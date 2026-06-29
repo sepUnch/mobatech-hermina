@@ -6,3 +6,6 @@ backend.exe
 temp_server
 *.db
 uploads/
+tmp/
+main
+!uploads/.gitkeep

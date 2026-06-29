@@ -22,7 +22,7 @@ class _FamilyMemberHeader extends StatelessWidget {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textDark),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textDark),
                 overflow: TextOverflow.ellipsis,
               ),
             ),
@@ -68,7 +68,7 @@ class _FamilyMemberDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _DetailRow(icon: Icons.cake_outlined, text: _formatDate(dob ?? '-')),
+        _DetailRow(icon: Icons.cake_outlined, text: Formatters.parseAndFormatDateID(dob ?? '-')),
         const SizedBox(height: 6),
         _DetailRow(
           icon: gender?.toLowerCase() == 'perempuan' ? Icons.female : Icons.male,
@@ -76,19 +76,6 @@ class _FamilyMemberDetails extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  String _formatDate(String dateStr) {
-    if (dateStr == '-' || dateStr.isEmpty) return dateStr;
-    try {
-      final parts = dateStr.split('-');
-      if (parts.length == 3) {
-        final months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-        final monthIdx = int.tryParse(parts[1]) ?? 1;
-        return '${parts[2]} ${months[monthIdx - 1]} ${parts[0]}';
-      }
-    } catch (_) {}
-    return dateStr;
   }
 }
 

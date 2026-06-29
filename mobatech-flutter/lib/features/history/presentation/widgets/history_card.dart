@@ -30,7 +30,7 @@ class HistoryCard extends StatelessWidget {
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
             child: Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
               decoration: BoxDecoration(
                 color: AppColors.primaryLight.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(16),
@@ -64,7 +64,7 @@ class HistoryCard extends StatelessWidget {
                           title,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 15,
                             color: AppColors.textDark,
                           ),
                         ),
@@ -82,7 +82,7 @@ class HistoryCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
-                      vertical: 6,
+                      vertical: 4,
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.successGreen.withValues(alpha: 0.15),
@@ -92,7 +92,7 @@ class HistoryCard extends StatelessWidget {
                       status,
                       style: const TextStyle(
                         color: AppColors.successGreen,
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

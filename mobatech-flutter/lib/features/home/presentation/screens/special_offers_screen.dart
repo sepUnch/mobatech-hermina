@@ -61,7 +61,7 @@ class SpecialOffersScreen extends ConsumerWidget {
     return offersAsync.when(
       data: (offers) {
         if (offers.isEmpty) {
-          return const Center(child: Text('Tidak ada penawaran spesial saat ini.'));
+          return const Center(child: Text(AppStrings.extTidakadapenawaranspesialsaatini));
         }
         return TweenAnimationBuilder<double>(
           tween: Tween(begin: 0.0, end: 1.0),
@@ -87,7 +87,7 @@ class SpecialOffersScreen extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (err, stack) => Center(child: Text('Gagal memuat promo: $err')),
+      error: (err, stack) => Center(child: Text('${AppStrings.extGagalmemuatpromo} $err')),
     );
   }
 }

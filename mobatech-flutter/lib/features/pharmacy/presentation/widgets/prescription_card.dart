@@ -1,3 +1,5 @@
+import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -18,10 +20,10 @@ class PrescriptionCard extends ConsumerWidget {
         decoration: BoxDecoration(
           color: AppColors.backgroundWhite.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+          border: Border.all(color: AppColors.backgroundWhite.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: AppColors.textDark.withValues(alpha: 0.1),
               blurRadius: 15,
               offset: const Offset(0, 4),
             ),
@@ -85,7 +87,7 @@ class PrescriptionCard extends ConsumerWidget {
   Widget _buildDeleteButton(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () => _confirmDelete(context, ref),
-      child: const Icon(Icons.delete_outline, color: Colors.red, size: 24),
+      child: const Icon(Icons.delete_outline, color: AppColors.errorRed, size: 24),
     );
   }
 
@@ -93,11 +95,11 @@ class PrescriptionCard extends ConsumerWidget {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Hapus E-Resep'),
-        content: const Text('Apakah Anda yakin ingin menghapus e-resep ini?'),
+        title: Text(AppStrings.extHapuseresep),
+        content: Text(AppStrings.extApakahandayakininginmenghapuseresepini),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Batal', style: TextStyle(color: AppColors.textGrey))),
-          TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Hapus', style: TextStyle(color: Colors.red))),
+          TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppStrings.extBatal, style: TextStyle(color: AppColors.textGrey))),
+          TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppStrings.extHapus, style: TextStyle(color: AppColors.errorRed))),
         ],
       ),
     );
@@ -109,20 +111,20 @@ class PrescriptionCard extends ConsumerWidget {
       await ref.read(prescriptionRepositoryProvider).deletePrescription(prescription.id);
       ref.invalidate(prescriptionsProvider);
       if (context.mounted) if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('E-Resep berhasil dihapus')));
+      CustomSnackbar.showSuccess(context, AppStrings.extEresepberhasildihapus);
     } catch (e) {
       if (context.mounted) if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gagal menghapus E-Resep')));
+      CustomSnackbar.showError(context, AppStrings.extGagalmenghapuseresep);
     }
   }
 
-  Widget _buildDate() => Text('Tanggal: ${prescription.createdAt.toLocal().toString().split(' ')[0]}', style: const TextStyle(color: AppColors.textGrey, fontSize: 14));
+  Widget _buildDate() => Text('${AppStrings.extTanggal} ${prescription.createdAt.toLocal().toString().split(' ')[0]}', style: const TextStyle(color: AppColors.textGrey, fontSize: 14));
 
   Widget _buildImage() {
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),
       child: Image.network(
-        prescription.imageUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2'),
+        prescription.imageUrl,
         height: 150,
         width: double.infinity,
         fit: BoxFit.cover,
@@ -135,7 +137,7 @@ class PrescriptionCard extends ConsumerWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       const SizedBox(height: 12),
-      const Text('Catatan:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
+      Text(AppStrings.extCatatan, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textDark)),
       const SizedBox(height: 4),
       Text(prescription.notes, style: const TextStyle(color: AppColors.textGrey, fontSize: 14)),
     ],

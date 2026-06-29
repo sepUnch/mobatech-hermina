@@ -20,9 +20,10 @@ class AppointmentsTab extends ConsumerWidget {
         if (appointments.isEmpty) {
           return const Center(child: Text(AppStrings.noAppointmentHistory));
         }
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           itemCount: appointments.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final appt = appointments[index];
             final title =
@@ -31,14 +32,11 @@ class AppointmentsTab extends ConsumerWidget {
             final date = appt.schedule?.date != null
                 ? Formatters.formatDate(appt.schedule!.date!)
                 : '-';
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: HistoryCard(
-                title: title,
-                status: status,
-                date: date,
-                onTap: () => context.push('/appointment/user-appointments'),
-              ),
+            return HistoryCard(
+              title: title,
+              status: status,
+              date: date,
+              onTap: () => context.push('/appointment/user-appointments'),
             );
           },
         );

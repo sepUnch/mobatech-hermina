@@ -1,3 +1,5 @@
+import '../../../../core/network/dio_client.dart';
+
 class Doctor {
   final int id;
   final int? userId;
@@ -26,13 +28,7 @@ class Doctor {
   factory Doctor.fromJson(Map<String, dynamic> json) {
     final poly = json['polyclinic'];
     String rawImageUrl = json['image_url'] ?? '';
-    // Fix localhost URL for Android Emulator
-    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
-      // We can't import dart:io easily without making this file UI-dependent, 
-      // but replacing it universally for 10.0.2.2 won't hurt the emulator, 
-      // or we can just import dart:io
-      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
-    }
+    rawImageUrl = fixImageUrl(rawImageUrl);
 
     return Doctor(
       id: json['ID'] ?? 0,

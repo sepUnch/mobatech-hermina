@@ -37,6 +37,12 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
     try {
       const res = await api.post<LoginResponseData>("/api/auth/login", { email, password });
       
+      if (res.data.user.role === 'patient') {
+        showToast("Akses ditolak: Pasien tidak memiliki izin masuk ke portal Admin.", "error");
+        setLoading(false);
+        return;
+      }
+
       await fetch("/api/auth/set-cookie", {
         method: "POST",
         headers: { "Content-Type": "application/json" },

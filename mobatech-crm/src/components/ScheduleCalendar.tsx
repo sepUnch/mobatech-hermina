@@ -4,6 +4,7 @@ import { useState } from "react";
 import { DoctorSchedule } from "@/types/api";
 import { Badge } from "./ui/Badge";
 import { Clock, ChevronLeft, ChevronRight } from "lucide-react";
+import { Formatters } from "@/lib/formatters";
 
 interface Props {
   groupedSchedules: Record<string, DoctorSchedule[]>;
@@ -38,7 +39,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
       <div className="border border-glass-border bg-black/5 dark:bg-white/5 rounded-2xl p-4 md:p-6 backdrop-blur-md">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-primary">
-            {currentDate.toLocaleDateString("id-ID", { month: "long", year: "numeric" })}
+            {Formatters.date(currentDate, "long")}
           </h2>
           <div className="flex gap-2">
             <button onClick={handlePrevMonth} className="p-2 rounded-xl hover:bg-black/10 dark:hover:bg-white/10 transition-colors">
@@ -91,7 +92,7 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
       {selectedDateStr && (
         <div className="mt-8">
           <h3 className="font-bold text-lg mb-4 text-foreground flex items-center gap-2">
-            Jadwal Tanggal {new Date(selectedDateStr).toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long" })}
+            Jadwal Tanggal {Formatters.date(selectedDateStr, "weekday")}
           </h3>
           
           {selectedSchedules.length === 0 ? (

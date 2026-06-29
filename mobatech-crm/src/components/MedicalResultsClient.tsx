@@ -6,6 +6,7 @@ import { ForbiddenView } from "@/components/ui/ForbiddenView";
 import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
+import { APP_STRINGS } from "@/lib/constants";
 import { DeleteModal } from "@/components/DeleteModal";
 import { MedicalResultsTable } from "./MedicalResultsTable";
 import { MedicalResultsForm } from "./MedicalResultsForm";
@@ -30,8 +31,7 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(defaultForm);
   const [saving, setSaving] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterValue, setFilterValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); const [filterValue, setFilterValue] = useState("");
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
 
   const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
@@ -45,7 +45,7 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
       const res = await api.get<MedicalResult[]>(`/api/admin/medical-results${qs}`);
       setResults(res.data || []);
-    } catch { showToast("Gagal memuat hasil medis", "error"); }
+    } catch { showToast(APP_STRINGS.common.medicalResultsLoadFailed, "error"); }
     finally { setLoading(false); }
   };
 
@@ -56,15 +56,10 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
     } catch { /* non-blocking */ }
   };
 
-  useEffect(() => { load(); }, [searchQuery, filterValue]);
-  useEffect(() => { loadUsers(); }, []);
+  useEffect(() => { load(); }, [searchQuery, filterValue]); useEffect(() => { loadUsers(); }, []);
 
   const openCreate = () => { setForm(defaultForm); setEditId(null); setShowForm(true); };
-  const openEdit = (r: MedicalResult) => {
-    setForm({ user_id: r.user_id, appointment_id: r.appointment_id, doctor_name: r.doctor_name, test_type: r.test_type, test_name: r.test_name, result: r.result, notes: r.notes, file_url: r.file_url, result_date: r.result_date?.slice(0, 10) ?? "" });
-    setEditId(r.id);
-    setShowForm(true);
-  };
+  const openEdit = (r: MedicalResult) => { setForm({ user_id: r.user_id, appointment_id: r.appointment_id, doctor_name: r.doctor_name, test_type: r.test_type, test_name: r.test_name, result: r.result, notes: r.notes, file_url: r.file_url, result_date: r.result_date?.slice(0, 10) ?? "" }); setEditId(r.id); setShowForm(true); };
 
   const handleSave = async () => {
     if (!form.user_id || !form.test_name || !form.result_date) {
@@ -75,21 +70,20 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
     try {
       if (editId) {
         await api.put(`/api/admin/medical-results/${editId}`, form);
-        showToast("Hasil medis diperbarui", "success");
+        showToast(APP_STRINGS.common.medicalResultsUpdated, "success");
       } else {
         await api.post("/api/admin/medical-results", form);
-        showToast("Hasil medis berhasil ditambahkan", "success");
+        showToast(APP_STRINGS.common.medicalResultsAdded, "success");
       }
       setShowForm(false);
       setForm(defaultForm);
       setEditId(null);
       load();
-    } catch { showToast("Gagal menyimpan data", "error"); }
+    } catch { showToast(APP_STRINGS.common.medicalResultsSaveFailed, "error"); }
     finally { setSaving(false); }
   };
 
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteId, setDeleteId] = useState<number | null>(null); const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async (id: number) => {
     setIsDeleting(true);

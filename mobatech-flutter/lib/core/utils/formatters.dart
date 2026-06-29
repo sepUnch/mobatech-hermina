@@ -7,6 +7,22 @@ class Formatters {
     return DateFormat(format).format(date);
   }
 
+  static String getDayOfWeekID(DateTime d) => ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'][d.weekday-1];
+  
+  static String getMonthID(DateTime d) => ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.month-1];
+
+  static String formatDateID(DateTime d) => '${d.day} ${getMonthID(d)} ${d.year}';
+
+  static String parseAndFormatDateID(String dateStr) {
+    if (dateStr.isEmpty || dateStr == '-') return '-';
+    try {
+      final dt = DateTime.parse(dateStr);
+      return formatDateID(dt);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
   static String formatPhoneNumber(String phone) {
     // Clean all non-digit characters except the leading plus
     String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');

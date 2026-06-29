@@ -6,20 +6,29 @@ import 'dart:io' show Platform;
 
 // Localhost mapping for emulator/web environment bridging.
 String get baseUrl {
-  final envUrl = dotenv.env['API_BASE_URL'];
-  if (envUrl != null && envUrl.isNotEmpty) return envUrl;
-
-  if (Platform.isAndroid) return 'http://10.0.2.2:8080/api';
-  return 'http://127.0.0.1:8080/api';
+  String envUrl = dotenv.env['API_BASE_URL'] ?? 'http://127.0.0.1:8080/api';
+  
+  if (Platform.isAndroid) {
+    envUrl = envUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2');
+  } else {
+    envUrl = envUrl.replaceAll('10.0.2.2', '127.0.0.1');
+  }
+  
+  return envUrl;
 }
 
 String get baseMediaUrl {
-  final envUrl = dotenv.env['API_BASE_URL'];
-  if (envUrl != null && envUrl.isNotEmpty) {
-    return envUrl.replaceAll('/api', '');
+  return baseUrl.replaceAll('/api', '');
+}
+
+
+String fixImageUrl(String rawUrl) {
+  if (rawUrl.isEmpty) return rawUrl;
+  
+  if (rawUrl.contains('127.0.0.1:8080') || rawUrl.contains('localhost:8080') || rawUrl.contains('10.0.2.2:8080')) {
+    return rawUrl.replaceAll(RegExp(r'http://(127\.0\.0\.1|localhost|10\.0\.2\.2):8080'), baseMediaUrl);
   }
-  if (Platform.isAndroid) return 'http://10.0.2.2:8080';
-  return 'http://127.0.0.1:8080';
+  return rawUrl;
 }
 
 String? globalAuthToken;

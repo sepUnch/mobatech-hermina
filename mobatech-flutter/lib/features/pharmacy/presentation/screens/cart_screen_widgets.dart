@@ -63,7 +63,7 @@ class _CartItemWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         child: item.medicine.imageUrl.isNotEmpty
             ? Image.network(
-                item.medicine.imageUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2'),
+                item.medicine.imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => const Icon(Icons.medication, color: AppColors.backgroundWhite),
               )

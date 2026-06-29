@@ -36,7 +36,10 @@ func AdminMiddleware() gin.HandlerFunc {
 		tokenString := parts[1]
 		secret := os.Getenv("JWT_SECRET")
 		if secret == "" {
-			secret = "default_secret"
+			c.AbortWithStatusJSON(http.StatusInternalServerError, utils.BuildError(
+				utils.ErrInternal, "JWT_SECRET is not configured on the server", nil,
+			))
+			return
 		}
 
 		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {

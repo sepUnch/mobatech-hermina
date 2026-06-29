@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/formatters.dart';
 import 'family_member_card_widgets.dart';
 
 part 'family_member_card_parts.dart';
@@ -35,6 +36,7 @@ class FamilyMemberCard extends ConsumerWidget {
       decoration: BoxDecoration(
         color: isPrimary ? AppColors.primaryLight.withValues(alpha: 0.5) : AppColors.backgroundWhite.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: isPrimary ? AppColors.primary.withValues(alpha: 0.2) : AppColors.textGrey.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(color: AppColors.shadowColor.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, 4)),
         ],
@@ -48,7 +50,7 @@ class FamilyMemberCard extends ConsumerWidget {
             child: InkWell(
               onTap: () {},
               child: Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                 child: Row(
                   children: [
                     FamilyMemberAvatar(name: name, isPrimary: isPrimary),

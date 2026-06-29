@@ -300,4 +300,17 @@ class AppStrings {
   static const String extFiturbelumtersedia = 'Fitur belum tersedia di versi ini.';
   static const String extGagalmemuatnotifikasi = 'Gagal memuat notifikasi:';
   static const String extGagalmemuathasilmedis = 'Gagal memuat hasil medis:';
+  static const String extHapuseresep = 'Hapus E-Resep';
+  static const String extApakahandayakininginmenghapuseresepini = 'Apakah Anda yakin ingin menghapus e-resep ini?';
+  static const String extBatal = 'Batal';
+  static const String extEresepberhasildihapus = 'E-Resep berhasil dihapus';
+  static const String extGagalmenghapuseresep = 'Gagal menghapus e-resep';
+  static const String extCatatan = 'Catatan';
+  static const String extStokhabis = 'Stok Habis';
+  static const String extTidakadarumahsakitterdekat = 'Tidak ada rumah sakit terdekat';
+  static const String extGagalmemuatrumahsakit = 'Gagal memuat rumah sakit';
+  static const String extTidakadapenawaranspesialsaatini = 'Tidak ada penawaran spesial saat ini.';
+  static const String extGagalmemuatpromo = 'Gagal memuat promo:';
+  static const String extRp = 'Rp';
+  static const String extTanggal = 'Tanggal:';
 }

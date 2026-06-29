@@ -22,7 +22,7 @@ class Article {
   }
 }
 
-final forYouArticlesProvider = FutureProvider.autoDispose<List<Article>>((
+final forYouArticlesProvider = FutureProvider<List<Article>>((
   ref,
 ) async {
   final dio = ref.read(dioProvider);
@@ -43,7 +43,7 @@ class PharmacyOrderMock {
 }
 
 final pharmacyHistoryProvider =
-    FutureProvider.autoDispose<List<PharmacyOrderMock>>((ref) async {
+    FutureProvider<List<PharmacyOrderMock>>((ref) async {
       final dio = ref.read(dioProvider);
       final response = await dio.get('/pharmacy/orders');
       final dynamic responseData = response.data;
@@ -72,7 +72,7 @@ class SpecialOffer {
   SpecialOffer(this.title, this.subtitle, this.themeColor);
 }
 
-final specialOffersProvider = FutureProvider.autoDispose<List<SpecialOffer>>((ref) async {
+final specialOffersProvider = FutureProvider<List<SpecialOffer>>((ref) async {
   final dio = ref.read(dioProvider);
   final response = await dio.get('/promos');
   final dynamic responseData = response.data;

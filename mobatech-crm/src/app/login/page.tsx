@@ -24,8 +24,15 @@ export default function LoginPage() {
   }, []);
 
   const toggleTheme = () => {
-    setDark(!dark);
-    document.documentElement.classList.toggle("dark");
+    const isDark = !dark;
+    setDark(isDark);
+    if (isDark) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
   };
 
   const showToast = (message: string, type: "success" | "error" | "warning") => {

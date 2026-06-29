@@ -32,7 +32,7 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
       final formData = FormData.fromMap({
         'file': await MultipartFile.fromFile(pickedFile.path),
       });
-      final uploadRes = await dio.post('http://10.0.2.2:8080/api/upload', data: formData);
+      final uploadRes = await dio.post('$baseUrl/upload', data: formData);
       final imageUrl = uploadRes.data['url'] as String;
 
       await dio.post('/pharmacy/prescriptions', data: {

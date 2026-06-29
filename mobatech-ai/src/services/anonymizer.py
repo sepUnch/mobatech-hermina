@@ -23,7 +23,7 @@ class AnonymizationEngine:
         # Lapis 1: Regex untuk pola statis (NIK, No HP, Tanggal)
         text = re.sub(r'\b\d{16}\b', '[REDACTED_NIK]', text)
         text = re.sub(r'\b(?:08|\+628)\d{8,11}\b', '[REDACTED_PHONE]', text)
-        text = re.sub(r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b', '[REDACTED_DATE]', text)
+        
         return text
 
     def anonymize(self, text: str) -> str:
@@ -44,8 +44,10 @@ class AnonymizationEngine:
             end = entity['end']
             label = entity['entity_group']
             
-            if label in ['PER', 'ORG', 'LOC']:
-                anonymized_text = anonymized_text[:start] + f"[REDACTED_{label}]" + anonymized_text[end:]
+            # Disabled PER, ORG, LOC redaction because it destroys Doctor names, Hospital names, and queries.
+            # if label in ['PER', 'ORG', 'LOC']:
+            #     anonymized_text = anonymized_text[:start] + f"[REDACTED_{label}]" + anonymized_text[end:]
+            pass
                 
         return anonymized_text
 

@@ -56,7 +56,7 @@ export function PatientsTable({ items, loading }: PatientsTableProps) {
             items.map((user) => (
               <tr key={user.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                 <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/80">
-                  {new Date(user.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                  {Formatters.date(user.created_at, "short")}
                 </td>
                 <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                   <div className="font-semibold">{user.full_name || "Tanpa Nama"}</div>

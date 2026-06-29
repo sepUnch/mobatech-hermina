@@ -47,7 +47,7 @@ func (s *authService) Login(email, password string) (string, *models.User, error
 	}
 	secret := os.Getenv("JWT_SECRET")
 	if secret == "" {
-		secret = "default_secret"
+		return "", nil, errors.New("JWT_SECRET is not configured on the server")
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": user.ID, "role": user.Role,

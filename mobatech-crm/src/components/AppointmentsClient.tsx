@@ -53,17 +53,22 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
   }, [searchQuery, filterValue]);
 
   const handleApprove = async (id: number) => {
+    if (processingId) return;
+    setProcessingId(id);
     try {
       await api.post(`/api/admin/appointments/${id}/approve`, {});
       setToast({ isOpen: true, message: "Antrean berhasil disetujui", type: "success" });
-      loadItems();
+      await loadItems();
     } catch (err) {
       const msg = err instanceof ApiError ? err.message : APP_STRINGS.login.networkError;
       setToast({ isOpen: true, message: msg, type: "error" });
+    } finally {
+      setProcessingId(null);
     }
   };
 
   const [cancelConfirmId, setCancelConfirmId] = useState<number | null>(null);
+  const [processingId, setProcessingId] = useState<number | null>(null);
 
   const executeCancel = async (id: number) => {
     try {
@@ -96,7 +101,7 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
         description="Pantau jadwal dan janji temu pasien (Live Booking Queue)."
       />
 
-      <div className="flex justify-end mb-4 gap-2">
+      <div className="w-full flex flex-row items-center justify-between sm:justify-end gap-2 mb-4">
         <FilterDropdown
           value={filterValue}
           onChange={setFilterValue}
@@ -105,8 +110,9 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
             { label: 'Besok', value: 'tomorrow' },
           ]}
           placeholder={APP_STRINGS.common.searchSchedule}
+          className="flex-1 sm:flex-none sm:w-48 h-11"
         />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
+        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="flex-1 sm:flex-none sm:w-64 h-11" />
       </div>
 
       <Card noPadding className="overflow-x-auto">

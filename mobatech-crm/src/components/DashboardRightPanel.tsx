@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DashboardStats } from "@/app/dashboard/types";
+import { Formatters } from "@/lib/formatters";
 
 export function DashboardRightPanel({ stats }: { stats: DashboardStats }) {
   return (
@@ -52,7 +53,7 @@ export function DashboardRightPanel({ stats }: { stats: DashboardStats }) {
                 <div className="min-w-0">
                   <div className="text-xs font-medium truncate">{p.full_name || p.email}</div>
                   <div className="text-[10px] text-foreground/40">
-                    {new Date(p.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })}
+                    {Formatters.date(p.created_at, "short")}
                   </div>
                 </div>
               </div>
@@ -86,7 +87,7 @@ export function DashboardRightPanel({ stats }: { stats: DashboardStats }) {
                 <div className="min-w-0">
                   <div className="text-xs font-medium truncate">{s.doctor?.name || "Dokter"}</div>
                   <div className="text-[10px] text-foreground/50">
-                    {new Date(s.date).toLocaleDateString("id-ID", { day: "2-digit", month: "short" })} • {s.start_time} - {s.end_time}
+                    {Formatters.date(s.date, "short")} • {s.start_time} - {s.end_time}
                   </div>
                 </div>
               </div>

@@ -140,11 +140,8 @@ class _ScheduleInfo extends StatelessWidget {
   String _getScheduleText() {
     if (appointment.schedule != null && appointment.schedule!.date != null) {
       final date = appointment.schedule!.date!;
-      return '${_getDayOfWeek(date)}, ${_formatDate(date)} . ${appointment.schedule!.startTime}';
+      return '${Formatters.getDayOfWeekID(date)}, ${Formatters.formatDateID(date)} . ${appointment.schedule!.startTime}';
     }
     return 'Jadwal belum ditentukan';
   }
-
-  String _getDayOfWeek(DateTime d) => ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'][d.weekday-1];
-  String _formatDate(DateTime d) => '${d.day} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.month-1]} ${d.year}';
 }

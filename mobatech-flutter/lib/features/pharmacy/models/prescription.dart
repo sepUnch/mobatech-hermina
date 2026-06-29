@@ -1,3 +1,5 @@
+import '../../../core/network/dio_client.dart';
+
 class Prescription {
   final int id;
   final int userId;
@@ -17,9 +19,7 @@ class Prescription {
 
   factory Prescription.fromJson(Map<String, dynamic> json) {
     String rawImageUrl = json['image_url'] as String? ?? '';
-    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
-      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
-    }
+    rawImageUrl = fixImageUrl(rawImageUrl);
 
     return Prescription(
       id: json['ID'] ?? json['id'] as int,

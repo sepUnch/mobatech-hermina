@@ -24,19 +24,17 @@ class PharmacyTab extends ConsumerWidget {
             ),
           );
         }
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
           itemCount: orders.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
             final order = orders[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: HistoryCard(
-                title: order.title,
-                status: order.status,
-                date: order.date,
-                onTap: () => context.push('/pharmacy/tracking', extra: order),
-              ),
+            return HistoryCard(
+              title: order.title,
+              status: order.status,
+              date: order.date,
+              onTap: () => context.push('/pharmacy/tracking', extra: order),
             );
           },
         );

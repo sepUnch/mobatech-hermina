@@ -31,13 +31,13 @@ void main() async {
             const SizedBox(height: 16),
             const Text(
               'Terjadi kesalahan',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textDark),
             ),
             const SizedBox(height: 8),
             Text(
               kDebugMode ? details.exceptionAsString() : 'Silakan coba lagi atau hubungi dukungan.',
               textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.black54),
+              style: const TextStyle(color: AppColors.textGrey),
             ),
           ],
         ),

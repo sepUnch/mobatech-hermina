@@ -7,12 +7,13 @@ import { Check, X, CheckCircle2 } from "lucide-react";
 interface AppointmentsTableProps {
   items: Appointment[];
   loading: boolean;
+  processingId?: number | null;
   onApprove: (id: number) => void;
   onCancel: (id: number) => void;
   onComplete: (id: number) => void;
 }
 
-export function AppointmentsTable({ items, loading, onApprove, onCancel, onComplete }: AppointmentsTableProps) {
+export function AppointmentsTable({ items, loading, processingId, onApprove, onCancel, onComplete }: AppointmentsTableProps) {
   const getStatusBadge = (status: string) => {
     let variant: BadgeVariant = "warning";
     let label = "Menunggu";
@@ -71,16 +72,16 @@ export function AppointmentsTable({ items, loading, onApprove, onCancel, onCompl
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm space-x-2">
                 {item.status === "pending" && (
                   <>
-                    <Button size="sm" variant="outline" className="text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10" onClick={() => onApprove(item.id)} icon={<Check size={14} />}>
+                    <Button size="sm" variant="outline" disabled={processingId === item.id} className="text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10 disabled:opacity-50" onClick={() => onApprove(item.id)} icon={<Check size={14} />}>
                       Setujui
                     </Button>
-                    <Button size="sm" variant="danger" onClick={() => onCancel(item.id)} icon={<X size={14} />}>
+                    <Button size="sm" variant="danger" disabled={processingId === item.id} onClick={() => onCancel(item.id)} icon={<X size={14} />}>
                       Tolak
                     </Button>
                   </>
                 )}
                 {item.status === "approved" && (
-                  <Button size="sm" variant="outline" className="text-blue-600 border-blue-500/30 hover:bg-blue-500/10" onClick={() => onComplete(item.id)} icon={<CheckCircle2 size={14} />}>
+                  <Button size="sm" variant="outline" disabled={processingId === item.id} className="text-blue-600 border-blue-500/30 hover:bg-blue-500/10 disabled:opacity-50" onClick={() => onComplete(item.id)} icon={<CheckCircle2 size={14} />}>
                     Selesai
                   </Button>
                 )}

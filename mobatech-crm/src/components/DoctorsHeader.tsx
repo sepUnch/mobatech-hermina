@@ -36,16 +36,17 @@ export function DoctorsHeader({
           </Button>
         }
       />
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 mb-4 w-full">
         <DoctorsTabs activeTab={activeTab} setActiveTab={setActiveTab} />
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row w-full lg:w-auto gap-2">
           <FilterDropdown
             value={filterValue}
             onChange={setFilterValue}
             options={polyclinicOptions}
             placeholder={APP_STRINGS.common.searchPolyclinic}
+            className="w-full sm:w-48 h-11"
           />
-          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
+          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
         </div>
       </div>
     </>

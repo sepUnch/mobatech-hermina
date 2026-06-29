@@ -7,6 +7,7 @@ import { Modal } from "@/components/Modal";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { ConfirmModal } from "@/components/ConfirmModal";
 import { ScheduleForm } from "./ScheduleForm";
+import { Formatters } from "@/lib/formatters";
 interface ScheduleModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -79,14 +80,6 @@ export function ScheduleModal({ isOpen, onClose, doctor, onChange }: ScheduleMod
       setDeleteConfirmId(null);
     }
   };
-  const formatDate = (isoStr: string) => {
-    return new Date(isoStr).toLocaleDateString("id-ID", {
-      weekday: "long",
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={`${APP_STRINGS.schedules.title} - ${doctor?.name || ""}`}>
       <div className="space-y-6">
@@ -111,7 +104,7 @@ export function ScheduleModal({ isOpen, onClose, doctor, onChange }: ScheduleMod
             schedules.map((sched) => (
               <div key={sched.id} className="flex items-center justify-between p-3 rounded-xl border border-glass-border glass-card">
                 <div>
-                  <p className="text-xs font-bold text-foreground">{formatDate(sched.date)}</p>
+                  <p className="text-xs font-bold text-foreground">{Formatters.date(sched.date, "weekday")}</p>
                   <p className="text-[10px] text-foreground/60 mt-0.5">
                     ⏰ {sched.start_time} - {sched.end_time} | 👥 Kuota: {sched.quota} (Terisi: {sched.booked})
                   </p>

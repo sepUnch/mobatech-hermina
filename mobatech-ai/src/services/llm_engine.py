@@ -2,7 +2,8 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-load_dotenv()
+backend_env_path = os.path.join(os.path.dirname(__file__), "../../../mobatech-backend/.env")
+load_dotenv(backend_env_path)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 if GEMINI_API_KEY:

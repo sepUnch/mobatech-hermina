@@ -1,3 +1,5 @@
+import '../../../../core/network/dio_client.dart';
+
 class PolyclinicSchedule {
   final int id;
   final int polyclinicId;
@@ -51,9 +53,7 @@ class Polyclinic {
         .toList();
 
     String rawImageUrl = json['image_url'] ?? '';
-    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
-      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
-    }
+    rawImageUrl = fixImageUrl(rawImageUrl);
 
     return Polyclinic(
       id: json['ID'] ?? 0,

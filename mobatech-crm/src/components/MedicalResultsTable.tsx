@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/Button";
 import { Edit2, Trash2 } from "lucide-react";
 import { Card } from "@/components/ui/Card";
+import { Formatters } from "@/lib/formatters";
 
 interface User { id: number; full_name: string; email: string; }
 interface MedicalResult { id: number; created_at: string; user_id: number; appointment_id: number; doctor_name: string; test_type: string; test_name: string; result: string; notes: string; file_url: string; result_date: string; }
@@ -43,7 +44,7 @@ export function MedicalResultsTable({
               ) : results.map((r) => (
                 <tr key={r.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/70 text-xs">
-                    {new Date(r.result_date).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                    {Formatters.date(r.result_date, "short")}
                   </td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">
                     {users.find((u) => u.id === r.user_id)?.full_name || users.find((u) => u.id === r.user_id)?.email || `User #${r.user_id}`}

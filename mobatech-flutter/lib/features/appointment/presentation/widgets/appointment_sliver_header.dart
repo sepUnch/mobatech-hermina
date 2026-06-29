@@ -17,7 +17,7 @@ class AppointmentSliverHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverAppBar(
       backgroundColor: AppColors.primary,
-      expandedHeight: 260,
+      expandedHeight: 210,
       pinned: true,
       elevation: 0,
       iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
@@ -75,7 +75,7 @@ class AppointmentSliverHeader extends ConsumerWidget {
                 ),
               ),
               Positioned(
-                bottom: 24,
+                bottom: 16,
                 left: 0,
                 right: 0,
                 child: Column(
@@ -83,7 +83,7 @@ class AppointmentSliverHeader extends ConsumerWidget {
                   children: [
                     // Search Bar
                     AppointmentSearchBar(searchController: searchController),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     // Filter Chips
                     const AppointmentFilterChips(),
                   ],

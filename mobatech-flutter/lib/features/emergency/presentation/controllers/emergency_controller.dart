@@ -6,6 +6,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../../../../core/network/dio_client.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -79,13 +80,7 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
 
   void _connectWebSocket(String emergencyId) {
     try {
-      final envWs = dotenv.env['WS_BASE_URL'];
-      String baseWsUrl;
-      if (envWs != null && envWs.isNotEmpty) {
-        baseWsUrl = envWs;
-      } else {
-        baseWsUrl = Platform.isAndroid ? 'ws://10.0.2.2:8080/api' : 'ws://127.0.0.1:8080/api';
-      }
+      String baseWsUrl = baseUrl.replaceFirst('http', 'ws');
 
       _channel = WebSocketChannel.connect(
         Uri.parse('$baseWsUrl/emergencies/$emergencyId/track'),

@@ -58,7 +58,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
               searchController: _searchController,
             ),
             SliverPadding(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               sliver: doctorsAsync.when(
                 data: (doctors) {
                   if (doctors.isEmpty) {

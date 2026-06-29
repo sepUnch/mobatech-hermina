@@ -69,9 +69,9 @@ class QuickAccessGrid extends ConsumerWidget {
           );
         }
 
-        if (menuItems.length > 8) {
-          final List<Widget> displayedItems = menuItems.sublist(0, 7);
-          final List<Widget> remainingItems = menuItems.sublist(7);
+        if (menuItems.length > 4) {
+          final List<Widget> displayedItems = menuItems.sublist(0, 3);
+          final List<Widget> remainingItems = menuItems.sublist(3);
 
           displayedItems.add(
             QuickAccessItem(
@@ -89,23 +89,23 @@ class QuickAccessGrid extends ConsumerWidget {
           return _buildGrid(context, menuItems);
         }
       },
-      loading: () => const GridSkeletonLoader(count: 8),
+      loading: () => const GridSkeletonLoader(count: 4),
       error: (err, stack) => Center(child: Text(ErrorHandler.getMessage(err))),
     );
   }
 
   Widget _buildGrid(BuildContext context, List<Widget> items) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: GridView.count(
-        padding: EdgeInsets.zero,
-        crossAxisCount: 4,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        mainAxisSpacing: 12,
-        crossAxisSpacing: 8,
-        childAspectRatio: MediaQuery.of(context).size.width / 4 / 115,
-        children: items,
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: items.map((item) => Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: item,
+          ),
+        )).toList(),
       ),
     );
   }

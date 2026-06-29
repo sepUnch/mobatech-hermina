@@ -76,7 +76,7 @@ class FamilyMembersScreen extends ConsumerWidget {
                 final familyList = user.familyMembers ?? [];
 
                 return ListView(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
                   physics: const BouncingScrollPhysics(),
                   children: [
                     FamilyMemberCard(
@@ -88,11 +88,11 @@ class FamilyMembersScreen extends ConsumerWidget {
                       dob: user.dob,
                       gender: user.gender,
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
                     ...familyList.map((member) {
                       final m = member as Map<String, dynamic>;
                       return Padding(
-                        padding: const EdgeInsets.only(bottom: 16),
+                        padding: const EdgeInsets.only(bottom: 12),
                         child: FamilyMemberCard(
                           name: m['full_name'] ?? 'Tanpa Nama',
                           relation: m['relationship'] ?? 'Keluarga',

@@ -1,60 +1,125 @@
-# Hermina Smart Assistant (Mobatech)
+<div align="center">
 
-This repository contains the source code and architectural documentation for the Hermina Smart Assistant project, an AI-driven healthcare application integrating a Generative AI (GPT-5) Chatbot, an Anonymization Engine, and the Hospital Information System (SIRS).
+# Mobatech Healthcare Ecosystem
 
-## Architecture Overview
+[![Go](https://img.shields.io/badge/Go-1.21%2B-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev/)
+[![Flutter](https://img.shields.io/badge/Flutter-3.19-02569B?style=flat-square&logo=flutter&logoColor=white)](https://flutter.dev/)
+[![Next.js](https://img.shields.io/badge/Next.js-14%2B-000000?style=flat-square&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
 
-The system is built using a Client-Server architecture with a dedicated AI/RAG microservice. The technology stack is separated into three primary components:
+A comprehensive and modular hospital management and telemedicine ecosystem, featuring a robust Go backend API, a glassmorphism CRM portal, an AI-powered diagnostic engine, and a scalable Flutter mobile application for patients.
 
-1. **Client Layer (Mobile Application)**
-   - Built with Flutter.
-   - Implements Clean Architecture (Presentation, Domain, Data layers).
-   - Handles patient interactions, polyclinic registration, and consultation rendering.
+</div>
 
-2. **Backend Layer (API Server)**
-   - Built with Golang (Gin Framework).
-   - Serves as the primary REST API Gateway connecting the mobile client to the database.
-   - Manages CRUD operations for master data, schedules, and triggers the synchronization pipeline to the Vector Database.
+---
 
-3. **AI & RAG Engine Layer**
-   - Built with Python.
-   - Implements the Retrieval-Augmented Generation (RAG) algorithm.
-   - Executes Dual-Layer Anonymization (Regex & Named Entity Recognition via BERT) before sending prompts to the public LLM (GPT-5) to ensure compliance with Personal Data Protection (PDP) regulations.
+## Architecture & Technology Stack
 
-## Repository Structure
+The application strictly adheres to a **Microservice-Oriented Architecture** with separated layers for Client, Admin, Core Backend, and AI Processing to ensure maximum scalability and maintainability.
 
-```text
-mobatech/
-├── mobatech-flutter/     # Client Layer: Flutter application source code.
-├── mobatech-crm/         # Admin Portal: Next.js/React CRM for hospital staff and master data.
-├── mobatech-backend/     # Backend Layer: Golang REST API server source code.
-├── mobatech-ai/          # AI Layer: Python scripts for data chunking, embeddings, and RAG search.
-├── AGENTS.md             # Crucial engineering constraints, error codes, and strict coding guidelines.
-└── CRM_ADMIN_PRD.md      # Product Requirements Document outlining the Next.js/React Admin Web Portal.
+| Layer          | Technologies                                             |
+| -------------- | -------------------------------------------------------- |
+| Mobile Client  | Flutter, Riverpod, Dio, GoRouter, Secure Storage         |
+| CRM Portal     | Next.js (App Router), Tailwind CSS (Glassmorphism), Zustand |
+| Core Backend   | Go (Golang), GORM, JWT, AES-256 Encryption               |
+| AI & Analytics | Python, DeepMind Gemini, RAG Engine, Vector Search       |
+| Persistence    | MySQL2 (Relational), Vector Database (Embeddings)        |
+
+---
+
+## Core Features
+
+- **Blazingly Fast Mobile App:** Pure native-like performance with robust `Riverpod` state management and cached API consumptions for zero-jitter navigation.
+- **High-Security Core API:** JWT-based authentication with role-based access control (RBAC) and AES-256 level encryption for all patient sensitive data (PDP Compliance).
+- **Glassmorphism CRM Dashboard:** A visually stunning, unified administrative dashboard featuring SSR-first approach, real-time widgets, and smooth micro-animations.
+- **Strict Data Validation:** Comprehensive and unified utility formatting (`Formatters.*`) and regex validation (`Validators.*`) on both mobile and web frontends.
+- **AI-Powered Diagnostics:** Context-aware RAG Engine connected to Gemini AI capable of analyzing patient symptoms, checking medical records, and scheduling polyclinics automatically.
+
+---
+
+## Installation & Setup Guide
+
+**System Requirements:**
+- Go v1.21 or higher
+- Node.js v18.0.0 or higher
+- Flutter SDK v3.19 or higher
+- Python v3.10 or higher
+- MySQL v8.0+
+
+### 1. Repository Setup
+
+Clone the repository to your local machine:
+
+```bash
+git clone https://github.com/Samaele13/mobatech.git
+cd mobatech
 ```
 
-## Mandatory Reading for Contributors
+### 2. Core Backend (Go)
 
-Before contributing or initializing autonomous agent tasks, all developers and AI agents must review the following contextual documents:
+Initialize the Go server and dependencies:
 
-1. **`AGENTS.md`**: This is the strict technical guideline for the project. It dictates the prohibition of hardcoded literals, enforcing regex validations, limiting file lengths, and utilizing specific state management architectures. Failure to adhere to these rules will result in rejected pull requests.
-2. **`CRM_ADMIN_PRD.md`**: Provides the functional and non-functional requirements for the CRM Web Admin Portal.
+```bash
+cd mobatech-backend
+go mod tidy
+go run main.go
+```
+*Note: The backend runs on `localhost:8080` by default. It utilizes `start.sh` to scaffold the Super Admin account.*
 
-## 🚀 Quick Start & Developer Onboarding
+### 3. CRM Portal (Next.js)
 
-**We employ a strict "One Admin Master Key" philosophy.** To set up your local environment from a clean state (Factory Reset):
+Setup the Web Dashboard:
 
-1. **Clone the repository** and install dependencies in respective folders (e.g. `npm install` for CRM).
-2. **Copy `.env.example`** to `.env` in all four directories (`mobatech-backend`, `mobatech-crm`, `mobatech-flutter`, `mobatech-ai`) and adjust your local credentials.
-3. **Execute the Factory Reset Script**:
-   ```bash
-   cd mobatech-crm
-   bash start.sh
-   ```
-   This script will drop your local database, remigrate tables, and securely inject exactly **one** Super Admin account. No dummy or dirty data is generated.
-4. **Login** to the CRM (http://localhost:3000) using:
-   - **Email:** `admin@hermina.com`
-   - **Password:** `admin123`
-5. From the Admin Dashboard, you can manually build your Polyclinics, hire Doctors, and hire Pharmacists via the UI.
+```bash
+cd ../mobatech-crm
+npm install
+npm run dev
+```
+*Access the CRM Portal at `http://localhost:3000`.*
 
-Welcome to the Hermina Smart Assistant Ecosystem!
+### 4. Patient Application (Flutter)
+
+Run the mobile app:
+
+```bash
+cd ../mobatech-flutter
+flutter pub get
+flutter run
+```
+
+---
+
+## Production Build
+
+To compile the CRM and Backend for production deployment:
+
+**Web:**
+```bash
+npm run build
+npm run start
+```
+
+**Backend:**
+```bash
+go build -o mobatech-server
+./mobatech-server
+```
+
+---
+
+## Documentation & Standards
+
+This repository is an **Industry-Ready** boilerplate. It rigorously follows the `AGENTS.md` and `engineering-standards` ensuring:
+- Strict typing and explicit null-safety handling across TS, Dart, and Go.
+- Component modularity limited to 150-lines maximum per file.
+- Unified and centralized design systems, tokens, validators, and formatters.
+- Ignored environment secrets, generated binaries, and unhashed assets in `.gitignore`.
+
+---
+
+## Authors
+
+**Raihan Akbar** — [GitHub](https://github.com/rhankbrguw) · [LinkedIn](https://www.linkedin.com/in/raihan-akbar-2b5820334/)
+
+**Ansya Rulloh Vini** — [GitHub](https://github.com/ansyarulloh) · [LinkedIn](https://www.linkedin.com/in/ansya-rulloh-vini-2414302a1/)

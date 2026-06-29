@@ -9,6 +9,7 @@ import { DashboardStatCards } from "@/components/DashboardStatCards";
 import { DashboardRecentAppointments } from "@/components/DashboardRecentAppointments";
 import { DashboardRightPanel } from "@/components/DashboardRightPanel";
 import { StatusPill } from "@/components/StatusPill";
+import { Formatters } from "@/lib/formatters";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -73,7 +74,7 @@ export default function DashboardPage() {
             {user?.full_name ?? "Admin"}
           </h1>
           <p className="text-xs text-foreground/50 mt-1">
-            {new Date().toLocaleDateString("id-ID", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            {Formatters.date(new Date(), "weekday")}
           </p>
         </div>
         {stats.activeEmergencies > 0 && (
@@ -109,7 +110,7 @@ export default function DashboardPage() {
                 <div className="flex-1">
                   <div className="text-sm font-medium">Kasus #{e.id}</div>
                   <div className="text-xs text-foreground/50">
-                    {new Date(e.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    {Formatters.date(e.created_at, "datetime")}
                   </div>
                 </div>
                 <StatusPill status={e.status} />

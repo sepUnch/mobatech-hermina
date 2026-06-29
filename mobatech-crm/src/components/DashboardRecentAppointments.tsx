@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { DashboardStats } from "@/app/dashboard/types";
 import { StatusPill } from "./StatusPill";
+import { Formatters } from "@/lib/formatters";
 
 export function DashboardRecentAppointments({ stats }: { stats: DashboardStats }) {
   return (
@@ -34,7 +35,7 @@ export function DashboardRecentAppointments({ stats }: { stats: DashboardStats }
               <div className="flex-1 min-w-0">
                 <div className="text-sm font-medium truncate">{a.notes || "Tidak ada catatan"}</div>
                 <div className="text-xs text-foreground/50 mt-0.5">
-                  {new Date(a.created_at).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" })}
+                  {Formatters.date(a.created_at, "short")}
                 </div>
               </div>
               <StatusPill status={a.status} />

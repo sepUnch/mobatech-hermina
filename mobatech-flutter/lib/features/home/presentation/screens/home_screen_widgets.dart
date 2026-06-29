@@ -38,16 +38,19 @@ class _HomeBody extends ConsumerWidget {
                   const QuickAccessGrid(),
                   const SizedBox(height: 24),
                   const PromoBannerCarousel(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 28),
                   _buildSectionTitle(AppStrings.sectionAgenda),
+                  const SizedBox(height: 12),
                   const _AgendaList(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 28),
                   _buildSectionTitle(AppStrings.sectionAssistant),
+                  const SizedBox(height: 12),
                   const AssistantCard(),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 28),
                   _buildSectionTitle(AppStrings.sectionHospitals),
+                  const SizedBox(height: 12),
                   const _HospitalsList(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
@@ -107,7 +110,7 @@ class _HospitalsList extends ConsumerWidget {
 
     return branchesAsync.when(
       data: (branches) {
-        if (branches.isEmpty) return const Padding(padding: EdgeInsets.all(24.0), child: Text('Tidak ada rumah sakit terdekat.', style: TextStyle(color: AppColors.textGrey)));
+        if (branches.isEmpty) return const Padding(padding: EdgeInsets.all(24.0), child: Text(AppStrings.extTidakadarumahsakitterdekat, style: TextStyle(color: AppColors.textGrey)));
         return Column(
           children: branches.map((branch) {
             final dummyDistance = (branch.id * 1.5 + 2).toStringAsFixed(1) + ' KM';
@@ -127,7 +130,7 @@ class _HospitalsList extends ConsumerWidget {
       ),
       error: (err, stack) => const Padding(
         padding: EdgeInsets.all(24.0),
-        child: Text('Gagal memuat rumah sakit', style: TextStyle(color: AppColors.errorRed)),
+        child: Text(AppStrings.extGagalmemuatrumahsakit, style: TextStyle(color: AppColors.errorRed)),
       ),
     );
   }

@@ -15,7 +15,7 @@ class MedicineCardImage extends StatelessWidget {
         borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
         child: medicine.imageUrl.isNotEmpty
             ? Image.network(
-                medicine.imageUrl.replaceAll('127.0.0.1', '10.0.2.2').replaceAll('localhost', '10.0.2.2'),
+                medicine.imageUrl,
                 fit: BoxFit.cover,
                 errorBuilder: (_, __, ___) => _buildFallbackIcon(),
               )
@@ -63,7 +63,7 @@ class MedicineCardDetails extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text('Rp ${medicine.price.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 14)),
+        Text('${AppStrings.extRp} ${medicine.price.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppColors.primary, fontSize: 14)),
         medicine.requiresPrescription ? _buildPrescriptionLabel() : _buildAddToCartButton(),
       ],
     );
@@ -88,7 +88,7 @@ class MedicineCardDetails extends StatelessWidget {
           borderRadius: BorderRadius.circular(8),
         ),
         child: isOutOfStock
-            ? const Text('Stok Habis', style: TextStyle(color: AppColors.textGrey, fontSize: 10, fontWeight: FontWeight.bold))
+            ? Text(AppStrings.extStokhabis, style: TextStyle(color: AppColors.textGrey, fontSize: 10, fontWeight: FontWeight.bold))
             : const Icon(Icons.add, color: AppColors.primary, size: 18),
       ),
     );

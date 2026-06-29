@@ -1,4 +1,6 @@
 import { Card } from "@/components/ui/Card";
+import { Modal } from "@/components/Modal";
+import { Formatters } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Trash2 } from "lucide-react";
@@ -47,9 +49,7 @@ export function RemindersList({
                   <div className="text-xs text-foreground/40 mt-1">
                     Kepada: <span className="font-medium text-foreground/60">{getUserName(r.user_id)}</span>
                     {" • "}
-                    {new Date(r.reminder_date).toLocaleDateString("id-ID", {
-                      day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit",
-                    })}
+                    {Formatters.date(r.reminder_date, "datetime")}
                   </div>
                 </div>
               </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { ChatSession } from "@/types/api";
+import { Formatters } from "@/lib/formatters";
 
 export function AiAuditChatHistory({
   sessions,
@@ -32,13 +33,7 @@ export function AiAuditChatHistory({
                     <div className="font-semibold text-primary">{session.title || "Percakapan Baru"}</div>
                     <div className="text-xs text-foreground/50 mt-1">
                       Sesi ID: {session.id} • Terakhir aktif:{" "}
-                      {new Date(session.updated_at).toLocaleDateString("id-ID", {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
+                      {Formatters.date(session.updated_at, "datetime")}
                     </div>
                   </div>
                   <div className="text-foreground/50 text-sm">

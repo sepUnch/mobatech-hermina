@@ -1,3 +1,4 @@
+import '../../../../core/network/dio_client.dart';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,7 +37,7 @@ class UserProfile {
     if (imgPath != null && imgPath.trim().isEmpty) {
       imgPath = null;
     } else if (imgPath != null && imgPath.startsWith('http://127.0.0.1:8080')) {
-      imgPath = imgPath.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
+      imgPath = fixImageUrl(imgPath);
     }
     return UserProfile(
       id: json['ID'] ?? 0,

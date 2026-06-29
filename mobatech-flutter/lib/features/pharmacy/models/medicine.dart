@@ -1,5 +1,7 @@
 import 'medicine_category.dart';
 
+import '../../../core/network/dio_client.dart';
+
 class Medicine {
   final int id;
   final String name;
@@ -23,9 +25,7 @@ class Medicine {
 
   factory Medicine.fromJson(Map<String, dynamic> json) {
     String rawImageUrl = json['image_url'] as String? ?? '';
-    if (rawImageUrl.startsWith('http://127.0.0.1:8080')) {
-      rawImageUrl = rawImageUrl.replaceAll('http://127.0.0.1:8080', 'http://10.0.2.2:8080');
-    }
+    rawImageUrl = fixImageUrl(rawImageUrl);
 
     return Medicine(
       id: json['ID'] ?? json['id'] as int,

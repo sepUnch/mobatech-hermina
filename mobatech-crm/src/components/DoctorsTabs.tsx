@@ -9,10 +9,10 @@ export function DoctorsTabs({
   setActiveTab: (tab: "doctors" | "schedules") => void;
 }) {
   return (
-    <div className="flex gap-2 p-1 bg-black/5 dark:bg-white/5 rounded-xl w-max">
+    <div className="flex flex-wrap gap-2 p-1 bg-black/5 dark:bg-white/5 rounded-xl w-full sm:w-max">
       <button
         onClick={() => setActiveTab("doctors")}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto ${
           activeTab === "doctors" ? "bg-white dark:bg-black/50 shadow text-primary" : "text-foreground/60 hover:text-foreground"
         }`}
       >
@@ -20,7 +20,7 @@ export function DoctorsTabs({
       </button>
       <button
         onClick={() => setActiveTab("schedules")}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+        className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors w-full sm:w-auto ${
           activeTab === "schedules" ? "bg-white dark:bg-black/50 shadow text-primary" : "text-foreground/60 hover:text-foreground"
         }`}
       >

@@ -16,45 +16,58 @@ class ForYouScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncArticles = ref.watch(forYouArticlesProvider);
 
-    return Scaffold(
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       appBar: const _ForYouAppBar(),
-      body: asyncArticles.when(
-        data: (articles) {
-          return TweenAnimationBuilder<double>(
-            tween: Tween(begin: 0.0, end: 1.0),
-            duration: const Duration(milliseconds: 600),
-            curve: Curves.easeOutCubic,
-            builder: (context, value, child) {
-              return Opacity(
-                opacity: value,
-                child: Transform.translate(
-                  offset: Offset(0, 30 * (1 - value)),
-                  child: child,
+      body: TabBarView(
+        children: [
+          asyncArticles.when(
+            data: (articles) {
+              return TweenAnimationBuilder<double>(
+                tween: Tween(begin: 0.0, end: 1.0),
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeOutCubic,
+                builder: (context, value, child) {
+                  return Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, 30 * (1 - value)),
+                      child: child,
+                    ),
+                  );
+                },
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                  itemCount: articles.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 12),
+                  itemBuilder: (context, index) {
+                    return _ArticleCard(article: articles[index]);
+                  },
                 ),
               );
             },
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: articles.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                return _ArticleCard(article: articles[index]);
-              },
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: AppColors.primary),
             ),
-          );
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator(color: AppColors.primary),
-        ),
-        error: (e, st) => const Center(
-          child: Text(
-            AppStrings.extGagalmemuatrekomendasi,
-            style: TextStyle(color: AppColors.textGrey),
+            error: (e, st) => const Center(
+              child: Text(
+                AppStrings.extGagalmemuatrekomendasi,
+                style: TextStyle(color: AppColors.textGrey),
+              ),
+            ),
           ),
-        ),
+          const Center(
+            child: Text(
+              'Belum ada promo saat ini.',
+              style: TextStyle(color: AppColors.textGrey),
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: const CustomBottomNavBar(currentIndex: 2),
+    ),
     );
   }
 }

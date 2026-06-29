@@ -13,6 +13,7 @@ import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { useEffect } from "react";
 import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
 
 function StatusBadge({ value, type }: { value: string; type: "order" | "payment" }) {
   let variant: BadgeVariant = "neutral";
@@ -70,17 +71,20 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-end gap-2">
-        <FilterDropdown
-          value={filterValue}
-          onChange={setFilterValue}
-          options={[
-            { label: 'Pending', value: 'pending' },
-            { label: 'Selesai', value: 'resolved' },
-          ]}
-          placeholder={APP_STRINGS.common.searchStatus}
-        />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
+        <div className="flex flex-col sm:flex-row flex-1 sm:flex-none gap-2">
+          <FilterDropdown
+            value={filterValue}
+            onChange={setFilterValue}
+            options={[
+              { label: 'Pending', value: 'pending' },
+              { label: 'Selesai', value: 'resolved' },
+            ]}
+            placeholder={APP_STRINGS.common.searchStatus}
+            className="w-full sm:w-48 h-11"
+          />
+          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} className="w-full sm:max-w-xs h-11" />
+        </div>
       </div>
       <Card noPadding>
         <div className="divide-y divide-glass-border">
@@ -91,13 +95,13 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
               <div className="flex-1">
                 <div className="font-semibold text-sm">{order.order_number}</div>
                 <div className="text-xs text-foreground/50 mt-0.5">
-                  User #{order.user_id} • {new Date(order.created_at).toLocaleDateString("id-ID")} • {order.pickup_method}
+                  User #{order.user_id} • {Formatters.date(order.created_at)} • {order.pickup_method}
                 </div>
               </div>
               <div className="flex items-center gap-2 flex-wrap">
                 <StatusBadge value={order.status} type="order" />
                 <StatusBadge value={order.payment_status} type="payment" />
-                <span className="text-sm font-semibold">Rp {order.total_price.toLocaleString("id-ID")}</span>
+                <span className="text-sm font-semibold">{Formatters.currency(order.total_price)}</span>
               </div>
             </div>
             {expandedOrder === order.id && (
@@ -106,7 +110,7 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
                 {order.items?.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
                     <span>{item.medicine?.name ?? `Obat #${item.medicine_id}`} × {item.quantity}</span>
-                    <span className="font-medium">Rp {item.subtotal?.toLocaleString("id-ID")}</span>
+                    <span className="font-medium">{Formatters.currency(item.subtotal)}</span>
                   </div>
                 ))}
                 {order.delivery_address && <div className="text-xs text-foreground/60"><span className="font-medium">Alamat:</span> {order.delivery_address}</div>}
