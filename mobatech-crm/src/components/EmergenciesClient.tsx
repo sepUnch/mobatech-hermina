@@ -6,6 +6,7 @@ import { ForbiddenView } from "@/components/ui/ForbiddenView";
 import { useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
 import { EmergencyRequest } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { format } from "date-fns";
@@ -111,7 +112,7 @@ return (
                   <td className="p-4 text-foreground/80 max-w-[150px] truncate">{item.condition}</td>
                   <td className="p-4">
                     <div className="text-foreground/80 font-medium truncate max-w-[200px]">{item.location}</div>
-                    <div className="text-xs text-foreground/60 mt-1">{item.phone_number}</div>
+                    <div className="text-xs text-foreground/60 mt-1">{Formatters.phone(item.phone_number)}</div>
                   </td>
                   <td className="p-4">{getStatusBadge(item.status)}</td>
                   <td className="p-4 text-right space-x-2 whitespace-nowrap">

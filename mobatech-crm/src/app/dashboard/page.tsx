@@ -26,7 +26,7 @@ export default function DashboardPage() {
         const [doctorsRes, polyRes, patientsRes, appRes, emergRes, scheduleRes] = await Promise.allSettled([
           api.get<Doctor[]>("/api/doctors"),
           api.get<Polyclinic[]>("/api/polyclinics"),
-          api.get<User[]>("/api/admin/users"),
+          api.get<User[]>("/api/admin/users?role=patient"),
           api.get<Appointment[]>("/api/admin/appointments"),
           api.get<Emergency[]>("/api/admin/emergencies"),
           api.get<DoctorSchedule[]>("/api/admin/schedules?limit=4"),

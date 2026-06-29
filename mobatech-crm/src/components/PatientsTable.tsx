@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/Badge";
+import { Formatters } from "@/lib/formatters";
 
 export interface FamilyMember {
   id: number;
@@ -66,7 +67,7 @@ export function PatientsTable({ items, loading }: PatientsTableProps) {
                 </td>
                 <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                   <div className="text-foreground/90">{user.email}</div>
-                  <div className="text-xs text-foreground/60 mt-1">{user.phone_number || "-"}</div>
+                  <div className="text-xs text-foreground/60 mt-1">{Formatters.phone(user.phone_number)}</div>
                 </td>
                 <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                   <div className="flex flex-wrap justify-center gap-1 text-xs">

@@ -22,7 +22,7 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
   className = "" 
 }) => {
   return (
-    <div className={`relative flex items-center w-full max-w-[200px] rounded-xl border border-black/5 dark:border-white/10 bg-white/70 dark:bg-[#1A1A1A]/70 backdrop-blur-[12px] saturate-[180%] shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary focus-within:border-primary/50 ${className}`}>
+    <div className={`relative flex items-center w-full max-w-[200px] rounded-xl border border-black/5 dark:border-white/10 bg-white/70 dark:[background-color:var(--color-dark-panel)] backdrop-blur-[12px] saturate-[180%] shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary focus-within:border-primary/50 ${className}`}>
       <div className="pl-3 py-2.5 text-foreground/50 pointer-events-none">
         <Filter className="w-4 h-4" />
       </div>

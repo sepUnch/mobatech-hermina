@@ -9,6 +9,7 @@ import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { DeleteModal } from "@/components/DeleteModal";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { PromosFormModal } from "./PromosFormModal";
+import { APP_STRINGS } from "@/lib/constants";
 
 export function PromosClient() {
   const [promos, setPromos] = useState<any[]>([]);
@@ -60,7 +61,7 @@ export function PromosClient() {
       />
       
       <div className="flex flex-col sm:flex-row sm:justify-end mb-4 gap-2">
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} placeholder="Cari Promo..." className="w-full sm:max-w-sm" />
+        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} placeholder={APP_STRINGS.promos.searchPlaceholder} className="w-full sm:max-w-sm" />
       </div>
 
       <Card noPadding>
@@ -76,7 +77,7 @@ export function PromosClient() {
             </thead>
             <tbody>
               {loading ? <tr><td colSpan={4} className="p-8 text-center text-foreground/50">Memuat...</td></tr> : promos.map((p) => (
-                <tr key={p.ID} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                <tr key={p.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <div className="text-left"><div className="font-semibold">{p.title}</div><div className="text-xs text-foreground/60">{p.subtitle}</div></div>
                   </td>
@@ -94,7 +95,7 @@ export function PromosClient() {
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <div className="flex gap-2 justify-center">
                       <button onClick={() => { setEditingPromo(p); setShowModal(true); }} className="p-1.5 text-info hover:bg-info/10 rounded-lg transition-colors"><Edit size={16} /></button>
-                      <button onClick={() => setDeleteConfirm({id: p.ID, title: `Hapus promo "${p.title}"?`})} className="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                      <button onClick={() => setDeleteConfirm({id: p.id, title: `Hapus promo "${p.title}"?`})} className="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
                     </div>
                   </td>
                 </tr>

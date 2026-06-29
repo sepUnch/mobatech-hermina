@@ -51,7 +51,7 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
 
   const loadUsers = async () => {
     try {
-      const res = await api.get<User[]>("/api/admin/users");
+      const res = await api.get<User[]>("/api/admin/users?role=patient");
       setUsers(res.data || []);
     } catch { /* non-blocking */ }
   };

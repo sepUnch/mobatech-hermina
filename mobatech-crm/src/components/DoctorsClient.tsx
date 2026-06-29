@@ -4,7 +4,7 @@ import { ForbiddenView } from "@/components/ui/ForbiddenView";
 import { useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
-import { Doctor, DoctorSchedule } from "@/types/api";
+import { Doctor, DoctorSchedule, Polyclinic } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { DoctorFormModal } from "@/components/DoctorFormModal";
 import { ScheduleModal } from "@/components/ScheduleModal";
@@ -26,6 +26,7 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
   const [selectedItem, setSelectedItem] = useState<Doctor | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
   const [toast, setToast] = useState<{
     isOpen: boolean;
     message: string;
@@ -50,6 +51,9 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
       setLoading(false);
     }
   };
+  useEffect(() => {
+    api.get<Polyclinic[]>("/api/polyclinics").then((res) => setPolyclinics(res.data || [])).catch(() => {});
+  }, []);
   useEffect(() => {
     loadItems();
     const interval = setInterval(() => loadItems(), 5000);
@@ -113,6 +117,7 @@ return (
         setFilterValue={setFilterValue}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
+        polyclinicOptions={polyclinics.map((p) => ({ label: p.name, value: p.name }))}
       />
       <DoctorsContent
         activeTab={activeTab}

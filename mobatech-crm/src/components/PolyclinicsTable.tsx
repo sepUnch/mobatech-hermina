@@ -27,7 +27,6 @@ export function PolyclinicsTable({
               <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold">
                 <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderName}</th>
                 <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderDesc}</th>
-                <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Daftar Dokter</th>
                 <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderStatus}</th>
                 <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">{APP_STRINGS.polyclinics.tableHeaderActions}</th>
               </tr>
@@ -37,19 +36,7 @@ export function PolyclinicsTable({
                 <tr key={item.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">{item.name}</td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75 truncate max-w-xs">{item.description}</td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    {item.doctors && item.doctors.length > 0 ? (
-                      <div className="flex flex-wrap justify-center gap-1">
-                        {item.doctors.map((doc) => (
-                          <span key={doc.id} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-medium">
-                            {doc.name}
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-xs text-foreground/40">Belum ada dokter</span>
-                    )}
-                  </td>
+
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <Badge variant={item.is_active ? "success" : "error"}>
                       {item.is_active ? APP_STRINGS.polyclinics.statusActive : APP_STRINGS.polyclinics.statusInactive}

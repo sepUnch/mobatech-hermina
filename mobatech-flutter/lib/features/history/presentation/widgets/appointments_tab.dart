@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
@@ -29,7 +29,7 @@ class AppointmentsTab extends ConsumerWidget {
                 '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';
             final status = appt.status.toUpperCase();
             final date = appt.schedule?.date != null
-                ? DateFormat('dd MMM yyyy').format(appt.schedule!.date!)
+                ? Formatters.formatDate(appt.schedule!.date!)
                 : '-';
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),

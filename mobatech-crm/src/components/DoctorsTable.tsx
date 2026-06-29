@@ -1,6 +1,7 @@
 import React from "react";
 import { Doctor } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Edit2, Trash2, Calendar } from "lucide-react";
@@ -41,7 +42,7 @@ export function DoctorsTable({
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">{item.name}</td>
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75">{item.polyclinic?.name || "-"}</td>
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75">{item.specialization}</td>
-              <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/60">{item.contact_info}</td>
+              <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/60">{Formatters.phone(item.contact_info)}</td>
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                 <Badge variant={item.is_active ? "success" : "error"}>
                   {item.is_active ? APP_STRINGS.doctors.statusActive : APP_STRINGS.doctors.statusInactive}

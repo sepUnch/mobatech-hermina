@@ -1,6 +1,12 @@
 import 'package:flutter/services.dart';
 
+import 'package:intl/intl.dart';
+
 class Formatters {
+  static String formatDate(DateTime date, {String format = 'dd MMM yyyy'}) {
+    return DateFormat(format).format(date);
+  }
+
   static String formatPhoneNumber(String phone) {
     // Clean all non-digit characters except the leading plus
     String cleanPhone = phone.replaceAll(RegExp(r'[^\d+]'), '');
@@ -42,12 +48,8 @@ class PhonePrefixFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    String text = newValue.text;
+    String text = newValue.text.replaceAll(RegExp(r'[^\d+]'), '');
 
-    // First strip all non-digits except +
-    text = text.replaceAll(RegExp(r'[^\d+]'), '');
-
-    // If it starts with +62, 62, or 0, strip it! We only want the local part (e.g. 818...)
     if (text.startsWith('+62')) {
       text = text.substring(3);
     } else if (text.startsWith('62')) {
@@ -56,12 +58,19 @@ class PhonePrefixFormatter extends TextInputFormatter {
       text = text.substring(1);
     }
 
-    // After removing the prefix, if there are still non-digits, remove them
     text = text.replaceAll(RegExp(r'\D'), '');
+    if (text.length > 12) text = text.substring(0, 12);
 
+    final buf = StringBuffer();
+    for (int i = 0; i < text.length; i++) {
+      if (i == 3 || i == 7) buf.write('-');
+      buf.write(text[i]);
+    }
+
+    final formatted = buf.toString();
     return newValue.copyWith(
-      text: text,
-      selection: TextSelection.collapsed(offset: text.length),
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
     );
   }
 }

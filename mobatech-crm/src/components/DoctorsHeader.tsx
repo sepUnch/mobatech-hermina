@@ -14,6 +14,7 @@ export function DoctorsHeader({
   setFilterValue,
   searchQuery,
   setSearchQuery,
+  polyclinicOptions,
 }: {
   openForm: () => void;
   activeTab: "doctors" | "schedules";
@@ -22,6 +23,7 @@ export function DoctorsHeader({
   setFilterValue: (val: string) => void;
   searchQuery: string;
   setSearchQuery: (val: string) => void;
+  polyclinicOptions: { label: string; value: string }[];
 }) {
   return (
     <>
@@ -40,12 +42,7 @@ export function DoctorsHeader({
           <FilterDropdown
             value={filterValue}
             onChange={setFilterValue}
-            options={[
-              { label: 'Jantung', value: 'Jantung' },
-              { label: 'Mata', value: 'Mata' },
-              { label: 'Gigi', value: 'Gigi' },
-              { label: 'Umum', value: 'Umum' },
-            ]}
+            options={polyclinicOptions}
             placeholder={APP_STRINGS.common.searchPolyclinic}
           />
           <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />

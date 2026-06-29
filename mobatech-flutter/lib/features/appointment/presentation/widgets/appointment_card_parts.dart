@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
 
@@ -30,7 +30,7 @@ class AppointmentCardTopSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '${appointment.schedule?.date != null ? DateFormat('dd MMM yyyy').format(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
+                '${appointment.schedule?.date != null ? Formatters.formatDate(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,

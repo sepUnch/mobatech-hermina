@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class ScheduleDetailsCard extends StatelessWidget {
@@ -45,9 +45,7 @@ class ScheduleDetailsCard extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 appointment.schedule?.date != null
-                    ? DateFormat(
-                        'EEEE, dd MMM yyyy',
-                      ).format(appointment.schedule!.date!)
+                    ? Formatters.formatDate(appointment.schedule!.date!, format: 'EEEE, dd MMM yyyy')
                     : '-',
                 style: const TextStyle(color: AppColors.textDark),
               ),

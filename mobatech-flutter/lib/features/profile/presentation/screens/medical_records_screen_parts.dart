@@ -71,7 +71,7 @@ class _AppointmentsList extends StatelessWidget {
               final appt = sorted[index];
               final isDone = appt.status.toLowerCase() == 'completed';
               final dateStr = appt.schedule?.date != null
-                  ? DateFormat('dd MMM yyyy').format(appt.schedule!.date ?? DateTime.now())
+                  ? Formatters.formatDate(appt.schedule!.date ?? DateTime.now())
                   : '-';
               final docSpec = appt.doctor?.specialization ?? 'Umum';
               final docName = appt.doctor?.name ?? 'Dokter Tidak Diketahui';

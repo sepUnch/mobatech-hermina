@@ -14,6 +14,7 @@ import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { UsersFormModal } from "./UsersFormModal";
 
 import { APP_STRINGS } from "@/lib/constants";
+import { Formatters } from "@/lib/formatters";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 
@@ -115,7 +116,7 @@ export function UsersClient() {
                       <div className="text-left"><div className="font-semibold">{u.full_name}</div><div className="text-xs text-foreground/50">ID: {u.id}</div></div>
                     </div>
                   </td>
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm"><div className="font-medium">{u.email}</div><div className="text-xs text-foreground/50">{u.phone_number}</div></td>
+                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm"><div className="font-medium">{u.email}</div><div className="text-xs text-foreground/50">{Formatters.phone(u.phone_number)}</div></td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold ${u.role === "admin" ? "bg-rose-100 text-rose-700" : u.role === "doctor" ? "bg-blue-100 text-blue-700" : u.role === "pharmacist" ? "bg-amber-100 text-amber-700" : "bg-emerald-100 text-emerald-700"}`}>
                       {u.role === "admin" && <ShieldAlert size={12} />}

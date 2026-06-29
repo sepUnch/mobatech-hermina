@@ -12,7 +12,6 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName ${AppStrings.requiredField.toLowerCase()}';
     }
-    // Restrict name field to alphabetic characters and common separators.
     final nameRegex = RegExp(r"^[a-zA-Z\s\.,'-]+$");
     if (!nameRegex.hasMatch(value.trim())) {
       return AppStrings.errInvalidName;
@@ -24,29 +23,13 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
     }
-    // RFC 5322 compliant email regex pattern.
     final emailRegex = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+      r"^[^\s@]+@[^\s@]+\.(com|id|co\.id|net|org|ac\.id|go\.id|sch\.id)$",
+      caseSensitive: false,
     );
     if (!emailRegex.hasMatch(value.trim())) {
-      return AppStrings.errValidation;
-    }
-
-    // Domain validation for recognized email providers.
-    final allowedDomains = [
-      'gmail.com',
-      'yahoo.com',
-      'yahoo.co.id',
-      'outlook.com',
-      'hotmail.com',
-      'icloud.com'
-    ];
-    
-    final domain = value.trim().split('@').last.toLowerCase();
-    if (!allowedDomains.contains(domain)) {
       return AppStrings.errInvalidEmailDomain;
     }
-
     return null;
   }
 
@@ -54,9 +37,8 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
     }
-    // Strip non-numeric characters for length validation.
     final digits = value.replaceAll(RegExp(r'\D'), '');
-    if (digits.length < 8 || digits.length > 15) {
+    if (digits.length < 7 || digits.length > 12) {
       return AppStrings.errInvalidPhone;
     }
     return null;
@@ -66,7 +48,6 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
     }
-    // Enforce password complexity: Min 8 chars, mixed case, alphanumeric.
     final passwordRegex = RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$');
     if (!passwordRegex.hasMatch(value)) {
       return AppStrings.errWeakPassword;

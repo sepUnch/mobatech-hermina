@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { FormValidators } from "@/lib/validators";
 import { Doctor, Polyclinic } from "@/types/api";
 import { Modal } from "@/components/Modal";
 import { ImageUpload } from "./ImageUpload";
+import { PhoneInput } from "@/components/ui/PhoneInput";
 
 interface DoctorFormModalProps {
   isOpen: boolean;
@@ -26,12 +28,13 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
   const [name, setName] = useState("");
   const [polyclinicId, setPolyclinicId] = useState<number | undefined>();
   const [specialization, setSpecialization] = useState("");
-  const [contactInfo, setContactInfo] = useState("");
+  const [contactInfo, setContactInfo] = useState("+62");
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
+  const [errors, setErrors] = useState<{name?: string, phone?: string}>({});
 
   useEffect(() => {
     if (isOpen) {
@@ -45,7 +48,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
     setName(doctor ? doctor.name : "");
     setPolyclinicId(doctor?.polyclinic_id ?? undefined);
     setSpecialization(doctor ? doctor.specialization : "");
-    setContactInfo(doctor ? doctor.contact_info : "");
+    setContactInfo(doctor ? doctor.contact_info : "+62");
     setDescription(doctor ? doctor.description : "");
     setImageUrl(doctor ? doctor.image_url : "");
     setIsActive(doctor ? doctor.is_active : true);
@@ -62,6 +65,15 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors({});
+    
+    const nameErr = FormValidators.name(name);
+    const phoneErr = FormValidators.phone(contactInfo);
+    if (nameErr || phoneErr) {
+      setErrors({ name: nameErr || undefined, phone: phoneErr || undefined });
+      return;
+    }
+
     setSubmitting(true);
     try {
       await onSave({
@@ -87,7 +99,8 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.nameLabel}</label>
-            <input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.namePlaceholder} />
+            <input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className={`w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground ${errors.name ? 'border-error focus:border-error' : ''}`} placeholder={APP_STRINGS.doctors.namePlaceholder} />
+            {errors.name && <p className="text-xs text-error mt-1">{errors.name}</p>}
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">Poliklinik</label>
@@ -105,7 +118,8 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label>
-          <input disabled={submitting} type="text" required value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder={APP_STRINGS.doctors.contactPlaceholder} />
+          <PhoneInput disabled={submitting} value={contactInfo} onChange={setContactInfo} className={errors.phone ? 'border-error focus-within:border-error' : ''} />
+          {errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label>

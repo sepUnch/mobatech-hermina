@@ -3,6 +3,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
+  --color-dark-panel: rgba(26, 26, 26, 0.7);
   --background: #f8fafc;
   --foreground: #0f172a;
   

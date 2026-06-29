@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/constants/app_strings.dart';
+import '../../../../core/utils/validators.dart';
 
 class EmergencyFormField extends StatelessWidget {
   final TextEditingController controller;
@@ -27,7 +27,7 @@ class EmergencyFormField extends StatelessWidget {
       controller: controller,
       maxLines: maxLines,
       keyboardType: keyboardType,
-      validator: validator ?? (v) => v!.isEmpty ? AppStrings.requiredField : null,
+      validator: validator ?? (v) => Validators.validateRequired(v, hint),
       style: const TextStyle(fontSize: 15),
       decoration: InputDecoration(
         hintText: hint,

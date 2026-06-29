@@ -10,6 +10,7 @@ export const APP_STRINGS = {
     defaultColor: "#1E5E44",
     statusActive: "Status Aktif",
     active: "Aktif",
+    searchPlaceholder: "Cari promo...",
   },
 
   login: {
@@ -176,6 +177,7 @@ export const APP_STRINGS = {
     searchType: "Jenis...",
     searchPatient: "Cari nama, email, atau no HP pasien...",
     uploadExternal: "Atau tempel URL eksternal (Opsional)",
+    phonePlaceholder: "812-3456-7890",
   },
   users: {
     title: "Manajemen Pengguna",

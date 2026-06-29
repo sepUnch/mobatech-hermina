@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { LoginResponseData } from "@/types/api";
+import { FormValidators } from "@/lib/validators";
 import { Eye, EyeOff } from "lucide-react";
 
 export function LoginForm({ showToast }: { showToast: (msg: string, type: "success"|"error"|"warning") => void }) {
@@ -20,8 +21,8 @@ export function LoginForm({ showToast }: { showToast: (msg: string, type: "succe
       showToast(APP_STRINGS.login.emptyFieldsError, "warning");
       return false;
     }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    const emailError = FormValidators.email(email);
+    if (emailError) {
       showToast(APP_STRINGS.login.invalidEmailError, "warning");
       return false;
     }

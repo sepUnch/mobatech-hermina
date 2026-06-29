@@ -35,7 +35,7 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
     setToast({ isOpen: true, message, type });
   const loadUsers = async () => {
     try {
-      const res = await api.get<User[]>("/api/admin/users");
+      const res = await api.get<User[]>("/api/admin/users?role=patient");
       setUsers(res.data || []);
     } catch { /* non-blocking */ }
   };
