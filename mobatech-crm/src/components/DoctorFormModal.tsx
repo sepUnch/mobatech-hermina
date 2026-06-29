@@ -91,7 +91,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">Poliklinik</label>
-            <select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer" placeholder="Contoh: Poli Jantung & Pembuluh Darah">
+            <select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer">
               <option value="">Pilih Poliklinik</option>
               {polyclinics.filter((p) => p.is_active).map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>

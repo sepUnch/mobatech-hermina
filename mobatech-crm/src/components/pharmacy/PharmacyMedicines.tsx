@@ -9,15 +9,18 @@ import { api } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { Edit, Trash2, Package } from "lucide-react";
 import { DeleteModal } from "@/components/DeleteModal";
+import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 
-export function PharmacyMedicines({ initialMedicines, categories, showToast }: { initialMedicines: Medicine[], categories: MedicineCategory[], showToast: (msg: string, type: "success"|"error") => void }) {
+export function PharmacyMedicines({ initialMedicines, categories }: { initialMedicines: Medicine[], categories: MedicineCategory[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
   const [medicines, setMedicines] = useState<Medicine[]>(initialMedicines);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMedicine, setEditingMedicine] = useState<Partial<Medicine> | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; id: number; title: string } | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [toast, setToast] = useState<{isOpen: boolean; message: string; type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
+  const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
 
   const loadMedicines = async () => {
     try {
@@ -122,6 +125,7 @@ export function PharmacyMedicines({ initialMedicines, categories, showToast }: {
       )}
 
       <DeleteModal isOpen={deleteConfirm?.isOpen || false} onClose={() => setDeleteConfirm(null)} onConfirm={executeDelete} description={deleteConfirm?.title} />
+      <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </>
   );
 }

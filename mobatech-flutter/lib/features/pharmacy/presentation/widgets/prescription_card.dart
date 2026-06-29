@@ -16,12 +16,12 @@ class PrescriptionCard extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.backgroundWhite.withOpacity(0.15),
+          color: AppColors.backgroundWhite.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.2)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 15,
               offset: const Offset(0, 4),
             ),
@@ -67,7 +67,7 @@ class PrescriptionCard extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: isPending
-            ? AppColors.iconOrange.withOpacity(0.1)
+            ? AppColors.iconOrange.withValues(alpha: 0.1)
             : AppColors.primaryLight,
         borderRadius: BorderRadius.circular(12),
       ),
@@ -108,9 +108,11 @@ class PrescriptionCard extends ConsumerWidget {
     try {
       await ref.read(prescriptionRepositoryProvider).deletePrescription(prescription.id);
       ref.invalidate(prescriptionsProvider);
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('E-Resep berhasil dihapus')));
+      if (context.mounted) if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('E-Resep berhasil dihapus')));
     } catch (e) {
-      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gagal menghapus E-Resep')));
+      if (context.mounted) if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Gagal menghapus E-Resep')));
     }
   }
 

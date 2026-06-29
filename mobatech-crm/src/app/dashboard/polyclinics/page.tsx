@@ -8,12 +8,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const search = (await searchParams).search || "";
   
   // Example fetch, customize per page
-  let initialData = [];
+  let initialData: any = [];
   try {
     initialData = await serverFetch(`/api/polyclinics?page=${page}&search=${search}`);
   } catch (e) {
     console.error(e);
   }
 
-  return <PolyclinicsClient initialData={initialData} searchParams={searchParams} />;
+  return <PolyclinicsClient initialData={initialData} searchParams={await searchParams} />;
 }

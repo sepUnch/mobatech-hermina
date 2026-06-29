@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 import '../models/cart.dart';
-import 'medicine_repository.dart';
 
 class CartRepository {
   final Dio _dio;

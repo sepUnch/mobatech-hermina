@@ -70,29 +70,29 @@ export function BranchFormModal({
       <form onSubmit={handleSave} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.nameLabel}</label>
-          <input disabled={isLoading} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: Cabang Jakarta Pusat" />
+          <input disabled={saving} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: Cabang Jakarta Pusat" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.addressLabel}</label>
-          <textarea disabled={isLoading} required value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder="Contoh: Jl. Jend. Sudirman Kav. 21, Jakarta Selatan" />
+          <textarea disabled={saving} required value={address} onChange={(e) => setAddress(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder="Contoh: Jl. Jend. Sudirman Kav. 21, Jakarta Selatan" />
         </div>
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.latLabel}</label>
-            <input disabled={isLoading} type="number" step="any" required value={latitude} onChange={(e) => setLatitude(parseFloat(e.target.value) || 0)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: -6.2088" />
+            <input disabled={saving} type="number" step="any" required value={latitude} onChange={(e) => setLatitude(parseFloat(e.target.value) || 0)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: -6.2088" />
           </div>
           <div className="flex-1">
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.lngLabel}</label>
-            <input disabled={isLoading} type="number" step="any" required value={longitude} onChange={(e) => setLongitude(parseFloat(e.target.value) || 0)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: 106.8456" />
+            <input disabled={saving} type="number" step="any" required value={longitude} onChange={(e) => setLongitude(parseFloat(e.target.value) || 0)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: 106.8456" />
           </div>
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.gmapsLabel}</label>
-          <input disabled={isLoading} type="url" value={gmapsLink} onChange={(e) => setGmapsLink(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://maps.app.goo.gl/abcd123" />
+          <input disabled={saving} type="url" value={gmapsLink} onChange={(e) => setGmapsLink(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://maps.app.goo.gl/abcd123" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.branches.imgLabel}</label>
-          <input disabled={isLoading} type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://herminahospitals.com/image.jpg" />
+          <input disabled={saving} type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://herminahospitals.com/image.jpg" />
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <Button type="button" variant="ghost" onClick={onClose}>{APP_STRINGS.branches.cancelBtn}</Button>

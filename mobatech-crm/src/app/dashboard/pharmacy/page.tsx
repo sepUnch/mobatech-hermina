@@ -10,9 +10,9 @@ export default async function PharmacyPage({ searchParams }: { searchParams: Pro
   const page = typeof (await searchParams).page === "string" ? (await searchParams).page : "1";
   const search = typeof (await searchParams).search === "string" ? (await searchParams).search : "";
 
-  let orders = [];
-  let medicines = [];
-  let categories = [];
+  let orders: any = [];
+  let medicines: any = [];
+  let categories: any = [];
 
   try {
     if (tab === "orders") {

@@ -8,12 +8,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const search = (await searchParams).search || "";
   
   // Example fetch, customize per page
-  let initialData = [];
+  let initialData: any = [];
   try {
     initialData = await serverFetch(`/ping`);
   } catch (e) {
     console.error(e);
   }
 
-  return <AiAuditClient initialData={initialData} searchParams={searchParams} />;
+  return <AiAuditClient initialData={initialData} searchParams={await searchParams} />;
 }

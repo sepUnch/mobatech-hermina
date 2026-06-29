@@ -14,12 +14,12 @@ class MedicalResultHeader extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite.withOpacity(0.15),
+        color: AppColors.backgroundWhite.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.white.withOpacity(0.2)),
+        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 15,
             offset: const Offset(0, 5),
           ),
@@ -77,7 +77,7 @@ class MedicalResultDetailsBox extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
-            color: AppColors.primaryLight.withOpacity(0.3),
+            color: AppColors.primaryLight.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(color: AppColors.primaryLight),
           ),

@@ -10,7 +10,8 @@ export function MedicalResultsTable({
   results, 
   users, 
   onEdit, 
-  onDelete 
+  onDelete,
+  userRole 
 }: { 
   loading: boolean;
   results: MedicalResult[];

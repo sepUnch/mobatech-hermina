@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
 
 import { PharmacyOrder } from "@/types/api";
+import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { useState } from "react";
 import { Badge, BadgeVariant } from "@/components/ui/Badge";
 import { api } from "@/lib/api";
@@ -24,11 +25,13 @@ function StatusBadge({ value, type }: { value: string; type: "order" | "payment"
 const ORDER_STATUSES = ["Pending", "Verifying", "Processing", "Ready", "Completed", "Cancelled"];
 const PAYMENT_STATUSES = ["Unpaid", "Paid", "Refunded"];
 
-export function PharmacyOrders({ initialOrders, showToast }: { initialOrders: PharmacyOrder[], showToast: (msg: string, type: "success" | "error") => void }) {
+export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
   const [orders, setOrders] = useState<PharmacyOrder[]>(initialOrders);
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [toast, setToast] = useState<{isOpen: boolean; message: string; type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
+  const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
   const [filterValue, setFilterValue] = useState("");
 
   const loadOrders = async () => {
@@ -130,6 +133,7 @@ export function PharmacyOrders({ initialOrders, showToast }: { initialOrders: Ph
         ))}
       </div>
     </Card>
+      <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );
 }

@@ -8,6 +8,7 @@ export interface GormModel {
 export interface User extends GormModel {
   full_name: string;
   email: string;
+  role: string;
   phone_number: string;
   image_url?: string;
   blood_type?: string;
@@ -95,4 +96,42 @@ export interface EmergencyRequest extends GormModel {
   ambulance_lat: number;
   ambulance_lng: number;
   estimated_minutes: number;
+}
+
+export interface MedicineCategory extends GormModel {
+  name: string;
+  description?: string;
+}
+
+export interface Medicine extends GormModel {
+  name: string;
+  generic_name: string;
+  dosage: string;
+  unit: string;
+  price: number;
+  stock: number;
+  requires_prescription: boolean;
+  category_id?: number;
+  category?: MedicineCategory;
+}
+
+export interface PharmacyOrderItem extends GormModel {
+  order_id: number;
+  medicine_id: number;
+  medicine?: Medicine;
+  quantity: number;
+  subtotal: number;
+}
+
+export interface PharmacyOrder extends GormModel {
+  order_number: string;
+  user_id: number;
+  user?: User;
+  pickup_method: string;
+  status: string;
+  payment_status: string;
+  total_price: number;
+  delivery_address?: string;
+  notes?: string;
+  items?: PharmacyOrderItem[];
 }

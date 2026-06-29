@@ -8,12 +8,12 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ [
   const search = (await searchParams).search || "";
   
   // Example fetch, customize per page
-  let initialData = [];
+  let initialData: any = [];
   try {
     initialData = await serverFetch(`/api/admin/reminders?page=${page}&search=${search}`);
   } catch (e) {
     console.error(e);
   }
 
-  return <RemindersClient initialData={initialData} searchParams={searchParams} />;
+  return <RemindersClient initialData={initialData} searchParams={await searchParams} />;
 }

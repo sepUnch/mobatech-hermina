@@ -72,7 +72,7 @@ class MedicineCardDetails extends StatelessWidget {
   Widget _buildPrescriptionLabel() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: AppColors.iconOrange.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: AppColors.iconOrange.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
       child: const Text(AppStrings.prescriptionLabel, style: TextStyle(color: AppColors.iconOrange, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }

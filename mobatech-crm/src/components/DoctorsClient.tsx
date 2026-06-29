@@ -81,7 +81,15 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
     setShowSchedModal(true);
   };
 
-  const handleSave = async (payload: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) => {
+  const handleSave = async (payload: {
+    name: string;
+    specialization: string;
+    polyclinic_id?: number;
+    contact_info: string;
+    description: string;
+    image_url: string;
+    is_active: boolean;
+  }) => {
     try {
       if (selectedItem) {
         await api.put(`/api/admin/doctors/${selectedItem.id}`, payload);

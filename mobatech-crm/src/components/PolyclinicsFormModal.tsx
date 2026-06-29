@@ -37,18 +37,18 @@ export function PolyclinicsFormModal({
       <form onSubmit={handleSave} className="space-y-4">
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.polyclinics.nameLabel}</label>
-          <input disabled={isLoading} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: Poli Jantung & Pembuluh Darah" />
+          <input disabled={saving} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: Poli Jantung & Pembuluh Darah" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.polyclinics.descLabel}</label>
-          <textarea disabled={isLoading} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder="Contoh: Layanan spesialis untuk diagnosis dan pengobatan penyakit jantung." />
+          <textarea disabled={saving} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder="Contoh: Layanan spesialis untuk diagnosis dan pengobatan penyakit jantung." />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.polyclinics.imgLabel}</label>
-          <input disabled={isLoading} type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://herminahospitals.com/poli-jantung.jpg" />
+          <input disabled={saving} type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder="Contoh: https://herminahospitals.com/poli-jantung.jpg" />
         </div>
         <div className="flex items-center gap-2">
-          <input disabled={isLoading} type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
+          <input disabled={saving} type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
           <label htmlFor="isActive" className="text-xs font-semibold cursor-pointer">{APP_STRINGS.polyclinics.activeLabel}</label>
         </div>
         <div className="flex justify-end gap-2 pt-2">

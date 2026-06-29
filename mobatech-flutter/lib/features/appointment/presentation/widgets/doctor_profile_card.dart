@@ -17,7 +17,7 @@ class DoctorProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor.withOpacity(0.05),
+            color: AppColors.shadowColor.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -28,7 +28,7 @@ class DoctorProfileCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            color: AppColors.backgroundWhite.withOpacity(0.85),
+            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
