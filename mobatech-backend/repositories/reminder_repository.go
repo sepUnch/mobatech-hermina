@@ -7,7 +7,7 @@ import (
 )
 
 type ReminderRepository interface {
-	FindAll() ([]models.Reminder, error)
+	FindAll(search string, filter string) ([]models.Reminder, error)
 	FindByUserID(userID uint) ([]models.Reminder, error)
 	FindUnreadCountByUserID(userID uint) (int64, error)
 	FindByID(id uint) (*models.Reminder, error)
@@ -24,9 +24,20 @@ func NewReminderRepository(db *gorm.DB) ReminderRepository {
 	return &reminderRepository{db}
 }
 
-func (r *reminderRepository) FindAll() ([]models.Reminder, error) {
+func (r *reminderRepository) FindAll(search string, filter string) ([]models.Reminder, error) {
 	var reminders []models.Reminder
-	err := r.db.Order("created_at desc").Find(&reminders).Error
+	query := r.db.Joins("LEFT JOIN users ON users.id = reminders.user_id")
+
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("reminders.title LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
+	}
+
+	if filter != "" {
+		query = query.Where("type = ?", filter)
+	}
+
+	err := query.Order("reminders.created_at desc").Find(&reminders).Error
 	return reminders, err
 }
 

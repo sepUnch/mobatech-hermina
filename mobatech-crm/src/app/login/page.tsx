@@ -1,22 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useAuthStore } from "@/store/useAuthStore";
-import { api, ApiError } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { APP_STRINGS } from "@/lib/constants";
-import { LoginResponseData } from "@/types/api";
+import { LoginForm } from "@/components/LoginForm";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const setAuth = useAuthStore((state) => state.setAuth);
-  
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const [dark, setDark] = useState(false);
-
   const [toast, setToast] = useState<{
     isOpen: boolean;
     message: string;
@@ -42,40 +32,6 @@ export default function LoginPage() {
     setToast({ isOpen: true, message, type });
   };
 
-  const validateForm = () => {
-    if (!email || !password) {
-      showToast(APP_STRINGS.login.emptyFieldsError, "warning");
-      return false;
-    }
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      showToast(APP_STRINGS.login.invalidEmailError, "warning");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setLoading(true);
-    try {
-      const res = await api.post<LoginResponseData>("/api/auth/login", { email, password });
-      setAuth(res.data.token, res.data.user);
-      showToast(APP_STRINGS.login.successMessage, "success");
-      setTimeout(() => router.replace("/dashboard"), 1500);
-    } catch (err) {
-      setLoading(false);
-      if (err instanceof ApiError) {
-        const errorMsg = APP_STRINGS.errors[err.code as keyof typeof APP_STRINGS.errors] || err.message;
-        showToast(errorMsg, "error");
-      } else {
-        showToast(APP_STRINGS.login.networkError, "error");
-      }
-    }
-  };
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 relative overflow-hidden transition-colors duration-300">
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
@@ -98,43 +54,7 @@ export default function LoginPage() {
           <p className="text-sm text-foreground/60 text-center mt-2">{APP_STRINGS.login.subtitle}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase tracking-wider">
-              {APP_STRINGS.login.emailLabel}
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder={APP_STRINGS.login.emailPlaceholder}
-              className="w-full h-11 px-4 rounded-xl border glass-input text-sm text-foreground"
-              disabled={loading}
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-foreground/80 mb-2 uppercase tracking-wider">
-              {APP_STRINGS.login.passwordLabel}
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder={APP_STRINGS.login.passwordPlaceholder}
-              className="w-full h-11 px-4 rounded-xl border glass-input text-sm text-foreground"
-              disabled={loading}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground font-medium rounded-xl transition-all duration-200 shadow-md flex items-center justify-center disabled:opacity-50 cursor-pointer"
-          >
-            {loading ? APP_STRINGS.login.submittingButton : APP_STRINGS.login.submitButton}
-          </button>
-        </form>
+        <LoginForm showToast={showToast} />
       </main>
 
       <CustomSnackbar

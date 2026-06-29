@@ -1,4 +1,6 @@
+import axios, { AxiosRequestConfig, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from "@/store/useAuthStore";
+import { encryptData, decryptData } from "./crypto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
@@ -13,7 +15,6 @@ export class ApiError extends Error {
   code: string;
   status: number;
   errors?: any;
-
   constructor(code: string, status: number, message: string, errors?: any) {
     super(message);
     this.code = code;
@@ -23,85 +24,120 @@ export class ApiError extends Error {
   }
 }
 
-function getErrorCode(status: number): string {
-  switch (status) {
-    case 401: return "UNAUTHENTICATED";
-    case 403: return "UNAUTHORIZED";
-    case 404: return "NOT_FOUND";
-    case 409: return "CONFLICT";
-    case 422: return "VALIDATION_ERROR";
-    default: return "INTERNAL_ERROR";
+const axiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
   }
+});
+
+export interface CustomRequestConfig extends AxiosRequestConfig {
+  securePayload?: boolean;
 }
 
-function normalizeKeys(obj: any): any {
-  if (Array.isArray(obj)) {
-    return obj.map(normalizeKeys);
-  } else if (obj !== null && typeof obj === "object") {
-    const newObj: any = {};
-    for (const key in obj) {
-      if (Object.prototype.hasOwnProperty.call(obj, key)) {
-        let newKey = key;
-        if (key === "ID") newKey = "id";
-        else if (key === "CreatedAt") newKey = "created_at";
-        else if (key === "UpdatedAt") newKey = "updated_at";
-        else if (key === "DeletedAt") newKey = "deleted_at";
-        newObj[newKey] = normalizeKeys(obj[key]);
+interface CustomInternalConfig extends InternalAxiosRequestConfig {
+  securePayload?: boolean;
+}
+
+axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
+  let token = useAuthStore.getState().token;
+  
+  if (!token && typeof window !== "undefined") {
+    try {
+      const stored = localStorage.getItem("hermina-crm-auth");
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        token = parsed?.state?.token;
+      }
+    } catch (e) {
+      console.error("Failed to read token from localStorage", e);
+    }
+  }
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  
+  if (config.securePayload && config.data) {
+    try {
+      const stringData = JSON.stringify(config.data);
+      const encrypted = await encryptData(stringData);
+      config.data = { encrypted_payload: encrypted };
+    } catch (e) {
+      console.error("Encryption failed in interceptor:", e);
+    }
+  }
+  return config;
+}, (error) => Promise.reject(error));
+
+axiosInstance.interceptors.response.use(
+  async (response) => {
+    if (response.data && response.data.encrypted_payload) {
+      try {
+        const decryptedStr = await decryptData(response.data.encrypted_payload);
+        response.data = JSON.parse(decryptedStr);
+      } catch (e) {
+        console.error("Decryption failed for response payload", e);
       }
     }
-    return newObj;
+    
+    const normalizeKeys = (obj: any): any => {
+      if (Array.isArray(obj)) return obj.map(normalizeKeys);
+      else if (obj !== null && typeof obj === "object") {
+        const newObj: any = {};
+        for (const key in obj) {
+          if (Object.prototype.hasOwnProperty.call(obj, key)) {
+            let newKey = key;
+            if (key === "ID") newKey = "id";
+            else if (key === "CreatedAt") newKey = "created_at";
+            else if (key === "UpdatedAt") newKey = "updated_at";
+            else if (key === "DeletedAt") newKey = "deleted_at";
+            newObj[newKey] = normalizeKeys(obj[key]);
+          }
+        }
+        return newObj;
+      }
+      return obj;
+    };
+    
+    response.data = normalizeKeys(response.data);
+    return response;
+  },
+  (error: AxiosError<any>) => {
+    const status = error.response?.status || 500;
+    const responseData = error.response?.data || {};
+    
+    let errorCode = responseData.code || "INTERNAL_ERROR";
+    if (!responseData.code) {
+      switch (status) {
+        case 401: errorCode = "UNAUTHENTICATED"; break;
+        case 403: errorCode = "UNAUTHORIZED"; break;
+        case 404: errorCode = "NOT_FOUND"; break;
+        case 409: errorCode = "CONFLICT"; break;
+        case 422: errorCode = "VALIDATION_ERROR"; break;
+      }
+    }
+    const errorMessage = responseData.message || error.message || "Terjadi kesalahan koneksi.";
+    
+    return Promise.reject(new ApiError(errorCode, status, errorMessage, responseData.errors));
   }
-  return obj;
-}
-
-async function request<T>(
-  path: string,
-  options: RequestInit = {}
-): Promise<ApiResponse<T>> {
-  // Use lazy loading for auth store to avoid circular imports during startup
-  const token = useAuthStore.getState().token;
-  
-  const headers = new Headers(options.headers);
-  headers.set("Content-Type", "application/json");
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-  
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...options,
-    headers,
-  });
-  
-  const rawData = await response.json().catch(() => ({}));
-  const data = normalizeKeys(rawData);
-  
-  if (!response.ok) {
-    const errorCode = data.code || getErrorCode(response.status);
-    const errorMessage = data.message || "Terjadi kesalahan koneksi.";
-    throw new ApiError(errorCode, response.status, errorMessage, data.errors);
-  }
-  
-  return data as ApiResponse<T>;
-}
+);
 
 export const api = {
-  get: <T>(path: string, options?: RequestInit) => 
-    request<T>(path, { ...options, method: "GET" }),
-    
-  post: <T>(path: string, body: any, options?: RequestInit) => 
-    request<T>(path, {
-      ...options,
-      method: "POST",
-      body: JSON.stringify(body),
-    }),
-    
-  put: <T>(path: string, body: any, options?: RequestInit) => 
-    request<T>(path, {
-      ...options,
-      method: "PUT",
-      body: JSON.stringify(body),
-    }),
-    
-  delete: <T>(path: string, options?: RequestInit) => 
-    request<T>(path, { ...options, method: "DELETE" }),
+  get: async <T>(path: string, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+    const res = await axiosInstance.get<ApiResponse<T>>(path, options);
+    return res.data;
+  },
+  post: async <T>(path: string, body: any, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+    const res = await axiosInstance.post<ApiResponse<T>>(path, body, options);
+    return res.data;
+  },
+  put: async <T>(path: string, body: any, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+    const res = await axiosInstance.put<ApiResponse<T>>(path, body, options);
+    return res.data;
+  },
+  delete: async <T>(path: string, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
+    const res = await axiosInstance.delete<ApiResponse<T>>(path, options);
+    return res.data;
+  }
 };

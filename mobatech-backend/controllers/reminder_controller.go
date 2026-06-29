@@ -20,7 +20,9 @@ func NewReminderController(service services.ReminderService) *ReminderController
 
 // GET /api/admin/reminders
 func (c *ReminderController) GetAll(ctx *gin.Context) {
-	reminders, err := c.service.GetAllReminders()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	reminders, err := c.service.GetAllReminders(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

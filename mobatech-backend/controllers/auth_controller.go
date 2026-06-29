@@ -74,7 +74,9 @@ func (c *AuthController) Me(ctx *gin.Context) {
 }
 
 func (c *AuthController) GetAllUsers(ctx *gin.Context) {
-	users, err := c.service.GetAllUsers()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	users, err := c.service.GetAllUsers(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

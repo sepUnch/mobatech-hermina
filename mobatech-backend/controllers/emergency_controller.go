@@ -63,7 +63,9 @@ func (c *EmergencyController) GetUserHistory(ctx *gin.Context) {
 }
 
 func (c *EmergencyController) GetAllAdmin(ctx *gin.Context) {
-	reqs, err := c.service.GetAllRequests()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	reqs, err := c.service.GetAllRequests(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

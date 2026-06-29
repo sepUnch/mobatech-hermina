@@ -19,7 +19,9 @@ func NewHospitalServiceController(service services.HospitalServiceService) *Hosp
 }
 
 func (c *HospitalServiceController) GetAll(ctx *gin.Context) {
-	services, err := c.service.GetAll()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	services, err := c.service.GetAll(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

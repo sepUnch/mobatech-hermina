@@ -18,7 +18,7 @@ type AuthService interface {
 	UpdateProfile(userID uint, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) (*models.User, error)
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
-	GetAllUsers() ([]models.User, error)
+	GetAllUsers(search string, filter string) ([]models.User, error)
 }
 
 type authService struct {
@@ -61,6 +61,7 @@ func (s *authService) Login(email, password string) (string, *models.User, error
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": user.ID,
+		"role":    user.Role,
 		"exp":     time.Now().Add(time.Hour * 72).Unix(),
 	})
 
@@ -104,8 +105,8 @@ func (s *authService) DeleteFamilyMember(id uint) error {
 	return s.repo.DeleteFamilyMember(id)
 }
 
-func (s *authService) GetAllUsers() ([]models.User, error) {
-	return s.repo.GetAllUsers()
+func (s *authService) GetAllUsers(search string, filter string) ([]models.User, error) {
+	return s.repo.GetAllUsers(search, filter)
 }
 
 func (s *authService) applyProfileUpdates(user *models.User, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) {

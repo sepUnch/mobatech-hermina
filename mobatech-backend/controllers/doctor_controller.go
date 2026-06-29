@@ -20,12 +20,14 @@ func NewDoctorController(doctorService services.DoctorService) *DoctorController
 
 // GET /api/doctors?specialization=...&polyclinic_id=...
 func (c *DoctorController) GetDoctors(ctx *gin.Context) {
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
 	specialization := ctx.Query("specialization")
 	polyclinicID, _ := strconv.ParseUint(ctx.DefaultQuery("polyclinic_id", "0"), 10, 32)
 	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "100"))
 	offset, _ := strconv.Atoi(ctx.DefaultQuery("offset", "0"))
 
-	doctors, err := c.doctorService.GetAllDoctors(specialization, uint(polyclinicID), limit, offset)
+	doctors, err := c.doctorService.GetAllDoctors(search, filter, specialization, uint(polyclinicID), limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

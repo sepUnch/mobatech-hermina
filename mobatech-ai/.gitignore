@@ -1,0 +1,19 @@
+# Environments
+.env
+.env*
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Data
+# DO NOT ignore mock_medical_knowledge.csv as it's the seed for RAG
+# data/
+
+# Misc
+.DS_Store

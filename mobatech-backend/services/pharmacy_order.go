@@ -49,8 +49,8 @@ func (s *pharmacyService) GetOrderByID(id uint) (*models.PharmacyOrder, error) {
 	return s.repo.GetOrderByID(id)
 }
 
-func (s *pharmacyService) GetAllOrders() ([]models.PharmacyOrder, error) {
-	return s.repo.GetAllOrders()
+func (s *pharmacyService) GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error) {
+	return s.repo.GetAllOrders(search, filter)
 }
 
 func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {

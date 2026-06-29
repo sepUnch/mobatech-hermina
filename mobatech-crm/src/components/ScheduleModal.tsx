@@ -101,24 +101,24 @@ export function ScheduleModal({ isOpen, onClose, doctor, onChange }: ScheduleMod
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.dateLabel}</label>
-              <input type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+              <input disabled={loading} type="date" required value={date} onChange={(e) => setDate(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" placeholder="Contoh: 2023-12-31" />
             </div>
             <div>
               <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.quotaLabel}</label>
-              <input type="number" required value={quota} onChange={(e) => setQuota(Number(e.target.value))} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+              <input disabled={loading} type="number" required value={quota} onChange={(e) => setQuota(Number(e.target.value))} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" placeholder="Contoh: 20" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.startLabel}</label>
-              <input type="text" required placeholder="08:00" value={startTime} onChange={(e) => setStartTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+              <input disabled={loading} type="text" required placeholder="Contoh: 08:00" value={startTime} onChange={(e) => setStartTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
             </div>
             <div>
               <label className="block text-[10px] font-bold mb-1 uppercase text-foreground/75">{APP_STRINGS.schedules.endLabel}</label>
-              <input type="text" required placeholder="12:00" value={endTime} onChange={(e) => setEndTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
+              <input disabled={loading} type="text" required placeholder="Contoh: 12:00" value={endTime} onChange={(e) => setEndTime(e.target.value)} className="w-full h-9 px-3 rounded-lg border glass-input text-xs text-foreground" />
             </div>
           </div>
-          <button type="submit" className="w-full h-9 bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-semibold rounded-lg transition-colors cursor-pointer">{APP_STRINGS.schedules.saveBtn}</button>
+          <button type="submit" disabled={loading} className="w-full h-9 bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-semibold rounded-lg transition-colors cursor-pointer">{APP_STRINGS.schedules.saveBtn}</button>
         </form>
 
         <div className="space-y-3">

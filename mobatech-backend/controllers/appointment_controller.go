@@ -20,7 +20,9 @@ func NewAppointmentController(appointmentService services.AppointmentService) *A
 
 // GET /api/admin/appointments
 func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
-	appointments, err := c.appointmentService.GetAllAppointments()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	appointments, err := c.appointmentService.GetAllAppointments(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

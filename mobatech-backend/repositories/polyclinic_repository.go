@@ -7,7 +7,7 @@ import (
 )
 
 type PolyclinicRepository interface {
-	FindAll() ([]models.Polyclinic, error)
+	FindAll(search string, filter string) ([]models.Polyclinic, error)
 	FindByID(id uint) (*models.Polyclinic, error)
 	Create(polyclinic *models.Polyclinic) error
 	Update(polyclinic *models.Polyclinic) error
@@ -27,9 +27,19 @@ func NewPolyclinicRepository(db *gorm.DB) PolyclinicRepository {
 	return &polyclinicRepository{db}
 }
 
-func (r *polyclinicRepository) FindAll() ([]models.Polyclinic, error) {
+func (r *polyclinicRepository) FindAll(search string, filter string) ([]models.Polyclinic, error) {
 	var polyclinics []models.Polyclinic
-	err := r.db.Preload("Schedules").Preload("Doctors").Find(&polyclinics).Error
+	query := r.db.Preload("Schedules").Preload("Doctors")
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("name LIKE ?", searchTerm)
+	}
+	if filter == "active" {
+		query = query.Where("is_active = ?", true)
+	} else if filter == "inactive" {
+		query = query.Where("is_active = ?", false)
+	}
+	err := query.Find(&polyclinics).Error
 	return polyclinics, err
 }
 

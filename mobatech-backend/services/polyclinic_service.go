@@ -7,7 +7,7 @@ import (
 )
 
 type PolyclinicService interface {
-	GetAllPolyclinics() ([]models.Polyclinic, error)
+	GetAllPolyclinics(search string, filter string) ([]models.Polyclinic, error)
 	GetPolyclinicByID(id uint) (*models.Polyclinic, error)
 	CreatePolyclinic(polyclinic *models.Polyclinic) error
 	UpdatePolyclinic(polyclinic *models.Polyclinic) error
@@ -27,8 +27,8 @@ func NewPolyclinicService(repo repositories.PolyclinicRepository) PolyclinicServ
 	return &polyclinicService{repo}
 }
 
-func (s *polyclinicService) GetAllPolyclinics() ([]models.Polyclinic, error) {
-	return s.repo.FindAll()
+func (s *polyclinicService) GetAllPolyclinics(search string, filter string) ([]models.Polyclinic, error) {
+	return s.repo.FindAll(search, filter)
 }
 
 func (s *polyclinicService) GetPolyclinicByID(id uint) (*models.Polyclinic, error) {

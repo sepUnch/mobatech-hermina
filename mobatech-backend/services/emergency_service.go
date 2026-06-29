@@ -9,7 +9,7 @@ type EmergencyService interface {
 	CreateRequest(req *models.EmergencyRequest) error
 	GetByID(id uint) (*models.EmergencyRequest, error)
 	GetHistoryByUser(userID uint) ([]models.EmergencyRequest, error)
-	GetAllRequests() ([]models.EmergencyRequest, error)
+	GetAllRequests(search string, filter string) ([]models.EmergencyRequest, error)
 	UpdateStatus(id uint, status string) error
 	UpdateTracking(id uint, ambulanceLat, ambulanceLng float64, estimatedMinutes int, status string) error
 }
@@ -35,8 +35,8 @@ func (s *emergencyService) GetHistoryByUser(userID uint) ([]models.EmergencyRequ
 	return s.repo.GetByUserID(userID)
 }
 
-func (s *emergencyService) GetAllRequests() ([]models.EmergencyRequest, error) {
-	return s.repo.GetAll()
+func (s *emergencyService) GetAllRequests(search string, filter string) ([]models.EmergencyRequest, error) {
+	return s.repo.GetAll(search, filter)
 }
 
 func (s *emergencyService) UpdateStatus(id uint, status string) error {

@@ -115,40 +115,24 @@ class EmergencyController extends AutoDisposeNotifier<EmergencyScreenState> {
   }
 
   void _simulateTracking() {
-    final baseLat = state.userLat ?? -6.2088;
-    final baseLng = state.userLng ?? 106.8456;
-    double ambLat = baseLat + 0.015 + Random().nextDouble() * 0.005;
-    double ambLng = baseLng + 0.015 + Random().nextDouble() * 0.005;
-    int minutes = 8;
+    final bLat = state.userLat ?? -6.2088;
+    final bLng = state.userLng ?? 106.8456;
+    double aLat = bLat + 0.015 + Random().nextDouble() * 0.005;
+    double aLng = bLng + 0.015 + Random().nextDouble() * 0.005;
+    int mins = 8;
 
-    state = state.copyWith(
-      status: EmergencyStatus.tracking,
-      ambulanceLat: ambLat,
-      ambulanceLng: ambLng,
-      estimatedMinutes: minutes,
-      isLoading: false,
-    );
-
+    state = state.copyWith(status: EmergencyStatus.tracking, ambulanceLat: aLat, ambulanceLng: aLng, estimatedMinutes: mins, isLoading: false);
     _simulationTimer = Timer.periodic(const Duration(seconds: 3), (timer) {
-      ambLat += (baseLat - ambLat) * 0.15;
-      ambLng += (baseLng - ambLng) * 0.15;
-      minutes = max(1, minutes - 1);
+      aLat += (bLat - aLat) * 0.15;
+      aLng += (bLng - aLng) * 0.15;
+      mins = max(1, mins - 1);
 
-      if (sqrt(pow(baseLat - ambLat, 2) + pow(baseLng - ambLng, 2)) < 0.001) {
+      if (sqrt(pow(bLat - aLat, 2) + pow(bLng - aLng, 2)) < 0.001) {
         timer.cancel();
-        state = state.copyWith(
-          ambulanceLat: baseLat,
-          ambulanceLng: baseLng,
-          estimatedMinutes: 0,
-          status: EmergencyStatus.arrived,
-        );
+        state = state.copyWith(ambulanceLat: bLat, ambulanceLng: bLng, estimatedMinutes: 0, status: EmergencyStatus.arrived);
         return;
       }
-      state = state.copyWith(
-        ambulanceLat: ambLat,
-        ambulanceLng: ambLng,
-        estimatedMinutes: minutes,
-      );
+      state = state.copyWith(ambulanceLat: aLat, ambulanceLng: aLng, estimatedMinutes: mins);
     });
   }
 }

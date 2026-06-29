@@ -7,7 +7,7 @@ import (
 )
 
 type DoctorRepository interface {
-	FindAll(specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error)
+	FindAll(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error)
 	FindByID(id uint) (*models.Doctor, error)
 	Create(doctor *models.Doctor) error
 	Update(doctor *models.Doctor) error
@@ -22,9 +22,15 @@ func NewDoctorRepository(db *gorm.DB) DoctorRepository {
 	return &doctorRepository{db}
 }
 
-func (r *doctorRepository) FindAll(specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error) {
+func (r *doctorRepository) FindAll(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error) {
 	var doctors []models.Doctor
-	query := r.db.Preload("Polyclinic").Where("is_active = ?", true)
+	query := r.db.Preload("Polyclinic").Where("doctors.is_active = ?", true)
+	if search != "" {
+		query = query.Where("doctors.name LIKE ?", "%"+search+"%")
+	}
+	if filter != "" {
+		query = query.Joins("LEFT JOIN polyclinics ON polyclinics.id = doctors.polyclinic_id").Where("polyclinics.name LIKE ?", "%"+filter+"%")
+	}
 	if specialization != "" {
 		query = query.Where("specialization = ?", specialization)
 	}

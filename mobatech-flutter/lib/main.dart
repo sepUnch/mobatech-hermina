@@ -16,7 +16,6 @@ void main() async {
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
     if (kReleaseMode) {
-      // TODO: Log to Sentry or Firebase Crashlytics
     }
   };
 

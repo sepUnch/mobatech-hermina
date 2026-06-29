@@ -59,7 +59,7 @@ export function CustomSnackbar({
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 animate-slide-in">
+    <div className="fixed top-6 right-6 z-[9999] animate-slide-in">
       <div className={`flex items-center gap-3 px-4 py-3 rounded-xl border glass-panel backdrop-blur-xl ${bgStyles[type]}`}>
         {icons[type]}
         <span className="text-sm font-medium">{message}</span>

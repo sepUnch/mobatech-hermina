@@ -2,3 +2,7 @@
 backend
 backend.log
 backend.pid
+backend.exe
+temp_server
+*.db
+uploads/

@@ -20,7 +20,9 @@ func NewMedicalResultController(service services.MedicalResultService) *MedicalR
 
 // GET /api/admin/medical-results
 func (c *MedicalResultController) GetAll(ctx *gin.Context) {
-	results, err := c.service.GetAllMedicalResults()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	results, err := c.service.GetAllMedicalResults(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
@@ -58,6 +60,12 @@ func (c *MedicalResultController) GetByID(ctx *gin.Context) {
 
 // POST /api/admin/medical-results
 func (c *MedicalResultController) Create(ctx *gin.Context) {
+	role, exists := ctx.Get("role")
+	if !exists || role != "doctor" {
+		ctx.JSON(http.StatusForbidden, utils.BuildError(utils.ErrUnauthorized, "Aksi klinis ditolak. Hanya Dokter yang berhak menambah hasil medis.", nil))
+		return
+	}
+
 	var req models.MedicalResult
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.Error(utils.NewValidationError(err.Error()))

@@ -7,7 +7,7 @@ import (
 )
 
 type MedicalResultRepository interface {
-	FindAll() ([]models.MedicalResult, error)
+	FindAll(search string, filter string) ([]models.MedicalResult, error)
 	FindByUserID(userID uint) ([]models.MedicalResult, error)
 	FindByID(id uint) (*models.MedicalResult, error)
 	Create(medicalResult *models.MedicalResult) error
@@ -23,9 +23,24 @@ func NewMedicalResultRepository(db *gorm.DB) MedicalResultRepository {
 	return &medicalResultRepository{db}
 }
 
-func (r *medicalResultRepository) FindAll() ([]models.MedicalResult, error) {
+func (r *medicalResultRepository) FindAll(search string, filter string) ([]models.MedicalResult, error) {
 	var results []models.MedicalResult
-	err := r.db.Order("created_at desc").Find(&results).Error
+	query := r.db.Joins("LEFT JOIN users ON users.id = medical_results.user_id")
+	
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("medical_results.test_name LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
+	}
+	
+	if filter == "newest" {
+		query = query.Order("medical_results.date_of_test desc")
+	} else if filter == "oldest" {
+		query = query.Order("medical_results.date_of_test asc")
+	} else {
+		query = query.Order("medical_results.created_at desc")
+	}
+	
+	err := query.Find(&results).Error
 	return results, err
 }
 

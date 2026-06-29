@@ -145,13 +145,6 @@ class _ScheduleInfo extends StatelessWidget {
     return 'Jadwal belum ditentukan';
   }
 
-  String _getDayOfWeek(DateTime date) {
-    final days = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'];
-    return days[date.weekday - 1];
-  }
-
-  String _formatDate(DateTime date) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
-    return '${date.day} ${months[date.month - 1]} ${date.year}';
-  }
+  String _getDayOfWeek(DateTime d) => ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'][d.weekday-1];
+  String _formatDate(DateTime d) => '${d.day} ${['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.month-1]} ${d.year}';
 }

@@ -17,5 +17,6 @@ type User struct {
 	Allergies     string         `json:"allergies"`
 	DateOfBirth   string         `json:"date_of_birth"`
 	Gender        string         `json:"gender"`
+	Role          string         `json:"role" gorm:"default:'patient'"`
 	FamilyMembers []FamilyMember `json:"family_members" gorm:"foreignKey:UserID"`
 }

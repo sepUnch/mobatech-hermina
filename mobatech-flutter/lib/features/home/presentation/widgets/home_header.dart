@@ -13,7 +13,7 @@ class HomeHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final userProfile = ref.watch(userProfileProvider).value;
+    final userProfile = ref.watch(userProfileProvider).valueOrNull;
     final firstName =
         userProfile?.fullName.split(' ').first ?? AppStrings.defaultUser;
 
@@ -102,8 +102,8 @@ class HomeHeader extends ConsumerWidget {
                                 ),
                                 onPressed: () => context.push('/notifications'),
                               ),
-                              if (unreadCountAsync.value != null &&
-                                  unreadCountAsync.value! > 0)
+                              if (unreadCountAsync.valueOrNull != null &&
+                                  unreadCountAsync.valueOrNull! > 0)
                                 Positioned(
                                   right: 6,
                                   top: 6,
@@ -114,7 +114,7 @@ class HomeHeader extends ConsumerWidget {
                                       shape: BoxShape.circle,
                                     ),
                                     child: Text(
-                                      unreadCountAsync.value!.toString(),
+                                      unreadCountAsync.valueOrNull!.toString(),
                                       style: const TextStyle(
                                         color: AppColors.textWhite,
                                         fontSize: 10,

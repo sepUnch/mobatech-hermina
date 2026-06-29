@@ -33,7 +33,7 @@ type PharmacyRepository interface {
 	// Orders
 	GetOrdersByUserID(userID uint) ([]models.PharmacyOrder, error)
 	GetOrderByID(id uint) (*models.PharmacyOrder, error)
-	GetAllOrders() ([]models.PharmacyOrder, error)
+	GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error)
 	CreateOrder(order *models.PharmacyOrder) error
 	UpdateOrderStatus(id uint, status string) error
 	UpdateOrderPayment(id uint, paymentStatus string) error

@@ -7,7 +7,7 @@ import (
 )
 
 type MedicalResultService interface {
-	GetAllMedicalResults() ([]models.MedicalResult, error)
+	GetAllMedicalResults(search string, filter string) ([]models.MedicalResult, error)
 	GetUserMedicalResults(userID uint) ([]models.MedicalResult, error)
 	GetMedicalResultByID(id uint) (*models.MedicalResult, error)
 	CreateMedicalResult(req *models.MedicalResult) (*models.MedicalResult, error)
@@ -23,8 +23,8 @@ func NewMedicalResultService(repo repositories.MedicalResultRepository) MedicalR
 	return &medicalResultService{repo}
 }
 
-func (s *medicalResultService) GetAllMedicalResults() ([]models.MedicalResult, error) {
-	return s.repo.FindAll()
+func (s *medicalResultService) GetAllMedicalResults(search string, filter string) ([]models.MedicalResult, error) {
+	return s.repo.FindAll(search, filter)
 }
 
 func (s *medicalResultService) GetUserMedicalResults(userID uint) ([]models.MedicalResult, error) {

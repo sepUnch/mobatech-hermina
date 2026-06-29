@@ -7,7 +7,7 @@ import (
 )
 
 type AppointmentRepository interface {
-	FindAll() ([]models.Appointment, error)
+	FindAll(search string, filter string) ([]models.Appointment, error)
 	FindByUserID(userID uint) ([]models.Appointment, error)
 	FindByID(id uint) (*models.Appointment, error)
 	Create(appointment *models.Appointment) error
@@ -22,11 +22,22 @@ func NewAppointmentRepository(db *gorm.DB) AppointmentRepository {
 	return &appointmentRepository{db}
 }
 
-func (r *appointmentRepository) FindAll() ([]models.Appointment, error) {
+func (r *appointmentRepository) FindAll(search string, filter string) ([]models.Appointment, error) {
 	var appointments []models.Appointment
-	err := r.db.Preload("User").Preload("Doctor").Preload("Schedule").
-		Order("created_at desc").
-		Find(&appointments).Error
+	query := r.db.Preload("User").Preload("Doctor").Preload("Schedule").
+		Joins("LEFT JOIN users ON users.id = appointments.user_id")
+		
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("appointments.complaint LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
+	}
+	if filter == "today" {
+		query = query.Where("DATE(schedule_date) = CURDATE()")
+	} else if filter == "tomorrow" {
+		query = query.Where("DATE(schedule_date) = CURDATE() + INTERVAL 1 DAY")
+	}
+	
+	err := query.Order("appointments.created_at desc").Find(&appointments).Error
 	return appointments, err
 }
 

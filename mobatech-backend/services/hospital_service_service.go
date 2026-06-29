@@ -6,7 +6,7 @@ import (
 )
 
 type HospitalServiceService interface {
-	GetAll() ([]models.HospitalService, error)
+	GetAll(search string, filter string) ([]models.HospitalService, error)
 	GetByID(id uint) (*models.HospitalService, error)
 	Create(service *models.HospitalService) error
 	Update(service *models.HospitalService) error
@@ -21,8 +21,8 @@ func NewHospitalServiceService(repo repositories.HospitalServiceRepository) Hosp
 	return &hospitalServiceService{repo}
 }
 
-func (s *hospitalServiceService) GetAll() ([]models.HospitalService, error) {
-	return s.repo.GetAll()
+func (s *hospitalServiceService) GetAll(search string, filter string) ([]models.HospitalService, error) {
+	return s.repo.GetAll(search, filter)
 }
 
 func (s *hospitalServiceService) GetByID(id uint) (*models.HospitalService, error) {

@@ -7,7 +7,7 @@ import (
 )
 
 type AppointmentService interface {
-	GetAllAppointments() ([]models.Appointment, error)
+	GetAllAppointments(search string, filter string) ([]models.Appointment, error)
 	GetUserAppointments(userID uint) ([]models.Appointment, error)
 	BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error)
 	CancelAppointment(id uint, userID uint, isAdmin bool) error
@@ -24,8 +24,8 @@ func NewAppointmentService(appointmentRepo repositories.AppointmentRepository, s
 	return &appointmentService{appointmentRepo, scheduleRepo}
 }
 
-func (s *appointmentService) GetAllAppointments() ([]models.Appointment, error) {
-	return s.appointmentRepo.FindAll()
+func (s *appointmentService) GetAllAppointments(search string, filter string) ([]models.Appointment, error) {
+	return s.appointmentRepo.FindAll(search, filter)
 }
 
 func (s *appointmentService) GetUserAppointments(userID uint) ([]models.Appointment, error) {

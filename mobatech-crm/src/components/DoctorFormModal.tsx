@@ -5,6 +5,7 @@ import { api } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Doctor, Polyclinic } from "@/types/api";
 import { Modal } from "@/components/Modal";
+import { DoctorImageUpload } from "./DoctorImageUpload";
 
 interface DoctorFormModalProps {
   isOpen: boolean;
@@ -30,7 +31,6 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
   const [imageUrl, setImageUrl] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [uploadingImage, setUploadingImage] = useState(false);
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
 
   useEffect(() => {
@@ -57,30 +57,6 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
     const poly = polyclinics.find((p) => p.id === id);
     if (poly && !specialization) {
       setSpecialization(poly.name);
-    }
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files || e.target.files.length === 0) return;
-    const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
-    try {
-      setUploadingImage(true);
-      const res = await fetch("http://127.0.0.1:8080/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setImageUrl(data.url);
-      } else {
-        alert(data.error || "Gagal mengunggah gambar");
-      }
-    } catch {
-      alert("Gagal mengunggah gambar");
-    } finally {
-      setUploadingImage(false);
     }
   };
 
@@ -111,11 +87,11 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.nameLabel}</label>
-            <input type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" />
+            <input disabled={submitting} type="text" required value={name} onChange={(e) => setName(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: dr. Budi Santoso, Sp.J" />
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">Poliklinik</label>
-            <select required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer">
+            <select disabled={submitting} required value={polyclinicId ?? ""} onChange={(e) => handlePolyChange(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer" placeholder="Contoh: Poli Jantung & Pembuluh Darah">
               <option value="">Pilih Poliklinik</option>
               {polyclinics.filter((p) => p.is_active).map((p) => (
                 <option key={p.id} value={p.id}>{p.name}</option>
@@ -125,37 +101,25 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label>
-          <input type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" />
+          <input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: Spesialis Jantung" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label>
-          <input type="text" required value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" />
+          <input disabled={submitting} type="text" required value={contactInfo} onChange={(e) => setContactInfo(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground" placeholder="Contoh: 08123456789" />
         </div>
         <div>
           <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label>
-          <textarea required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none" />
+          <textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none" placeholder="Contoh: Berpengalaman 10 tahun di bidang kardiologi..." />
         </div>
-        <div>
-          <label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.imgLabel}</label>
-          <div className="flex gap-2 items-center">
-            {imageUrl && (
-              <img src={imageUrl} alt="Preview" className="w-10 h-10 object-cover rounded-lg border border-glass-border shadow-sm shrink-0" />
-            )}
-            <input type="text" value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="Atau tempel URL gambar..." className="flex-1 min-w-0 h-10 px-3 rounded-xl border glass-input text-sm text-foreground" />
-            <div className="relative shrink-0 flex items-center justify-center">
-              <input type="file" accept="image/*" onChange={handleImageUpload} className="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10" />
-              <button type="button" disabled={uploadingImage} className="h-10 px-4 bg-primary/10 text-primary hover:bg-primary/20 rounded-xl text-sm font-medium transition-colors disabled:opacity-50 pointer-events-none">
-                {uploadingImage ? "..." : "Upload"}
-              </button>
-            </div>
-          </div>
-        </div>
+        
+        <DoctorImageUpload imageUrl={imageUrl} setImageUrl={setImageUrl} />
+
         <div className="flex items-center gap-2">
-          <input type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
+          <input disabled={submitting} type="checkbox" id="isActive" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="rounded border-glass-border text-primary focus:ring-primary w-4 h-4 cursor-pointer" />
           <label htmlFor="isActive" className="text-xs font-semibold cursor-pointer">{APP_STRINGS.doctors.activeLabel}</label>
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="h-10 px-4 border border-glass-border hover:bg-black/5 rounded-xl text-sm font-medium transition-colors cursor-pointer">{APP_STRINGS.doctors.cancelBtn}</button>
+          <button type="button" disabled={submitting} onClick={onClose} className="h-10 px-4 border border-glass-border hover:bg-black/5 rounded-xl text-sm font-medium transition-colors cursor-pointer">{APP_STRINGS.doctors.cancelBtn}</button>
           <button type="submit" disabled={submitting} className="h-10 px-4 bg-primary hover:bg-primary-hover text-primary-foreground text-sm font-medium rounded-xl transition-colors cursor-pointer disabled:opacity-50">{APP_STRINGS.doctors.saveBtn}</button>
         </div>
       </form>

@@ -7,6 +7,7 @@ import '../../../../core/utils/error_handler.dart';
 import '../providers/profile_provider.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import 'add_family_member_modal_widgets.dart';
+import 'modal_text_field.dart';
 
 part 'add_family_member_modal_parts.dart';
 

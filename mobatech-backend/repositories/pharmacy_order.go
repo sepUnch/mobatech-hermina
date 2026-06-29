@@ -48,9 +48,13 @@ func (r *pharmacyRepository) GetOrderByID(id uint) (*models.PharmacyOrder, error
 	return &order, err
 }
 
-func (r *pharmacyRepository) GetAllOrders() ([]models.PharmacyOrder, error) {
+func (r *pharmacyRepository) GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error) {
 	var orders []models.PharmacyOrder
-	err := r.db.Preload("Items").Preload("Items.Medicine").Order("created_at desc").Find(&orders).Error
+	query := r.db.Preload("Items").Preload("Items.Medicine")
+	if filter != "" {
+		query = query.Where("status = ?", filter)
+	}
+	err := query.Order("created_at desc").Find(&orders).Error
 	return orders, err
 }
 

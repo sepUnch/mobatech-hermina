@@ -8,6 +8,7 @@ import (
 	"backend/routes"
 	"fmt"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-contrib/cors"
@@ -17,6 +18,9 @@ import (
 func main() {
 	// Initialize Database Connection
 	config.ConnectDatabase()
+
+	// Ensure uploads directory exists to prevent crash on file upload
+	os.MkdirAll("uploads", os.ModePerm)
 
 	// Run Auto Migrations for all models
 	config.DB.AutoMigrate(

@@ -20,7 +20,9 @@ func NewPolyclinicController(service services.PolyclinicService) *PolyclinicCont
 
 // GET /api/polyclinics
 func (c *PolyclinicController) GetPolyclinics(ctx *gin.Context) {
-	polys, err := c.service.GetAllPolyclinics()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	polys, err := c.service.GetAllPolyclinics(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

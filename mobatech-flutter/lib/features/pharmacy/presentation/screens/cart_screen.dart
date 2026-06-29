@@ -6,6 +6,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../providers/pharmacy_provider.dart';
 
 part 'cart_screen_widgets.dart';
+part 'cart_bottom_bar.dart';
 
 class CartScreen extends ConsumerWidget {
   const CartScreen({super.key});

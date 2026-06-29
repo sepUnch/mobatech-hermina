@@ -7,7 +7,7 @@ import (
 )
 
 type HospitalServiceRepository interface {
-	GetAll() ([]models.HospitalService, error)
+	GetAll(search string, filter string) ([]models.HospitalService, error)
 	GetByID(id uint) (*models.HospitalService, error)
 	Create(service *models.HospitalService) error
 	Update(service *models.HospitalService) error
@@ -22,9 +22,19 @@ func NewHospitalServiceRepository(db *gorm.DB) HospitalServiceRepository {
 	return &hospitalServiceRepository{db}
 }
 
-func (r *hospitalServiceRepository) GetAll() ([]models.HospitalService, error) {
+func (r *hospitalServiceRepository) GetAll(search string, filter string) ([]models.HospitalService, error) {
 	var services []models.HospitalService
-	err := r.db.Find(&services).Error
+	query := r.db
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("name LIKE ? OR address LIKE ?", searchTerm, searchTerm)
+	}
+	if filter == "az" {
+		query = query.Order("name asc")
+	} else if filter == "za" {
+		query = query.Order("name desc")
+	}
+	err := query.Find(&services).Error
 	return services, err
 }
 

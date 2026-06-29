@@ -10,7 +10,7 @@ type EmergencyRepository interface {
 	Create(req *models.EmergencyRequest) error
 	GetByID(id uint) (*models.EmergencyRequest, error)
 	GetByUserID(userID uint) ([]models.EmergencyRequest, error)
-	GetAll() ([]models.EmergencyRequest, error)
+	GetAll(search string, filter string) ([]models.EmergencyRequest, error)
 	UpdateStatus(id uint, status string) error
 	UpdateTracking(id uint, ambulanceLat, ambulanceLng float64, estimatedMinutes int, status string) error
 }
@@ -39,9 +39,20 @@ func (r *emergencyRepository) GetByUserID(userID uint) ([]models.EmergencyReques
 	return reqs, err
 }
 
-func (r *emergencyRepository) GetAll() ([]models.EmergencyRequest, error) {
+func (r *emergencyRepository) GetAll(search string, filter string) ([]models.EmergencyRequest, error) {
 	var reqs []models.EmergencyRequest
-	err := r.db.Order("created_at desc").Find(&reqs).Error
+	query := r.db
+	
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("patient_name LIKE ? OR location LIKE ?", searchTerm, searchTerm)
+	}
+
+	if filter != "" {
+		query = query.Where("status = ?", filter)
+	}
+
+	err := query.Order("created_at desc").Find(&reqs).Error
 	return reqs, err
 }
 

@@ -61,8 +61,17 @@ func AdminMiddleware() gin.HandlerFunc {
 			return
 		}
 
+		role, ok := claims["role"].(string)
+		if !ok || role == "patient" {
+			c.AbortWithStatusJSON(http.StatusForbidden, utils.BuildError(
+				utils.ErrUnauthorized, "Access denied: Staff only", nil,
+			))
+			return
+		}
+
 		c.Set("user_id", claims["user_id"])
-		c.Set("is_admin", true)
+		c.Set("role", role)
+		c.Set("is_admin", role == "admin")
 		c.Next()
 	}
 }

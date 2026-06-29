@@ -13,7 +13,7 @@ type AuthRepository interface {
 	UpdateUser(user *models.User) error
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
-	GetAllUsers() ([]models.User, error)
+	GetAllUsers(search string, filter string) ([]models.User, error)
 }
 
 type authRepository struct {
@@ -52,8 +52,18 @@ func (r *authRepository) DeleteFamilyMember(id uint) error {
 	return r.db.Delete(&models.FamilyMember{}, id).Error
 }
 
-func (r *authRepository) GetAllUsers() ([]models.User, error) {
+func (r *authRepository) GetAllUsers(search string, filter string) ([]models.User, error) {
 	var users []models.User
-	err := r.db.Preload("FamilyMembers").Find(&users).Error
+	query := r.db.Preload("FamilyMembers").Where("role = ?", "patient")
+	if search != "" {
+		searchTerm := "%" + search + "%"
+		query = query.Where("full_name LIKE ? OR email LIKE ? OR phone_number LIKE ?", searchTerm, searchTerm, searchTerm)
+	}
+	if filter == "newest" {
+		query = query.Order("created_at desc")
+	} else if filter == "oldest" {
+		query = query.Order("created_at asc")
+	}
+	err := query.Find(&users).Error
 	return users, err
 }

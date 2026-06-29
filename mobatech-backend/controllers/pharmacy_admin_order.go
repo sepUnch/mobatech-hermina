@@ -62,7 +62,9 @@ func (c *PharmacyController) AdminUpdatePrescriptionStatus(ctx *gin.Context) {
 }
 
 func (c *PharmacyController) AdminGetAllOrders(ctx *gin.Context) {
-	orders, err := c.service.GetAllOrders()
+	search := ctx.Query("search")
+	filter := ctx.Query("filter")
+	orders, err := c.service.GetAllOrders(search, filter)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

@@ -27,7 +27,7 @@ class MedicalResult {
         ? '$backendResult\n\nCatatan Dokter:\n$backendNotes'
         : json['result_details']?.toString();
 
-    // Format tanggal (Ambil bagian YYYY-MM-DD saja jika ada T)
+    // Format date (Extract YYYY-MM-DD if 'T' is present)
     String dateStr =
         json['result_date']?.toString() ?? json['date']?.toString() ?? '';
     if (dateStr.contains('T')) {
