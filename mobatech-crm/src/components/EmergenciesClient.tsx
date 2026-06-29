@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { EmergenciesHeader } from "./EmergenciesHeader";
 
 export function EmergenciesClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
@@ -22,7 +23,6 @@ export function EmergenciesClient({ initialData, searchParams }: { initialData?:
   if (!["admin"].includes(role)) {
     return <ForbiddenView />;
   }
-
   const [items, setItems] = useState<EmergencyRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -51,7 +51,7 @@ export function EmergenciesClient({ initialData, searchParams }: { initialData?:
   useEffect(() => {
     loadItems();
     const interval = setInterval(loadItems, 10000);
-    return () => clearInterval(interval);
+return () => clearInterval(interval);
   }, [searchQuery, filterValue]);
 
   const updateStatus = async (id: number, status: string) => {
@@ -79,31 +79,14 @@ export function EmergenciesClient({ initialData, searchParams }: { initialData?:
         return <Badge variant="neutral">{status}</Badge>;
     }
   };
-
-  return (
+return (
     <div className="space-y-6 animate-slide-in">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight text-rose-600 dark:text-rose-500 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping"></span>
-            Gawat Darurat
-          </h1>
-          <p className="text-foreground/60 text-xs mt-1">Live tracking panggilan darurat dan pengerahan ambulans.</p>
-        </div>
-        <div className="flex gap-2">
-          <FilterDropdown
-            value={filterValue}
-            onChange={setFilterValue}
-            options={[
-              { label: 'Pending', value: 'pending' },
-              { label: 'Direspon', value: 'responded' },
-              { label: 'Selesai', value: 'resolved' },
-            ]}
-            placeholder="Status..."
-          />
-          <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
-        </div>
-      </div>
+      <EmergenciesHeader
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
 
       <Card noPadding className="overflow-x-auto">
         {loading && items.length === 0 ? (

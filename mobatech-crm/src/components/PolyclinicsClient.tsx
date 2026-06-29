@@ -3,19 +3,14 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
 
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Polyclinic } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
-import { DeleteModal } from "@/components/DeleteModal";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { Plus } from "lucide-react";
 import { PolyclinicsTable } from "./PolyclinicsTable";
-import { PolyclinicsFormModal } from "./PolyclinicsFormModal";
-import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
-import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { PolyclinicsHeader } from "./PolyclinicsHeader";
+import { PolyclinicsModals } from "./PolyclinicsModals";
 
 export function PolyclinicsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
@@ -24,7 +19,6 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
   if (!["admin"].includes(role)) {
     return <ForbiddenView />;
   }
-
   const [items, setItems] = useState<Polyclinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -114,31 +108,15 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
       setDeleteId(null);
     }
   };
-
-  return (
+return (
     <div className="space-y-6 animate-slide-in">
-      <PageHeader
-        title={APP_STRINGS.polyclinics.title}
-        description={APP_STRINGS.polyclinics.subtitle}
-        action={
-          <Button onClick={() => openForm(null)} icon={<Plus size={18} />}>
-            {APP_STRINGS.polyclinics.addBtn}
-          </Button>
-        }
+      <PolyclinicsHeader
+        openForm={() => openForm(null)}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
-
-      <div className="flex justify-end mb-4 gap-2">
-        <FilterDropdown
-          value={filterValue}
-          onChange={setFilterValue}
-          options={[
-            { label: 'Aktif', value: 'active' },
-            { label: 'Nonaktif', value: 'inactive' },
-          ]}
-          placeholder="Status..."
-        />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
-      </div>
 
       <PolyclinicsTable
         items={items}
@@ -147,27 +125,15 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
         onDelete={setDeleteId}
       />
 
-      <PolyclinicsFormModal
-        showModal={showModal}
-        setShowModal={setShowModal}
-        selectedItem={selectedItem}
-        name={name}
-        setName={setName}
-        description={description}
-        setDescription={setDescription}
-        imageUrl={imageUrl}
-        setImageUrl={setImageUrl}
-        isActive={isActive}
-        setIsActive={setIsActive}
-        handleSave={handleSave}
-        saving={saving}
-      />
-
-      <DeleteModal
-        isOpen={deleteId !== null}
-        onClose={() => setDeleteId(null)}
-        onConfirm={() => deleteId !== null && handleDelete(deleteId)}
-        isLoading={saving}
+      <PolyclinicsModals
+        showModal={showModal} setShowModal={setShowModal}
+        selectedItem={selectedItem} name={name} setName={setName}
+        description={description} setDescription={setDescription}
+        imageUrl={imageUrl} setImageUrl={setImageUrl}
+        isActive={isActive} setIsActive={setIsActive}
+        handleSave={handleSave} saving={saving}
+        deleteId={deleteId} setDeleteId={setDeleteId}
+        handleDelete={handleDelete}
       />
 
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />

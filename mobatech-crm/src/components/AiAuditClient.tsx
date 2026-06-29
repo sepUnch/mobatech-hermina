@@ -9,6 +9,8 @@ import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { AiAuditMonitor } from "./AiAuditMonitor";
 import { AiAuditChatHistory } from "./AiAuditChatHistory";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
+import { PrivacyComplianceBadge } from "./PrivacyComplianceBadge";
+import { AiAuditHeader } from "./AiAuditHeader";
 
 export interface RagStatus {
   status: string;
@@ -38,7 +40,6 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
   if (!["admin"].includes(role)) {
     return <ForbiddenView />;
   }
-
   const [ragStatus, setRagStatus] = useState<RagStatus | null>(null);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
@@ -108,17 +109,9 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
       setIsSyncing(false);
     }
   };
-
-  return (
+return (
     <div className="space-y-6 animate-slide-in">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">AI Orchestrator Dashboard</h1>
-          <p className="text-foreground/60 text-xs mt-1">
-            Pusat kendali dan audit untuk AI Chatbot (GPT-5) dan *Retrieval-Augmented Generation* (RAG).
-          </p>
-        </div>
-      </div>
+      <AiAuditHeader />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <AiAuditMonitor
@@ -128,15 +121,7 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
           handleManualSync={handleManualSync}
         />
 
-        <div className="rounded-2xl border glass-panel p-6 shadow-sm flex flex-col justify-center items-center text-center">
-          <div className="w-20 h-20 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-4">
-            <span className="text-3xl">🛡️</span>
-          </div>
-          <h3 className="font-semibold text-lg">Privacy & PDP Compliant</h3>
-          <p className="text-sm text-foreground/60 mt-2 max-w-sm">
-            Sistem AI menggunakan Anonymization Engine di mana informasi pribadi pasien disamarkan sebelum diakses oleh Model LLM, sesuai dengan hukum Perlindungan Data Pribadi.
-          </p>
-        </div>
+        <PrivacyComplianceBadge />
       </div>
 
       <div className="flex justify-end mb-4">

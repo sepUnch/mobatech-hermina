@@ -7,20 +7,13 @@ import { useState, useEffect } from "react";
 import { api } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { DeleteModal } from "@/components/DeleteModal";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { Button } from "@/components/ui/Button";
-import { Plus } from "lucide-react";
-import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
-import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { MedicalResultsTable } from "./MedicalResultsTable";
 import { MedicalResultsForm } from "./MedicalResultsForm";
+import { MedicalResultsHeader } from "./MedicalResultsHeader";
 
 interface User { id: number; full_name: string; email: string; }
-
 interface MedicalResult { id: number; created_at: string; user_id: number; appointment_id: number; doctor_name: string; test_type: string; test_name: string; result: string; notes: string; file_url: string; result_date: string; }
-
 const TEST_TYPES = ["Lab", "Radiologi", "EKG", "USG", "Endoskopi", "Lainnya"];
-
 const defaultForm = { user_id: 0, appointment_id: 0, doctor_name: "", test_type: "Lab", test_name: "", result: "", notes: "", file_url: "", result_date: "" };
 
 export function MedicalResultsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
@@ -30,7 +23,6 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
   if (!["admin", "doctor"].includes(role)) {
     return <ForbiddenView />;
   }
-
   const [users, setUsers] = useState<User[]>([]);
   const [results, setResults] = useState<MedicalResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,33 +104,16 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
       setDeleteId(null);
     }
   };
-
-  return (
+return (
     <div className="space-y-6 animate-slide-in">
-      <PageHeader
-        title="Hasil Medis Pasien"
-        description="Input dan kelola hasil lab, radiologi, dan pemeriksaan medis lainnya."
-        action={
-          <div title={role === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
-            <Button onClick={openCreate} icon={<Plus size={18} />} disabled={role === "admin"}>
-              Tambah Hasil Medis
-            </Button>
-          </div>
-        }
+      <MedicalResultsHeader
+        openCreate={openCreate}
+        role={role}
+        filterValue={filterValue}
+        setFilterValue={setFilterValue}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
       />
-
-      <div className="flex justify-end mb-4 gap-2">
-        <FilterDropdown
-          value={filterValue}
-          onChange={setFilterValue}
-          options={[
-            { label: 'Terbaru', value: 'newest' },
-            { label: 'Terlama', value: 'oldest' },
-          ]}
-          placeholder="Urutkan..."
-        />
-        <SearchFilterBar value={searchQuery} onChange={setSearchQuery} />
-      </div>
 
       {showForm && (
         <MedicalResultsForm
