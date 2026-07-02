@@ -104,3 +104,19 @@ export interface Promo extends GormModel {
   title: string; subtitle: string;
   themeColor: string; is_active: boolean;
 }
+
+export interface PrescriptionItem {
+  medicine_id: number;
+  medicine_name?: string;
+  dosage: string;
+  duration: string;
+  quantity: number;
+}
+export interface Prescription extends GormModel {
+  user_id: number;
+  appointment_id: number;
+  doctor_name: string;
+  diagnosis: string;
+  status: "pending" | "completed";
+  items: PrescriptionItem[];
+}

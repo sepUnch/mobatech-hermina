@@ -1,8 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Medicine, MedicineCategory, PharmacyOrder } from "@/types/api";
 import { PharmacyMedicines } from "./PharmacyMedicines";
 import { PharmacyOrders } from "./PharmacyOrders";
+import { PrescriptionFormModal } from "./PrescriptionFormModal";
+import { useSearchParams } from "next/navigation";
+import { api } from "@/lib/api";
+import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Package, ShoppingCart } from "lucide-react";
 
@@ -16,6 +20,25 @@ export function PharmacyClient({
   initialOrders: PharmacyOrder[];
 }) {
   const [activeTab, setActiveTab] = useState<"orders" | "medicines">("orders");
+  const searchParams = useSearchParams();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [toast, setToast] = useState<{isOpen: boolean, message: string, type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
+
+  useEffect(() => {
+    if (searchParams?.get("action") === "create_prescription") {
+      setIsModalOpen(true);
+    }
+  }, [searchParams]);
+
+  const handleSavePrescription = async (form: any) => {
+    try {
+      await api.post("/api/admin/pharmacy/prescriptions", form);
+      setToast({ isOpen: true, message: "E-Resep berhasil diterbitkan!", type: "success" });
+    } catch {
+      setToast({ isOpen: true, message: "Gagal menerbitkan E-Resep", type: "error" });
+    }
+  };
+
 
   return (
     <div className="space-y-6 animate-slide-in relative">
@@ -48,6 +71,16 @@ export function PharmacyClient({
       {activeTab === "medicines" && (
         <PharmacyMedicines initialMedicines={initialMedicines} categories={categories} />
       )}
+
+      <PrescriptionFormModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onSave={handleSavePrescription} 
+        initialAppointmentId={Number(searchParams?.get("appointment_id")) || 0}
+        initialUserId={Number(searchParams?.get("user_id")) || 0}
+        medicines={initialMedicines} 
+      />
+      <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast(t => ({...t, isOpen: false}))} />
     </div>
   );
 }

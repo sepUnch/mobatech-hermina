@@ -1,6 +1,7 @@
 import React from "react";
 import { Doctor } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
+import { useAuthStore } from "@/store/useAuthStore";
 import { Formatters } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
@@ -19,6 +20,8 @@ export function DoctorsTable({
   openForm: (item: Doctor) => void;
   setDeleteId: (id: number) => void;
 }) {
+  const user = useAuthStore((state) => state.user);
+  const isDoctor = user?.role === "doctor";
   if (loading) {
     return <div className="p-8 text-center text-foreground/50 animate-pulse text-sm">Memuat data...</div>;
   }
@@ -56,9 +59,11 @@ export function DoctorsTable({
                   <Button size="sm" variant="ghost" onClick={() => openForm(item)} className="text-primary hover:text-primary-hover px-2" icon={<Edit2 size={14} />}>
                     Ubah
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={() => setDeleteId(item.id)} className="text-rose-500 hover:text-rose-600 px-2" icon={<Trash2 size={14} />}>
-                    Hapus
-                  </Button>
+                  {!isDoctor && (
+                    <Button size="sm" variant="ghost" onClick={() => setDeleteId(item.id)} className="text-rose-500 hover:text-rose-600 px-2" icon={<Trash2 size={14} />}>
+                      Hapus
+                    </Button>
+                  )}
                 </div>
               </td>
             </tr>

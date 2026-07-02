@@ -5,6 +5,8 @@ import "gorm.io/gorm"
 type Prescription struct {
 	gorm.Model
 	UserID           uint               `json:"user_id"`
+	AppointmentID    *uint              `json:"appointment_id"`
+	Appointment      *Appointment       `json:"appointment,omitempty" gorm:"foreignKey:AppointmentID"`
 	DoctorName       string             `json:"doctor_name"`
 	DoctorSpecialty  string             `json:"doctor_specialty"`
 	Diagnosis        string             `json:"diagnosis" gorm:"type:text"`

@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Pill } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Formatters } from "@/lib/formatters";
 
@@ -21,6 +22,8 @@ export function MedicalResultsTable({
   onDelete: (id: number) => void;
   userRole?: string;
 }) {
+  const router = useRouter();
+
   return (
     <Card noPadding>
       <div className="w-full overflow-x-auto">
@@ -57,6 +60,15 @@ export function MedicalResultsTable({
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/70 max-w-xs truncate">{r.result}</td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <div className="flex gap-2 justify-center" title={userRole === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
+                      <Button 
+                        size="sm" 
+                        variant="outline" 
+                        className="text-indigo-600 border-indigo-500/30 hover:bg-indigo-500/10" 
+                        onClick={() => router.push(`/dashboard/pharmacy?action=create_prescription&appointment_id=${r.appointment_id || ''}&user_id=${r.user_id}`)} 
+                        icon={<Pill size={14} />}
+                      >
+                        E-Resep
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => onEdit(r)} disabled={userRole === "admin"} className="text-primary hover:text-primary-hover px-2" icon={<Edit2 size={14} />}>
                         Edit
                       </Button>

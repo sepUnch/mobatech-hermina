@@ -33,7 +33,7 @@ export function MedicalResultsForm({
           <label className="text-xs text-foreground/60 font-medium">Pasien *</label>
           <select disabled={saving}
             value={form.user_id || ""}
-            onChange={(e) => setForm((f) => ({ ...f, user_id: Number(e.target.value) }))}
+            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as any : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
           >
             <option value="">— Pilih Pasien —</option>
@@ -44,7 +44,7 @@ export function MedicalResultsForm({
         </div>
         <div className="space-y-1">
           <label className="text-xs text-foreground/60 font-medium">ID Janji Temu (opsional)</label>
-          <input disabled={saving} type="number" value={form.appointment_id || ""} onChange={(e) => setForm((f) => ({ ...f, appointment_id: Number(e.target.value) }))}
+          <input disabled={saving} type="number" value={form.appointment_id || ""} onChange={(e) => setForm((f) => ({ ...f, appointment_id: (e.target.value === "" ? "" as any : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary" placeholder={APP_STRINGS.medicalResults.patientIdPlaceholder} />
         </div>
         <div className="space-y-1">

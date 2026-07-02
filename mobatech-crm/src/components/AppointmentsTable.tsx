@@ -2,7 +2,8 @@ import { Appointment } from "@/types/api";
 import { format } from "date-fns";
 import { Badge, BadgeVariant } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Check, X, CheckCircle2 } from "lucide-react";
+import { Check, X, Stethoscope, CheckCircle2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface AppointmentsTableProps {
   items: Appointment[];
@@ -14,6 +15,7 @@ interface AppointmentsTableProps {
 }
 
 export function AppointmentsTable({ items, loading, processingId, onApprove, onCancel, onComplete }: AppointmentsTableProps) {
+  const router = useRouter();
   const getStatusBadge = (status: string) => {
     let variant: BadgeVariant = "warning";
     let label = "Menunggu";
@@ -81,16 +83,34 @@ export function AppointmentsTable({ items, loading, processingId, onApprove, onC
                   </>
                 )}
                 {item.status === "approved" && (
-                  <Button size="sm" variant="outline" disabled={processingId === item.id} className="text-blue-600 border-blue-500/30 hover:bg-blue-500/10 disabled:opacity-50" onClick={() => onComplete(item.id)} icon={<CheckCircle2 size={14} />}>
-                    Selesai
-                  </Button>
+                  <div className="flex justify-center gap-2">
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      className="text-indigo-600 border-indigo-500/30 hover:bg-indigo-500/10" 
+                      onClick={() => router.push(`/dashboard/medical-results?appointment_id=${item.id}&user_id=${item.user_id}&doctor_name=${encodeURIComponent(item.doctor?.name || '')}`)} 
+                      icon={<Stethoscope size={14} />}
+                    >
+                      Proses Rekam Medis
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline" 
+                      disabled={processingId === item.id} 
+                      className="text-blue-600 border-blue-500/30 hover:bg-blue-500/10 disabled:opacity-50" 
+                      onClick={() => onComplete(item.id)} 
+                      icon={<CheckCircle2 size={14} />}
+                    >
+                      Akhiri Sesi
+                    </Button>
+                  </div>
                 )}
               </td>
             </tr>
           ))}
           {items.length === 0 && (
             <tr>
-              <td colSpan={6} className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/50">Tidak ada antrean saat ini</td>
+              <td colSpan={6} className="text-center align-middle whitespace-nowrap py-4 px-4 text-sm text-foreground/50">Tidak ada antrean saat ini</td>
             </tr>
           )}
         </tbody>

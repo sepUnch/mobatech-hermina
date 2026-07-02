@@ -14,7 +14,7 @@ import { DoctorsContent } from "./DoctorsContent";
 export function DoctorsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-  if (!["admin"].includes(role)) {
+  if (!["admin", "doctor"].includes(role)) {
     return <ForbiddenView />;
   }
   const [items, setItems] = useState<Doctor[]>([]);
@@ -43,8 +43,15 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
         api.get<Doctor[]>(`/api/doctors${qs}`),
         api.get<DoctorSchedule[]>("/api/admin/schedules?limit=200")
       ]);
-      setItems(docRes.status === "fulfilled" ? (docRes.value.data || []) : []);
-      setSchedules(schedRes.status === "fulfilled" ? (schedRes.value.data || []) : []);
+      let docs = docRes.status === "fulfilled" ? (docRes.value.data || []) : [];
+      let scheds = schedRes.status === "fulfilled" ? (schedRes.value.data || []) : [];
+      if (user?.role === "doctor") {
+        docs = docs.filter((d) => d.user_id === user.id);
+        const docIds = docs.map((d) => d.id);
+        scheds = scheds.filter((s) => docIds.includes(s.doctor_id));
+      }
+      setItems(docs);
+      setSchedules(scheds);
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.login.networkError, type: "error" });
     } finally {

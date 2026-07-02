@@ -29,7 +29,7 @@ export function RemindersForm({
           <label className="text-xs text-foreground/60 font-medium">Pasien *</label>
           <select disabled={saving}
             value={form.user_id || ""}
-            onChange={(e) => setForm((f) => ({ ...f, user_id: Number(e.target.value) }))}
+            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as any : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
           >
             <option value="">— Pilih Pasien —</option>

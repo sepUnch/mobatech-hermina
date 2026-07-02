@@ -13,4 +13,5 @@ type Doctor struct {
 	Description    string      `json:"description"`
 	ImageURL       string      `json:"image_url"`
 	IsActive       bool        `json:"is_active" gorm:"default:true"`
+	IsAvailableToday bool      `json:"is_available_today" gorm:"-"`
 }

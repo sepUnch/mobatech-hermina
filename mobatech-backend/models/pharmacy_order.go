@@ -6,6 +6,7 @@ type PharmacyOrder struct {
 	gorm.Model
 	UserID          uint                `json:"user_id"`
 	PrescriptionID  *uint               `json:"prescription_id"` // nullable for OTC
+	Prescription    *Prescription       `json:"prescription,omitempty" gorm:"foreignKey:PrescriptionID"`
 	OrderNumber     string              `json:"order_number" gorm:"type:varchar(100);uniqueIndex"`
 	Status          string              `json:"status"` // Pending, Verifying, Processing, Ready, Completed, Cancelled
 	TotalPrice      float64             `json:"total_price"`

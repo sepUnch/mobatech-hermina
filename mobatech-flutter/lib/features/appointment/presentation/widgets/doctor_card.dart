@@ -84,7 +84,7 @@ class DoctorCard extends StatelessWidget {
                             Formatters.formatPhoneNumber(doctor.contactInfo),
                           ),
                           const SizedBox(height: 6),
-                          DoctorStatusBadge(isActive: doctor.isActive),
+                          DoctorStatusBadge(isActive: doctor.isAvailableToday),
                         ],
                       ),
                     ),

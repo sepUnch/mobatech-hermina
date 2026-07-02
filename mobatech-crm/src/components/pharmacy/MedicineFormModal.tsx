@@ -63,7 +63,7 @@ export function MedicineFormModal({ isOpen, onClose, medicine, categories, onSav
           </div>
           <div>
             <label className="block text-xs font-semibold mb-2">{APP_STRINGS.pharmacy.category}</label>
-            <select disabled={saving} value={formData.category_id || ""} onChange={(e) => update("category_id", Number(e.target.value))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none transition-all">
+            <select disabled={saving} value={formData.category_id || ""} onChange={(e) => update("category_id", (e.target.value === "" ? "" as any : Number(e.target.value)))} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none transition-all">
               <option value="">Pilih Kategori</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>{c.name}</option>

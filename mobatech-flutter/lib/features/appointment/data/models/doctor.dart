@@ -11,6 +11,7 @@ class Doctor {
   final String description;
   final String imageUrl;
   final bool isActive;
+  final bool isAvailableToday;
 
   Doctor({
     required this.id,
@@ -23,6 +24,7 @@ class Doctor {
     required this.description,
     required this.imageUrl,
     required this.isActive,
+    required this.isAvailableToday,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -41,6 +43,7 @@ class Doctor {
       description: json['description'] ?? '',
       imageUrl: rawImageUrl,
       isActive: json['is_active'] ?? true,
+      isAvailableToday: json['is_available_today'] ?? false,
     );
   }
 }

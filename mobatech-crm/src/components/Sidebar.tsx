@@ -16,6 +16,9 @@ import {
   Bell,
   Bot,
   LogOut,
+  Activity,
+  Archive,
+  ShoppingCart
 } from "lucide-react";
 
 import { useUIStore } from "@/store/useUIStore";
@@ -36,15 +39,36 @@ export function Sidebar() {
 
   const navItems = [
     { name: APP_STRINGS.sidebar.dashboard, path: "/dashboard", icon: <LayoutDashboard size={20} />, roles: ["admin", "pharmacist", "doctor"] },
+    
+    // Admin Master Data
     { name: "Manajemen Pengguna", path: "/dashboard/users", icon: <Users size={20} />, roles: ["admin"] },
-    { name: "Daftar Pasien", path: "/dashboard/patients", icon: <Users size={20} />, roles: ["admin", "doctor"] },
     { name: APP_STRINGS.sidebar.polyclinics, path: "/dashboard/polyclinics", icon: <Building2 size={20} />, roles: ["admin"] },
     { name: "Cabang RS", path: "/dashboard/branches", icon: <Building2 size={20} />, roles: ["admin"] },
-    { name: APP_STRINGS.sidebar.doctors, path: "/dashboard/doctors", icon: <Stethoscope size={20} />, roles: ["admin"] },
-    { name: "Antrean", path: "/dashboard/appointments", icon: <CalendarDays size={20} />, roles: ["admin", "doctor"] },
+    
+    // Doctors
+    { name: "Manajemen Dokter", path: "/dashboard/doctors", icon: <Stethoscope size={20} />, roles: ["admin"] },
+    { name: "Jadwal Praktik", path: "/dashboard/doctors", icon: <CalendarDays size={20} />, roles: ["doctor"] },
+    
+    // Patients & Appointments
+    { name: "Database Pasien", path: "/dashboard/patients", icon: <Users size={20} />, roles: ["admin"] },
+    { name: "Pasien Saya", path: "/dashboard/patients", icon: <Users size={20} />, roles: ["doctor"] },
+    { name: "Seluruh Antrean", path: "/dashboard/appointments", icon: <CalendarDays size={20} />, roles: ["admin"] },
+    { name: "Antrean Klinik", path: "/dashboard/appointments", icon: <CalendarDays size={20} />, roles: ["doctor"] },
+    
+    // Emergencies
     { name: "Darurat", path: "/dashboard/emergencies", icon: <Siren size={20} />, roles: ["admin"] },
-    { name: "Apotek", path: "/dashboard/pharmacy", icon: <Pill size={20} />, roles: ["admin", "pharmacist"] },
-    { name: "Hasil Medis", path: "/dashboard/medical-results", icon: <FileText size={20} />, roles: ["admin", "doctor"] },
+    
+    // Pharmacy
+    { name: "Inventaris Apotek", path: "/dashboard/pharmacy", icon: <Pill size={20} />, roles: ["admin"] },
+    { name: "Katalog Obat", path: "/dashboard/pharmacy", icon: <Pill size={20} />, roles: ["pharmacist"] },
+    { name: "Log E-Resep", path: "/dashboard/prescriptions", icon: <FileText size={20} />, roles: ["admin"] },
+    { name: "Proses E-Resep", path: "/dashboard/prescriptions", icon: <FileText size={20} />, roles: ["pharmacist"] },
+    
+    // Medical Results
+    { name: "Arsip Medis", path: "/dashboard/medical-results", icon: <FileText size={20} />, roles: ["admin"] },
+    { name: "Input Hasil Medis", path: "/dashboard/medical-results", icon: <FileText size={20} />, roles: ["doctor"] },
+    
+    // Others
     { name: "Pengingat", path: "/dashboard/reminders", icon: <Bell size={20} />, roles: ["admin"] },
     { name: "Manajemen Promo", path: "/dashboard/promos", icon: <FileText size={20} />, roles: ["admin"] },
     { name: APP_STRINGS.sidebar.aiAudit, path: "/dashboard/ai-audit", icon: <Bot size={20} />, roles: ["admin"] },

@@ -19,7 +19,8 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 
 export function UsersClient() {
-  const role = useAuthStore((state) => state.user)?.role || "admin";
+  const authUser = useAuthStore((state) => state.user);
+  const role = authUser?.role || "admin";
   if (role !== "admin") return <ForbiddenView />;
 
   const [users, setUsers] = useState<User[]>([]);
@@ -126,7 +127,7 @@ export function UsersClient() {
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                     <div className="flex gap-2 justify-center">
                       <button onClick={() => { setEditingUser(u); setShowModal(true); }} className="p-1.5 text-info hover:bg-info/10 rounded-lg transition-colors"><Edit size={16} /></button>
-                      <button onClick={() => setDeleteConfirm({ id: u.id, title: `Hapus pengguna "${u.full_name}"?` })} className="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                      {u.id !== authUser?.id && (<button onClick={() => setDeleteConfirm({ id: u.id, title: `Hapus pengguna "${u.full_name}"?` })} className="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors"><Trash2 size={16} /></button>)}
                     </div>
                   </td>
                 </tr>

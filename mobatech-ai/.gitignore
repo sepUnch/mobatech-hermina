@@ -12,8 +12,8 @@ __pycache__/
 *.so
 
 # Data
-# DO NOT ignore mock_medical_knowledge.csv as it's the seed for RAG
-# data/
+data/*.csv
+!data/*.example.csv
 
 # Misc
 .DS_Store
