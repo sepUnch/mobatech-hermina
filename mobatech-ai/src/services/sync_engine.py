@@ -29,21 +29,27 @@ class SyncEngine:
                 schedules = cursor.fetchall()
                 cursor.execute("SELECT id, name, description FROM polyclinics WHERE deleted_at IS NULL AND is_active = 1")
                 polyclinics = cursor.fetchall()
-            return doctors, schedules, polyclinics
+                cursor.execute("SELECT id, name, address, gmaps_link FROM branches WHERE deleted_at IS NULL")
+                branches = cursor.fetchall()
+            return doctors, schedules, polyclinics, branches
         except Exception as e:
             print(f"DB error: {e}")
-            return None, None, None
+            return None, None, None, None
         finally:
             if 'conn' in locals() and conn:
                 conn.close()
 
-    def _process_dynamic_knowledge(self, doctors, schedules, polyclinics):
+    def _process_dynamic_knowledge(self, doctors, schedules, polyclinics, branches):
         knowledge = []
         row_id = 100
         doc_map = {d["id"]: d for d in doctors}
 
         for poly in polyclinics:
             knowledge.append({"id": row_id, "kategori": "Layanan", "teks": f"Layanan Poliklinik {poly['name']}: {poly['description']}."})
+            row_id += 1
+
+        for branch in branches:
+            knowledge.append({"id": row_id, "kategori": "Cabang", "teks": f"Cabang Rumah Sakit Hermina {branch['name']} berlokasi di alamat {branch['address']}. Link Google Maps: {branch['gmaps_link']}"})
             row_id += 1
 
         for doc in doctors:
@@ -64,7 +70,7 @@ class SyncEngine:
         if os.path.exists(self.data_path):
             try:
                 with open(self.data_path, mode='r', encoding='utf-8') as f:
-                    static_items = [row for row in csv.DictReader(f) if row["kategori"] not in ["Jadwal", "Layanan", "Dokter"]]
+                    static_items = [row for row in csv.DictReader(f) if row["kategori"] not in ["Jadwal", "Layanan", "Dokter", "Cabang"]]
             except Exception as e:
                 print(f"CSV read error: {e}")
         return static_items
@@ -82,11 +88,12 @@ class SyncEngine:
             return False
 
     def sync_database(self) -> bool:
-        doctors, schedules, polyclinics = self._fetch_data_from_db()
-        if doctors is None:
+        db_data = self._fetch_data_from_db()
+        if db_data[0] is None:
             return False
             
-        new_knowledge = self._process_dynamic_knowledge(doctors, schedules, polyclinics)
+        doctors, schedules, polyclinics, branches = db_data
+        new_knowledge = self._process_dynamic_knowledge(doctors, schedules, polyclinics, branches)
         static_items = self._load_static_items()
         
         return self._save_to_csv(static_items, new_knowledge)

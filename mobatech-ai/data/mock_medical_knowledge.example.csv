@@ -5,11 +5,4 @@ id,kategori,teks
 6,FAQ,"Untuk pendaftaran menggunakan BPJS, pasien diwajibkan membawa surat rujukan aktif dari faskes tingkat pertama."
 8,Gejala,Nyeri dada sebelah kiri yang menjalar hingga ke lengan atau rahang merupakan tanda serangan jantung darurat. Segera arahkan pasien ke IGD.
 9,Gejala,Sakit kepala hebat disertai pandangan kabur pada ibu hamil adalah tanda preeklamsia. Arahkan ke Spesialis Kandungan.
-100,Layanan,"Layanan Poliklinik Poli Mata (Oftalmologi): Cek visus (mata minus/plus), katarak, dan gangguan penglihatan.."
-101,Layanan,"Layanan Poliklinik Poli Anak (Pediatri): Tumbuh kembang, vaksinasi, dan penyakit pada bayi hingga remaja.."
-102,Dokter,Dokter dr. Wahyu Ilawas Sp.M adalah spesialis Glaukoma. Berpengalaman 5 tahun mengagani Glaukoma
-103,Dokter,Dokter dr. Fahmi Prisma Putra Dani Sp.A adalah spesialis Neonatologi. Berpengalaman 10 tahun dalam mengurus anak yang baru lahir
-104,Jadwal,Jadwal praktik dr. Wahyu Ilawas Sp.M (Glaukoma): tanggal 2026-07-01 jam 8.00 - 13.00. Sisa kuota pasien: 20.
-105,Jadwal,Jadwal praktik dr. Fahmi Prisma Putra Dani Sp.A (Neonatologi): tanggal 2026-07-01 jam 10.00 - 14.00. Sisa kuota pasien: 9.
-106,Jadwal,Jadwal praktik dr. Wahyu Ilawas Sp.M (Glaukoma): tanggal 2026-07-02 jam 12:00 - 16:00. Sisa kuota pasien: 15.
-107,Jadwal,Jadwal praktik dr. Fahmi Prisma Putra Dani Sp.A (Neonatologi): tanggal 2026-07-03 jam 08:00 - 10:00. Sisa kuota pasien: 10.
+
