@@ -30,15 +30,15 @@ export const Formatters = {
     
     switch (format) {
       case "short":
-        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
+        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", timeZone: "Asia/Jakarta" });
       case "long":
-        return d.toLocaleDateString("id-ID", { month: "long", year: "numeric" });
+        return d.toLocaleDateString("id-ID", { month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
       case "weekday":
-        return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+        return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
       case "datetime":
-        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
       default:
-        return d.toLocaleDateString("id-ID");
+        return d.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
     }
   }
 };

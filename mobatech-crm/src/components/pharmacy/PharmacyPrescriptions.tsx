@@ -10,6 +10,7 @@ import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Pill, CheckCircle } from "lucide-react";
 import { Prescription } from "@/types/api";
+import { Formatters } from "@/lib/formatters";
 
 export function PharmacyPrescriptions() {
   const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
@@ -97,7 +98,7 @@ export function PharmacyPrescriptions() {
           <tbody>
             {filtered.map(p => (
               <tr key={p.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 text-center">
-                <td className="py-3 px-4 font-medium text-xs">{p.created_at}</td>
+                <td className="py-3 px-4 font-medium text-xs">{Formatters.date(p.created_at, "datetime")}</td>
                 <td className="py-3 px-4 text-xs font-semibold">RES-{p.id}</td>
                 <td className="py-3 px-4 font-semibold">{p.doctor_name || "Anonim"}</td>
                 <td className="py-3 px-4">

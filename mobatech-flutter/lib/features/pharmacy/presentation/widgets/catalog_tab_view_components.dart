@@ -14,14 +14,7 @@ class SearchAndCategories extends StatelessWidget {
   final ValueChanged<int?> onCategorySelected;
   final AsyncValue<List<dynamic>> categoriesAsync;
 
-  const SearchAndCategories({
-    super.key,
-    required this.searchController,
-    required this.onSearchChanged,
-    required this.selectedCategoryId,
-    required this.onCategorySelected,
-    required this.categoriesAsync,
-  });
+  const SearchAndCategories({ super.key, required this.searchController, required this.onSearchChanged, required this.selectedCategoryId, required this.onCategorySelected, required this.categoriesAsync, });
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +91,6 @@ class SearchAndCategories extends StatelessWidget {
 
 class MedicinesList extends ConsumerWidget {
   final AsyncValue<List<dynamic>> medicinesAsync;
-
   const MedicinesList({
     super.key,
     required this.medicinesAsync,

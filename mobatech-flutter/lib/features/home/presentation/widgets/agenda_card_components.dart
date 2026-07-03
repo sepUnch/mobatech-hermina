@@ -124,13 +124,23 @@ class _ScheduleInfo extends StatelessWidget {
               color: AppColors.textDark,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            'Status: ${appointment.status}',
-            style: const TextStyle(
-              fontSize: 13,
-              color: AppColors.textDark,
-            ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              const Text(
+                'Status Pendaftaran',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppColors.textGrey,
+                ),
+              ),
+              const SizedBox(width: 10),
+              GlassStatusChip(
+                status: appointment.status,
+                fontSize: 10,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              ),
+            ],
           ),
         ],
       ),

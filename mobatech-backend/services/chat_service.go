@@ -15,7 +15,7 @@ type ChatService interface {
 	GetSessionMessages(sessionID uint) ([]models.ChatMessage, error)
 	DeleteSession(userID uint, sessionID uint) error
 	StreamChat(ctx context.Context, sessionID uint, userMessage string, outChan chan<- string, errChan chan<- error)
-	GetAllSessions() ([]models.ChatSession, error)
+	GetAllSessions(search string) ([]models.ChatSession, error)
 }
 
 type chatService struct {
@@ -43,8 +43,8 @@ func (s *chatService) DeleteSession(userID uint, sessionID uint) error {
 	return s.repo.DeleteSession(userID, sessionID)
 }
 
-func (s *chatService) GetAllSessions() ([]models.ChatSession, error) {
-	return s.repo.GetAllSessions()
+func (s *chatService) GetAllSessions(search string) ([]models.ChatSession, error) {
+	return s.repo.GetAllSessions(search)
 }
 
 func (s *chatService) StreamChat(ctx context.Context, sessionID uint, userMessage string, outChan chan<- string, errChan chan<- error) {

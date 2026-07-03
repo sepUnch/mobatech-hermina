@@ -18,11 +18,34 @@ class Formatters {
   static String parseAndFormatDateID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
     try {
-      final dt = DateTime.parse(dateStr);
+      final dt = DateTime.parse(dateStr).toLocal();
       return formatDateID(dt);
     } catch (e) {
       return dateStr;
     }
+  }
+
+  static String formatDateTimeID(DateTime d) {
+    final timeStr = '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';
+    return '${formatDateID(d)} $timeStr';
+  }
+
+  static String parseAndFormatDateTimeID(String dateStr) {
+    if (dateStr.isEmpty || dateStr == '-') return '-';
+    try {
+      final dt = DateTime.parse(dateStr).toLocal();
+      return formatDateTimeID(dt);
+    } catch (e) {
+      return dateStr;
+    }
+  }
+
+  static String formatCurrency(double amount) {
+    return NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp ',
+      decimalDigits: 0,
+    ).format(amount);
   }
 
   static String formatPhoneNumber(String phone) {

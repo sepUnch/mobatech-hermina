@@ -140,7 +140,8 @@ func (c *ChatController) handleStream(ctx *gin.Context, outChan <-chan string, e
 }
 
 func (c *ChatController) GetAllSessions(ctx *gin.Context) {
-	sessions, err := c.service.GetAllSessions()
+	search := ctx.Query("search")
+	sessions, err := c.service.GetAllSessions(search)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

@@ -5,8 +5,14 @@ import '../theme/app_colors.dart';
 class GlassStatusChip extends StatelessWidget {
   final String status;
   final double fontSize;
+  final EdgeInsetsGeometry padding;
 
-  const GlassStatusChip({super.key, required this.status, this.fontSize = 13});
+  const GlassStatusChip({
+    super.key,
+    required this.status,
+    this.fontSize = 12,
+    this.padding = const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +67,7 @@ class GlassStatusChip extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: padding,
             child: Text(
               label,
               style: TextStyle(
