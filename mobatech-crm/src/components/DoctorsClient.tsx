@@ -40,7 +40,6 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
-      
       const [docRes, schedRes] = await Promise.allSettled([
         api.get<Doctor[]>(`/api/doctors${qs}`),
         api.get<DoctorSchedule[]>("/api/admin/schedules?limit=200")
@@ -49,9 +48,9 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
       let scheds = schedRes.status === "fulfilled" ? (schedRes.value.data || []) : [];
       if (user?.role === "doctor") {
         docs = docs.filter((d) => d.user_id === user.id);
-        const docIds = docs.map((d) => d.id);
-        scheds = scheds.filter((s) => docIds.includes(s.doctor_id));
       }
+      const docIds = docs.map((d) => d.id);
+      scheds = scheds.filter((s) => docIds.includes(s.doctor_id));
       setItems(docs);
       setSchedules(scheds);
     } catch {
@@ -139,7 +138,6 @@ return (
       />
       <DoctorFormModal isOpen={showFormModal} onClose={() => setShowFormModal(false)} doctor={selectedItem} onSave={handleSave} />
       <ScheduleModal isOpen={showSchedModal} onClose={() => setShowSchedModal(false)} doctor={selectedItem} onChange={loadItems} />
-      
       <DeleteModal
         isOpen={deleteId !== null}
         onClose={() => setDeleteId(null)}

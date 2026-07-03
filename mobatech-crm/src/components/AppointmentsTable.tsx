@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Appointment } from "@/types/api";
-import { format } from "date-fns";
+import { Formatters } from "@/lib/formatters";
 import { Badge, BadgeVariant } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Check, X, Stethoscope, CheckCircle2 } from "lucide-react";
@@ -60,7 +60,7 @@ export function AppointmentsTable({ items, loading, processingId, onApprove, onC
         <tbody>
           {items.map((item) => (
             <tr key={item.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-              <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/80">{format(new Date(item.created_at), "dd MMM yyyy HH:mm")}</td>
+              <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/80">{Formatters.date(item.created_at, "datetime")}</td>
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">
                 {item.user?.full_name || `Pasien #${item.user_id}`}
                 <div className="text-xs text-foreground/60 font-normal">{item.user?.email}</div>
@@ -68,7 +68,7 @@ export function AppointmentsTable({ items, loading, processingId, onApprove, onC
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
                 <div className="font-semibold">{item.doctor?.name}</div>
                 <div className="text-xs text-foreground/60">
-                  {item.schedule ? `${item.schedule.date} (${item.schedule.start_time} - ${item.schedule.end_time})` : "Jadwal tidak ditemukan"}
+                  {item.schedule ? `${Formatters.date(item.schedule.date, "long")} (${item.schedule.start_time} - ${item.schedule.end_time})` : "Jadwal tidak ditemukan"}
                 </div>
               </td>
               <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75 max-w-[150px] truncate">{item.notes || "-"}</td>

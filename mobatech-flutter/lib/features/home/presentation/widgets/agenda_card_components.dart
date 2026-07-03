@@ -117,7 +117,7 @@ class _ScheduleInfo extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            _getScheduleText(),
+            appointment.schedule?.date != null ? '${Formatters.formatDateWithDayID(appointment.schedule!.date!)} • ${appointment.schedule!.startTime}' : 'Jadwal belum ditentukan',
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -145,13 +145,5 @@ class _ScheduleInfo extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String _getScheduleText() {
-    if (appointment.schedule != null && appointment.schedule!.date != null) {
-      final date = appointment.schedule!.date!;
-      return '${Formatters.formatDateWithDayID(date)} • ${appointment.schedule!.startTime}';
-    }
-    return 'Jadwal belum ditentukan';
   }
 }

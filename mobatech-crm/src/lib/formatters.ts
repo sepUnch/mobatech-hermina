@@ -24,7 +24,7 @@ export const Formatters = {
     return `Rp ${amount.toLocaleString("id-ID")}`;
   },
 
-  date: (dateVal: string | Date | undefined | null, format: "short" | "long" | "datetime" | "weekday" = "short"): string => {
+  date: (dateVal: string | Date | undefined | null, format: "short" | "long" | "datetime" | "datetimesec" | "weekday" = "short"): string => {
     if (!dateVal) return "-";
     const d = new Date(dateVal);
     
@@ -37,6 +37,8 @@ export const Formatters = {
         return d.toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" });
       case "datetime":
         return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", timeZone: "Asia/Jakarta" });
+      case "datetimesec":
+        return d.toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Jakarta" });
       default:
         return d.toLocaleDateString("id-ID", { timeZone: "Asia/Jakarta" });
     }

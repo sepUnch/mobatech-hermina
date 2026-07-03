@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -13,7 +12,6 @@ import { DashboardRightPanel } from "@/components/DashboardRightPanel";
 import { StatusPill } from "@/components/StatusPill";
 import { Formatters } from "@/lib/formatters";
 import { Stethoscope, Bell, FileText, Bot, ArrowRight, Siren } from "lucide-react";
-
 export function AdminDashboard() {
   const user = useAuthStore((state) => state.user);
   const [stats, setStats] = useState<DashboardStats>({
@@ -23,7 +21,6 @@ export function AdminDashboard() {
     recentAppointments: [], recentEmergencies: [], recentPatients: [], recentSchedules: [],
     loading: true,
   });
-
   useEffect(() => {
     async function load() {
       try {

@@ -20,32 +20,31 @@ export function DoctorProfileView({
 
   return (
     <div className="space-y-6 fade-in">
-      <div className="relative overflow-hidden rounded-3xl border border-glass-border bg-black/10 dark:bg-white/5 backdrop-blur-md shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-primary/30">
-        <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-primary/30 to-emerald-500/30 opacity-70"></div>
-        <div className="relative p-6 pt-12 sm:p-10 sm:pt-16 flex flex-col sm:flex-row items-center sm:items-end gap-6">
-          <div className="w-32 h-32 rounded-2xl shadow-xl overflow-hidden border-4 border-background/50 flex-shrink-0 bg-background z-10 transition-transform duration-300 hover:scale-105">
-            <img src={doctor.image_url} alt={doctor.name} className="w-full h-full object-cover" />
+      <div className="relative overflow-hidden rounded-2xl border glass-panel shadow-sm transition-all duration-300 hover:shadow-md">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl -mr-10 -mt-10 pointer-events-none"></div>
+        <div className="relative p-5 sm:p-6 flex flex-col sm:flex-row items-center sm:items-start gap-5">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-sm overflow-hidden border border-glass-border flex-shrink-0 bg-background/50 z-10">
+            <img src={doctor.image_url} alt={doctor.name} className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" />
           </div>
           <div className="flex-1 text-center sm:text-left z-10">
-            <div className="flex flex-col sm:flex-row items-center sm:items-end gap-3 mb-2">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground drop-shadow-sm">{doctor.name}</h1>
-              {doctor.is_active && (
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-500 text-xs font-bold flex items-center gap-1.5 shadow-sm mb-1 sm:mb-2">
-                  <Activity size={14} /> Aktif
-                </span>
-              )}
+            <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight mb-1">{doctor.name}</h1>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 mb-3">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-[11px] font-bold tracking-wide uppercase border border-primary/20">
+                <MapPin size={12} /> {doctor.polyclinic?.name || "Umum"}
+              </span>
+              <span className="text-xs font-semibold text-foreground/60">
+                {doctor.specialization}
+              </span>
             </div>
-            <p className="text-foreground/80 font-medium flex items-center justify-center sm:justify-start gap-1.5 mb-3 text-sm">
-              <MapPin size={16} className="text-primary drop-shadow-sm"/> 
-              {doctor.polyclinic?.name || "Spesialis Umum"} &bull; {doctor.specialization}
+            <p className="text-xs text-foreground/70 max-w-2xl leading-relaxed">
+              {doctor.description || "Belum ada deskripsi profil. Klik ubah profil untuk menambahkan deskripsi."}
             </p>
-            <p className="text-sm text-foreground/60 max-w-2xl leading-relaxed">{doctor.description || "Belum ada deskripsi profil. Klik ubah profil untuk menambahkan deskripsi."}</p>
           </div>
-          <div className="flex flex-row sm:flex-col gap-3 w-full sm:w-auto mt-6 sm:mt-0 z-10">
-            <Button onClick={() => openSchedules(doctor)} icon={<Calendar size={18} />} className="flex-1 sm:flex-none justify-center shadow-md hover:shadow-lg transition-all duration-300">
+          <div className="flex flex-row sm:flex-col gap-2.5 w-full sm:w-auto mt-2 sm:mt-0 z-10">
+            <Button onClick={() => openSchedules(doctor)} size="sm" icon={<Calendar size={14} />} className="flex-1 sm:flex-none justify-center h-10 shadow-sm">
               Kelola Jadwal
             </Button>
-            <Button onClick={() => openForm(doctor)} variant="outline" icon={<Edit2 size={18} />} className="flex-1 sm:flex-none justify-center bg-background/50 backdrop-blur-sm border-glass-border shadow-sm hover:shadow-md transition-all duration-300">
+            <Button onClick={() => openForm(doctor)} size="sm" variant="outline" icon={<Edit2 size={14} />} className="flex-1 sm:flex-none justify-center h-10 border-glass-border shadow-sm hover:bg-black/5 dark:hover:bg-white/5">
               Ubah Profil
             </Button>
           </div>

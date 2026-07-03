@@ -3,9 +3,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../widgets/booking_qr_card.dart';
 import '../widgets/appointment_doctor_card.dart';
 import '../widgets/schedule_details_card.dart';
+import '../../data/models/appointment.dart';
 
 class AppointmentDetailScreen extends StatelessWidget {
-  final dynamic appointment;
+  final Appointment appointment;
 
   const AppointmentDetailScreen({super.key, required this.appointment});
 

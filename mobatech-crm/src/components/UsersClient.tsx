@@ -99,7 +99,7 @@ export function UsersClient() {
         <table className="w-full text-center border-collapse text-sm">
           <thead>
             <tr className="border-b border-glass-border bg-black/5 dark:bg-white/5 font-semibold">
-              <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Pengguna</th>
+              <th className="text-center align-middle whitespace-nowrap py-3 px-6 text-sm">Pengguna</th>
               <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Kontak</th>
               <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Peran (Role)</th>
               <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Aksi</th>
@@ -113,8 +113,8 @@ export function UsersClient() {
             ) : (
               users.map((u) => (
                 <tr key={u.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
-                  <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex items-center justify-center gap-3">
+                  <td className="text-left align-middle whitespace-nowrap py-3 px-6 text-sm">
+                    <div className="flex items-center justify-start gap-3">
                       <img src={u.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name)}&background=113c2b&color=fff`} alt={u.full_name} className="w-8 h-8 rounded-full object-cover border border-glass-border" />
                       <div className="text-left"><div className="font-semibold">{u.full_name}</div><div className="text-xs text-foreground/50">ID: {u.id}</div></div>
                     </div>

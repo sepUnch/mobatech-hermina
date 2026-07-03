@@ -1,24 +1,20 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
-
 import { useEffect, useState } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Formatters } from "@/lib/formatters";
 import { EmergencyRequest } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
-import { format } from "date-fns";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { EmergenciesHeader } from "./EmergenciesHeader";
-
 export function EmergenciesClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
@@ -109,7 +105,7 @@ return (
             <tbody>
               {items.map((item) => (
                 <tr key={item.id} className={`border-b border-glass-border/50 transition-colors ${item.status === 'Pending' ? 'bg-rose-500/5 dark:bg-rose-500/10' : 'hover:bg-black/5 dark:hover:bg-white/5'}`}>
-                  <td className="p-4 text-foreground/80">{format(new Date(item.created_at), "dd MMM yyyy HH:mm:ss")}</td>
+                  <td className="p-4 text-foreground/80">{Formatters.date(item.created_at, "datetimesec")}</td>
                   <td className="p-4 font-semibold text-rose-600 dark:text-rose-400">{item.patient_name}</td>
                   <td className="p-4 text-foreground/80 max-w-[150px] truncate">{item.condition}</td>
                   <td className="p-4">
