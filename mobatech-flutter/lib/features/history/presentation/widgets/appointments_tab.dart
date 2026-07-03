@@ -30,7 +30,7 @@ class AppointmentsTab extends ConsumerWidget {
                 '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';
             final status = appt.status.toUpperCase();
             final date = appt.schedule?.date != null
-                ? Formatters.formatDate(appt.schedule!.date!)
+                ? Formatters.formatDateID(appt.schedule!.date!)
                 : '-';
             return HistoryCard(
               title: title,

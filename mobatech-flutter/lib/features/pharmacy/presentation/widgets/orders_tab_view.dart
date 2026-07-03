@@ -25,7 +25,7 @@ class OrdersTabView extends ConsumerWidget {
           },
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
             itemCount: orders.length,
             separatorBuilder: (context, index) => const SizedBox(height: 16),
             itemBuilder: (context, index) {
@@ -131,7 +131,7 @@ class OrdersTabView extends ConsumerWidget {
         );
       },
       loading: () => ListView.separated(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         itemCount: 3,
         separatorBuilder: (context, index) => const SizedBox(height: 16),
         itemBuilder: (context, index) => const ShimmerLoading(

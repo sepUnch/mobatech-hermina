@@ -45,7 +45,7 @@ class ScheduleDetailsCard extends StatelessWidget {
               const SizedBox(width: 12),
               Text(
                 appointment.schedule?.date != null
-                    ? Formatters.formatDate(appointment.schedule!.date!, format: 'EEEE, dd MMM yyyy')
+                    ? Formatters.formatDateWithDayID(appointment.schedule!.date!)
                     : '-',
                 style: const TextStyle(color: AppColors.textDark),
               ),

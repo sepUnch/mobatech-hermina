@@ -31,6 +31,7 @@ class AppColors {
   // Status/Alerts
   static const Color errorRed = Color(0xFFE53935);
   static const Color successGreen = Color(0xFF4CAF50);
+  static const Color warningYellow = Color(0xFFFFB300);
 
   // Button disabled
   static const Color buttonDisabled = Color(0xFFEEEEEE);

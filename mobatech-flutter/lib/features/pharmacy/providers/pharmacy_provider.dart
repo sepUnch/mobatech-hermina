@@ -86,6 +86,7 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.addToCart(medicineId, quantity);
       await fetchCart();
     } catch (e) {
+      throw Exception('Failed to add to cart: $e');
     }
   }
 
@@ -94,6 +95,7 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.updateCartItem(cartItemId, quantity);
       await fetchCart();
     } catch (e) {
+      throw Exception('Failed to update cart: $e');
     }
   }
 
@@ -102,6 +104,7 @@ class CartNotifier extends StateNotifier<AsyncValue<Cart>> {
       await repository.removeFromCart(cartItemId);
       await fetchCart();
     } catch (e) {
+      throw Exception('Failed to remove from cart: $e');
     }
   }
 }

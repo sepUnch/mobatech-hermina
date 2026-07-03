@@ -1,5 +1,6 @@
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
+import '../../../../core/utils/formatters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -10,7 +11,7 @@ class PrescriptionCard extends ConsumerWidget {
   const PrescriptionCard({super.key, required this.prescription});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Padding( padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+    return Padding( padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
       child: Container( padding: const EdgeInsets.all(16),
         decoration: BoxDecoration( color: AppColors.backgroundWhite.withValues(alpha: 0.15),
           borderRadius: BorderRadius.circular(16),
@@ -61,7 +62,11 @@ class PrescriptionCard extends ConsumerWidget {
         content: Text(AppStrings.extApakahandayakininginmenghapuseresepini),
         actions: [ TextButton(onPressed: () => Navigator.pop(context, false), child: Text(AppStrings.extBatal, style: TextStyle(color: AppColors.textGrey))),
           TextButton(onPressed: () => Navigator.pop(context, true), child: Text(AppStrings.extHapus, style: TextStyle(color: AppColors.errorRed))), ], ), );
-    if (confirm == true) _deletePrescription(context, ref); }
+    if (confirm == true) {
+      if (!context.mounted) return;
+      _deletePrescription(context, ref);
+    } 
+  }
   Future<void> _deletePrescription(BuildContext context, WidgetRef ref) async {
     try {
       await ref.read(prescriptionRepositoryProvider).deletePrescription(prescription.id);
@@ -71,7 +76,7 @@ class PrescriptionCard extends ConsumerWidget {
     } catch (e) {
       if (!context.mounted) return;
       CustomSnackbar.showError(context, AppStrings.extGagalmenghapuseresep); } }
-  Widget _buildDate() => Text('${AppStrings.extTanggal} ${prescription.createdAt.toLocal().toString().split(' ')[0]}', style: const TextStyle(color: AppColors.textGrey, fontSize: 14));
+  Widget _buildDate() => Text('${AppStrings.extTanggal} ${Formatters.formatDateID(prescription.createdAt.toLocal())}', style: const TextStyle(color: AppColors.textGrey, fontSize: 14));
   Widget _buildItems() {
     if (prescription.items.isEmpty) return const SizedBox.shrink();
     return Column( crossAxisAlignment: CrossAxisAlignment.start,

@@ -62,26 +62,51 @@ class SchedulesCard extends StatelessWidget {
                         ),
                       );
                     }
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: schedules.length,
-                      separatorBuilder: (_, __) => const SizedBox(height: 12),
-                      itemBuilder: (context, index) {
-                        final schedule = schedules[index];
-                        final isSelected = selectedScheduleId == schedule.id;
-                        return ScheduleItemCard(
-                          schedule: schedule,
-                          isSelected: isSelected,
-                          onTap: () {
-                            if (selectedScheduleId == schedule.id) {
-                              onScheduleSelected(null);
-                            } else {
-                              onScheduleSelected(schedule.id);
-                            }
+                    return StreamBuilder<int>(
+                      stream: Stream.periodic(const Duration(minutes: 1), (i) => i),
+                      builder: (context, snapshot) {
+                        final now = DateTime.now();
+                        // Hanya tampilkan jadwal untuk HARI INI
+                        final todaySchedules = schedules.where((s) {
+                          if (s.date == null) return false;
+                          // Pastikan date di-parse ke local untuk perbandingan
+                          final localDate = s.date!.toLocal();
+                          return localDate.year == now.year &&
+                                 localDate.month == now.month &&
+                                 localDate.day == now.day;
+                        }).toList();
+
+                        if (todaySchedules.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              'Tidak ada jadwal tersedia untuk hari ini',
+                              style: TextStyle(color: AppColors.textGrey),
+                            ),
+                          );
+                        }
+
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: todaySchedules.length,
+                          separatorBuilder: (_, __) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            final schedule = todaySchedules[index];
+                            final isSelected = selectedScheduleId == schedule.id;
+                            return ScheduleItemCard(
+                              schedule: schedule,
+                              isSelected: isSelected,
+                              onTap: () {
+                                if (selectedScheduleId == schedule.id) {
+                                  onScheduleSelected(null);
+                                } else {
+                                  onScheduleSelected(schedule.id);
+                                }
+                              },
+                            );
                           },
                         );
-                      },
+                      }
                     );
                   },
                   loading: () => const CardSkeletonLoader(count: 3),

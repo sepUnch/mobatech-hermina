@@ -21,7 +21,20 @@ func NewAppointmentController(appointmentService services.AppointmentService) *A
 func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	appointments, err := c.appointmentService.GetAllAppointments(search, filter)
+	
+	roleFloat, _ := ctx.Get("role")
+	role := ""
+	if roleFloat != nil {
+		role = roleFloat.(string)
+	}
+
+	userIDFloat, _ := ctx.Get("user_id")
+	userID := uint(0)
+	if userIDFloat != nil {
+		userID = uint(userIDFloat.(float64))
+	}
+
+	appointments, err := c.appointmentService.GetAllAppointments(search, filter, userID, role)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

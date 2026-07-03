@@ -17,20 +17,44 @@ class CartScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: AppColors.backgroundLightGrey,
-      appBar: AppBar(
-        title: const Text(
-          AppStrings.extKeranjang,
-          style: TextStyle(
-            color: AppColors.textDark,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: AppColors.backgroundWhite,
-        iconTheme: const IconThemeData(color: AppColors.textDark),
-        elevation: 0,
-      ),
       body: cartAsync.when(
-        data: (cart) => _CartItemList(cart: cart),
+        data: (cart) => CustomScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          slivers: [
+            SliverAppBar(
+              expandedHeight: 40,
+              pinned: true,
+              backgroundColor: AppColors.primary,
+              iconTheme: const IconThemeData(color: AppColors.textWhite),
+              centerTitle: true,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+              ),
+              title: const Text(
+                AppStrings.extKeranjang,
+                style: TextStyle(
+                  color: AppColors.textWhite,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              flexibleSpace: FlexibleSpaceBar(
+                background: Stack(
+                  children: [
+                    Positioned(
+                      right: -20,
+                      top: 0,
+                      child: Opacity(
+                        opacity: 0.2,
+                        child: Image.asset('assets/header_logo.png', width: 150),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            _CartItemList(cart: cart),
+          ],
+        ),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) =>
             const Center(child: Text(AppStrings.extGagalmemuatkeranjang)),

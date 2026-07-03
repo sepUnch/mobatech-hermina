@@ -140,7 +140,7 @@ class _ScheduleInfo extends StatelessWidget {
   String _getScheduleText() {
     if (appointment.schedule != null && appointment.schedule!.date != null) {
       final date = appointment.schedule!.date!;
-      return '${Formatters.getDayOfWeekID(date)}, ${Formatters.formatDateID(date)} . ${appointment.schedule!.startTime}';
+      return '${Formatters.formatDateWithDayID(date)} • ${appointment.schedule!.startTime}';
     }
     return 'Jadwal belum ditentukan';
   }

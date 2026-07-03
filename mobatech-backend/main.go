@@ -3,6 +3,7 @@ package main
 import (
 	"backend/config"
 	"backend/controllers"
+	"backend/cron"
 	"backend/middleware"
 	"backend/models"
 	"backend/routes"
@@ -18,6 +19,9 @@ import (
 func main() {
 	// Initialize Database Connection
 	config.ConnectDatabase()
+
+	// Start Background Cron Jobs
+	cron.StartScheduleExpirationCron(config.DB)
 
 	// Ensure uploads directory exists to prevent crash on file upload
 	os.MkdirAll("uploads", os.ModePerm)

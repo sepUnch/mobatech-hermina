@@ -16,8 +16,28 @@ class ScheduleItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isExpired = false;
+    if (schedule.date != null && schedule.endTime.isNotEmpty) {
+      final now = DateTime.now();
+      final timeParts = schedule.endTime.split(':');
+      if (timeParts.length >= 2) {
+        final endHour = int.tryParse(timeParts[0]) ?? 0;
+        final endMinute = int.tryParse(timeParts[1]) ?? 0;
+        final scheduleEnd = DateTime(
+          schedule.date!.year,
+          schedule.date!.month,
+          schedule.date!.day,
+          endHour,
+          endMinute,
+        );
+        if (now.isAfter(scheduleEnd)) {
+          isExpired = true;
+        }
+      }
+    }
+
     final isAvailable =
-        schedule.isAvailable && (schedule.quota - schedule.booked > 0);
+        !isExpired && schedule.isAvailable && (schedule.quota - schedule.booked > 0);
     final dateStr = schedule.date != null
         ? '${schedule.date!.day}/${schedule.date!.month}/${schedule.date!.year}'
         : '';
@@ -85,9 +105,9 @@ class ScheduleItemCard extends StatelessWidget {
                   color: AppColors.errorRed.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'Penuh',
-                  style: TextStyle(
+                child: Text(
+                  isExpired ? 'Berakhir' : 'Penuh',
+                  style: const TextStyle(
                     color: AppColors.errorRed,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,

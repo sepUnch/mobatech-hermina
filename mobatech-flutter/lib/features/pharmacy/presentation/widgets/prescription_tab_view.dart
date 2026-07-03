@@ -60,7 +60,7 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                 child: ElevatedButton.icon(
                   onPressed: _isUploading ? null : _uploadPrescription,
                   icon: _isUploading 
@@ -100,7 +100,7 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
         );
       },
       loading: () => ListView.separated(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
         itemCount: 3,
         separatorBuilder: (context, index) => const SizedBox(height: 16),
         itemBuilder: (context, index) => const ShimmerLoading(

@@ -3,9 +3,8 @@
 import { useState } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
-import { Prescription, Medicine } from "@/types/api";
+import { Prescription, Medicine, PrescriptionItem } from "@/types/api";
 import { Trash2, Plus } from "lucide-react";
-import { SafeAny } from "@/types/api";
 
 interface PrescriptionFormModalProps {
   isOpen: boolean;
@@ -31,7 +30,7 @@ export function PrescriptionFormModal({
   const handleAddItem = () => {
     setForm(f => ({
       ...f,
-      items: [...(f.items || []), { medicine_id: 0, dosage: "", duration: "", quantity: 1, notes: "" } as SafeAny]
+      items: [...(f.items || []), { medicine_id: 0, dosage: "", duration: "", quantity: 1, notes: "" } as PrescriptionItem]
     }));
   };
 
@@ -44,7 +43,7 @@ export function PrescriptionFormModal({
 
   const updateItem = (index: number, field: string, value: string | number) => {
     setForm(f => {
-      const newItems = [...(f.items || [])] as SafeAny[];
+      const newItems = [...(f.items || [])] as PrescriptionItem[];
       newItems[index] = { ...newItems[index], [field]: value };
       return { ...f, items: newItems };
     });

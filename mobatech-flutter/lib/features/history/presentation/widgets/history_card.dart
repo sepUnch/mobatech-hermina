@@ -18,6 +18,16 @@ class HistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color getStatusColor(String s) {
+      final text = s.toLowerCase();
+      if (text == 'pending' || text == 'menunggu') return AppColors.warningYellow;
+      if (text == 'cancelled' || text == 'batal') return AppColors.errorRed;
+      if (text == 'completed' || text == 'selesai') return AppColors.primary;
+      return AppColors.successGreen;
+    }
+
+    final statusColor = getStatusColor(status);
+
     return Card(
       elevation: 0,
       color: AppColors.transparent,
@@ -85,13 +95,13 @@ class HistoryCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.successGreen.withValues(alpha: 0.15),
+                      color: statusColor.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
                       status,
-                      style: const TextStyle(
-                        color: AppColors.successGreen,
+                      style: TextStyle(
+                        color: statusColor,
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
                       ),

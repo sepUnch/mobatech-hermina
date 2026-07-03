@@ -7,16 +7,24 @@ class _CartItemList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     if (cart.items.isEmpty) {
-      return const Center(child: Text(AppStrings.extKeranjangandakosong));
+      return const SliverFillRemaining(
+        child: Center(child: Text(AppStrings.extKeranjangandakosong)),
+      );
     }
-    return ListView.separated(
-      padding: const EdgeInsets.all(16.0),
-      itemCount: cart.items.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        final item = cart.items[index];
-        return _CartItemWidget(item: item);
-      },
+    return SliverPadding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+      sliver: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) {
+            final item = cart.items[index];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: _CartItemWidget(item: item),
+            );
+          },
+          childCount: cart.items.length,
+        ),
+      ),
     );
   }
 }

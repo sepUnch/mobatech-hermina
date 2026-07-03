@@ -21,7 +21,20 @@ func NewMedicalResultController(service services.MedicalResultService) *MedicalR
 func (c *MedicalResultController) GetAll(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	results, err := c.service.GetAllMedicalResults(search, filter)
+
+	roleFloat, _ := ctx.Get("role")
+	role := ""
+	if roleFloat != nil {
+		role = roleFloat.(string)
+	}
+
+	userIDFloat, _ := ctx.Get("user_id")
+	userID := uint(0)
+	if userIDFloat != nil {
+		userID = uint(userIDFloat.(float64))
+	}
+
+	results, err := c.service.GetAllMedicalResults(search, filter, userID, role)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return

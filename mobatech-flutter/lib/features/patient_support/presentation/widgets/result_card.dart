@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/glass_status_chip.dart';
 import '../../data/models/medical_result.dart';
 
 class ResultCard extends StatelessWidget {
@@ -8,17 +9,6 @@ class ResultCard extends StatelessWidget {
   final VoidCallback onTap;
 
   const ResultCard({super.key, required this.result, required this.onTap});
-
-  Color _getStatusColor() {
-    switch (result.status.toLowerCase()) {
-      case 'selesai':
-        return AppColors.successGreen;
-      case 'menunggu hasil':
-        return AppColors.iconOrange;
-      default:
-        return AppColors.primary;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,23 +42,9 @@ class ResultCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: _getStatusColor().withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            result.status,
-                            style: TextStyle(
-                              color: _getStatusColor(),
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                        GlassStatusChip(
+                          status: result.status,
+                          fontSize: 12,
                         ),
                         Text(
                           result.date,

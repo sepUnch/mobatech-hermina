@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Dispatch, SetStateAction } from "react";
 import { APP_STRINGS } from "@/lib/constants";
-import { SafeAny } from "@/types/api";
 
 interface User { id: number; full_name: string; email: string; }
 type FormType = { user_id: number, appointment_id: number, doctor_name: string, test_type: string, test_name: string, result: string, notes: string, file_url: string, result_date: string };
@@ -36,7 +35,7 @@ export function MedicalResultsForm({
           <label className="text-xs text-foreground/60 font-medium">Pasien *</label>
           <select disabled={saving}
             value={form.user_id || ""}
-            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as SafeAny : Number(e.target.value)) }))}
+            onChange={(e) => setForm((f) => ({ ...f, user_id: (e.target.value === "" ? "" as unknown as number : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary"
           >
             <option value="">— Pilih Pasien —</option>
@@ -47,7 +46,7 @@ export function MedicalResultsForm({
         </div>
         <div className="space-y-1">
           <label className="text-xs text-foreground/60 font-medium">ID Janji Temu (opsional)</label>
-          <input disabled={saving} type="number" value={form.appointment_id || ""} onChange={(e) => setForm((f) => ({ ...f, appointment_id: (e.target.value === "" ? "" as SafeAny : Number(e.target.value)) }))}
+          <input disabled={saving} type="number" value={form.appointment_id || ""} onChange={(e) => setForm((f) => ({ ...f, appointment_id: (e.target.value === "" ? "" as unknown as number : Number(e.target.value)) }))}
             className="w-full glass-input rounded-xl px-3 py-2 text-sm text-foreground focus:border-primary" placeholder={APP_STRINGS.medicalResults.patientIdPlaceholder} />
         </div>
         <div className="space-y-1">

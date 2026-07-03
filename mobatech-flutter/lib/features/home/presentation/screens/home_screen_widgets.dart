@@ -23,8 +23,8 @@ class _HomeBody extends ConsumerWidget {
           },
           child: RefreshIndicator(
             onRefresh: () async {
-              ref.refresh(branchProvider);
-              ref.refresh(userAppointmentsProvider);
+              ref.invalidate(branchProvider);
+              ref.invalidate(userAppointmentsProvider);
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(
@@ -34,23 +34,23 @@ class _HomeBody extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const HomeHeader(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   const QuickAccessGrid(),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   const PromoBannerCarousel(),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
                   _buildSectionTitle(AppStrings.sectionAgenda),
                   const SizedBox(height: 12),
                   const _AgendaList(),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
                   _buildSectionTitle(AppStrings.sectionAssistant),
                   const SizedBox(height: 12),
                   const AssistantCard(),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 20),
                   _buildSectionTitle(AppStrings.sectionHospitals),
                   const SizedBox(height: 12),
                   const _HospitalsList(),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 24),
                 ],
               ),
             ),

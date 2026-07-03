@@ -47,7 +47,7 @@ func (r *doctorRepository) FindAll(search string, filter string, specialization 
 	if err == nil {
 		for i, doc := range doctors {
 			var count int64
-			r.db.Model(&models.DoctorSchedule{}).Where("doctor_id = ? AND DATE(date) = CURDATE()", doc.ID).Count(&count)
+			r.db.Model(&models.DoctorSchedule{}).Where("doctor_id = ? AND DATE(date) = CURDATE() AND is_available = ?", doc.ID, true).Count(&count)
 			doctors[i].IsAvailableToday = count > 0
 		}
 	}
@@ -61,7 +61,7 @@ func (r *doctorRepository) FindByID(id uint) (*models.Doctor, error) {
 		return nil, err
 	}
 	var count int64
-	r.db.Model(&models.DoctorSchedule{}).Where("doctor_id = ? AND DATE(date) = CURDATE()", doctor.ID).Count(&count)
+	r.db.Model(&models.DoctorSchedule{}).Where("doctor_id = ? AND DATE(date) = CURDATE() AND is_available = ?", doctor.ID, true).Count(&count)
 	doctor.IsAvailableToday = count > 0
 	return &doctor, nil
 }

@@ -13,6 +13,8 @@ class Formatters {
 
   static String formatDateID(DateTime d) => '${d.day} ${getMonthID(d)} ${d.year}';
 
+  static String formatDateWithDayID(DateTime d) => '${getDayOfWeekID(d)}, ${formatDateID(d)}';
+
   static String parseAndFormatDateID(String dateStr) {
     if (dateStr.isEmpty || dateStr == '-') return '-';
     try {

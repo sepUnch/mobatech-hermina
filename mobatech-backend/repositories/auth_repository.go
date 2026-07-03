@@ -13,7 +13,7 @@ type AuthRepository interface {
 	UpdateUser(user *models.User) error
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
-	GetAllUsers(search string, filter string, roleFilter string) ([]models.User, error)
+	GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string) ([]models.User, error)
 	DeleteUser(id uint) error
 }
 
@@ -57,9 +57,14 @@ func (r *authRepository) DeleteFamilyMember(id uint) error {
 	return r.db.Delete(&models.FamilyMember{}, id).Error
 }
 
-func (r *authRepository) GetAllUsers(search string, filter string, roleFilter string) ([]models.User, error) {
+func (r *authRepository) GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string) ([]models.User, error) {
 	var users []models.User
 	query := r.db.Preload("FamilyMembers")
+	
+	if viewerRole == "doctor" && roleFilter == "patient" {
+		query = query.Where("id IN (SELECT user_id FROM appointments WHERE doctor_id = (SELECT id FROM doctors WHERE user_id = ? LIMIT 1))", viewerID)
+	}
+
 	if roleFilter != "" {
 		query = query.Where("role = ?", roleFilter)
 	}

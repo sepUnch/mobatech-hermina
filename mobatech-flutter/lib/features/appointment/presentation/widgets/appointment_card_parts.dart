@@ -30,7 +30,7 @@ class AppointmentCardTopSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                '${appointment.schedule?.date != null ? Formatters.formatDate(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
+                '${appointment.schedule?.date != null ? Formatters.formatDateID(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
                 style: const TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.bold,

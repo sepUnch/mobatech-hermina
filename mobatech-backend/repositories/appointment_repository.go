@@ -7,7 +7,7 @@ import (
 )
 
 type AppointmentRepository interface {
-	FindAll(search string, filter string) ([]models.Appointment, error)
+	FindAll(search string, filter string, userID uint, role string) ([]models.Appointment, error)
 	FindByUserID(userID uint) ([]models.Appointment, error)
 	FindByID(id uint) (*models.Appointment, error)
 	Create(appointment *models.Appointment) error
@@ -22,19 +22,24 @@ func NewAppointmentRepository(db *gorm.DB) AppointmentRepository {
 	return &appointmentRepository{db}
 }
 
-func (r *appointmentRepository) FindAll(search string, filter string) ([]models.Appointment, error) {
+func (r *appointmentRepository) FindAll(search string, filter string, userID uint, role string) ([]models.Appointment, error) {
 	var appointments []models.Appointment
 	query := r.db.Preload("User").Preload("Doctor").Preload("Schedule").
-		Joins("LEFT JOIN users ON users.id = appointments.user_id")
+		Joins("LEFT JOIN users ON users.id = appointments.user_id").
+		Joins("LEFT JOIN doctor_schedules ON doctor_schedules.id = appointments.doctor_schedule_id")
 		
+	if role == "doctor" {
+		query = query.Where("appointments.doctor_id = (SELECT id FROM doctors WHERE user_id = ? LIMIT 1)", userID)
+	}
+
 	if search != "" {
 		searchTerm := "%" + search + "%"
 		query = query.Where("appointments.notes LIKE ? OR users.full_name LIKE ?", searchTerm, searchTerm)
 	}
 	if filter == "today" {
-		query = query.Where("DATE(schedule_date) = CURDATE()")
+		query = query.Where("DATE(doctor_schedules.date) = CURDATE()")
 	} else if filter == "tomorrow" {
-		query = query.Where("DATE(schedule_date) = CURDATE() + INTERVAL 1 DAY")
+		query = query.Where("DATE(doctor_schedules.date) = CURDATE() + INTERVAL 1 DAY")
 	}
 	
 	err := query.Order("appointments.created_at desc").Find(&appointments).Error

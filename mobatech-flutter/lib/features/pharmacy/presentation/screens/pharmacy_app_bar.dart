@@ -16,6 +16,7 @@ class _PharmacyAppBar extends StatelessWidget {
       pinned: true,
       backgroundColor: AppColors.primary,
       iconTheme: const IconThemeData(color: AppColors.textWhite),
+      centerTitle: true,
       title: const Text(
         AppStrings.pharmacyTitle,
         style: TextStyle(

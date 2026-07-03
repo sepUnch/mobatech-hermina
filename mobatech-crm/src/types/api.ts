@@ -123,5 +123,3 @@ export interface Prescription extends GormModel {
   items: PrescriptionItem[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SafeAny = any;

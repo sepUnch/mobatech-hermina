@@ -15,20 +15,35 @@ class GlassStatusChip extends StatelessWidget {
 
     switch (status.toLowerCase()) {
       case 'pending':
+      case 'menunggu':
+      case 'menunggu hasil':
         baseColor = AppColors.iconOrange;
         label = 'Menunggu';
         break;
       case 'approved':
+      case 'disetujui':
         baseColor = AppColors.iconBlue;
         label = 'Disetujui';
         break;
       case 'completed':
-        baseColor = AppColors.primary;
+      case 'selesai':
+        baseColor = AppColors.successGreen;
         label = 'Selesai';
         break;
       case 'cancelled':
+      case 'dibatalkan':
         baseColor = AppColors.errorRed;
         label = 'Dibatalkan';
+        break;
+      case 'available':
+      case 'tersedia':
+        baseColor = AppColors.primary;
+        label = 'Tersedia';
+        break;
+      case 'unavailable':
+      case 'tidak tersedia':
+        baseColor = AppColors.errorRed;
+        label = 'Tidak Tersedia';
         break;
       default:
         baseColor = AppColors.textGrey;

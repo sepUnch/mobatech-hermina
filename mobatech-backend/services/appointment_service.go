@@ -4,10 +4,12 @@ import (
 	"backend/models"
 	"backend/repositories"
 	"errors"
+	"fmt"
+	"time"
 )
 
 type AppointmentService interface {
-	GetAllAppointments(search string, filter string) ([]models.Appointment, error)
+	GetAllAppointments(search string, filter string, userID uint, role string) ([]models.Appointment, error)
 	GetUserAppointments(userID uint) ([]models.Appointment, error)
 	BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error)
 	CancelAppointment(id uint, userID uint, isAdmin bool) error
@@ -24,8 +26,8 @@ func NewAppointmentService(appointmentRepo repositories.AppointmentRepository, s
 	return &appointmentService{appointmentRepo, scheduleRepo}
 }
 
-func (s *appointmentService) GetAllAppointments(search string, filter string) ([]models.Appointment, error) {
-	return s.appointmentRepo.FindAll(search, filter)
+func (s *appointmentService) GetAllAppointments(search string, filter string, userID uint, role string) ([]models.Appointment, error) {
+	return s.appointmentRepo.FindAll(search, filter, userID, role)
 }
 
 func (s *appointmentService) GetUserAppointments(userID uint) ([]models.Appointment, error) {
@@ -41,6 +43,25 @@ func (s *appointmentService) BookAppointment(userID uint, req *models.Appointmen
 
 	if !schedule.IsAvailable || schedule.Booked >= schedule.Quota {
 		return nil, errors.New("schedule is full or not available")
+	}
+
+	// Validate if the schedule is expired (past date/time)
+	now := time.Now()
+	// Combine schedule.Date (time.Time) and schedule.EndTime (string)
+	scheduleEndStr := fmt.Sprintf("%s %s", schedule.Date.Format("2006-01-02"), schedule.EndTime)
+	
+	var scheduleEnd time.Time
+	var errParse error
+	if len(schedule.EndTime) > 5 {
+		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04:05", scheduleEndStr, time.Local)
+	} else {
+		scheduleEnd, errParse = time.ParseInLocation("2006-01-02 15:04", scheduleEndStr, time.Local)
+	}
+
+	if errParse == nil {
+		if now.After(scheduleEnd) {
+			return nil, errors.New("schedule has already expired")
+		}
 	}
 
 	schedule.Booked += 1

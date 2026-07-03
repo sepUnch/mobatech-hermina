@@ -10,7 +10,6 @@ import { Modal } from "@/components/Modal";
 import { Button } from "@/components/ui/Button";
 import { ImageUpload } from "./ImageUpload";
 import { PhoneInput } from "@/components/ui/PhoneInput";
-import { SafeAny } from "@/types/api";
 
 interface DoctorFormModalProps {
   isOpen: boolean; onClose: () => void; doctor: Doctor | null;
@@ -68,7 +67,7 @@ export function DoctorFormModal({ isOpen, onClose, doctor, onSave }: DoctorFormM
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.specLabel}</label><input disabled={submitting} type="text" required value={specialization} onChange={(e) => setSpecialization(e.target.value)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.specPlaceholder} /></div>
-          <div><label className="block text-xs font-semibold mb-2">Tautkan Akun (User ID)</label><select disabled={submitting} value={userId ?? ""} onChange={(e) => setUserId((e.target.value === "" ? "" as SafeAny : Number(e.target.value)) || undefined)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none"><option value="">Kosongkan (Belum Ada Akun)</option>{users.map((u) => (<option key={u.id} value={u.id}>{u.full_name} ({u.email})</option>))}</select></div>
+          <div><label className="block text-xs font-semibold mb-2">Tautkan Akun (User ID)</label><select disabled={submitting} value={userId ?? ""} onChange={(e) => setUserId((e.target.value === "" ? "" as unknown as number : Number(e.target.value)) || undefined)} className="w-full h-10 px-3 rounded-xl border glass-input text-sm text-foreground cursor-pointer focus:border-primary outline-none"><option value="">Kosongkan (Belum Ada Akun)</option>{users.map((u) => (<option key={u.id} value={u.id}>{u.full_name} ({u.email})</option>))}</select></div>
         </div>
         <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.contactLabel}</label><PhoneInput disabled={submitting} value={contactInfo} onChange={setContactInfo} className={errors.phone ? "border-error focus-within:border-error" : ""} />{errors.phone && <p className="text-xs text-error mt-1">{errors.phone}</p>}</div>
         <div><label className="block text-xs font-semibold mb-2">{APP_STRINGS.doctors.descLabel}</label><textarea disabled={submitting} required value={description} onChange={(e) => setDescription(e.target.value)} className="w-full p-3 rounded-xl border glass-input text-sm text-foreground h-20 resize-none focus:border-primary outline-none" placeholder={APP_STRINGS.doctors.descPlaceholder} /></div>
