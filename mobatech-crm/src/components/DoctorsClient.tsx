@@ -13,6 +13,8 @@ import { ScheduleModal } from "@/components/ScheduleModal";
 import { DeleteModal } from "@/components/DeleteModal";
 import { DoctorsHeader } from "./DoctorsHeader";
 import { DoctorsContent } from "./DoctorsContent";
+import { Pagination } from "@/components/ui/Pagination";
+
 export function DoctorsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
@@ -29,6 +31,8 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [polyclinics, setPolyclinics] = useState<Polyclinic[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{
     isOpen: boolean;
     message: string;
@@ -37,15 +41,20 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
   const loadItems = async () => {
     try {
       const queryParams = new URLSearchParams();
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", "10");
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
       const [docRes, schedRes] = await Promise.allSettled([
-        api.get<Doctor[]>(`/api/doctors${qs}`),
+        api.get<Doctor[]>(`/api/admin/doctors${qs}`),
         api.get<DoctorSchedule[]>("/api/admin/schedules?limit=200")
       ]);
       let docs = docRes.status === "fulfilled" ? (docRes.value.data || []) : [];
       let scheds = schedRes.status === "fulfilled" ? (schedRes.value.data || []) : [];
+      if (docRes.status === "fulfilled" && docRes.value.meta) {
+        setTotalPages(docRes.value.meta.total_pages);
+      }
       if (user?.role === "doctor") {
         docs = docs.filter((d) => d.user_id === user.id);
       }
@@ -63,10 +72,13 @@ export function DoctorsClient({ initialData, searchParams }: { initialData?: unk
     api.get<Polyclinic[]>("/api/polyclinics").then((res) => setPolyclinics(res.data || [])).catch(() => {});
   }, []);
   useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, filterValue]);
+  useEffect(() => {
     loadItems();
     const interval = setInterval(() => loadItems(), 5000);
 return () => clearInterval(interval);
-  }, [searchQuery, filterValue]);
+  }, [searchQuery, filterValue, currentPage]);
   const openForm = (item: Doctor | null = null) => {
     setSelectedItem(item);
     setShowFormModal(true);
@@ -136,6 +148,9 @@ return (
         setDeleteId={setDeleteId}
         schedules={schedules}
       />
+      {activeTab === "doctors" && user?.role !== "doctor" && (
+        <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+      )}
       <DoctorFormModal isOpen={showFormModal} onClose={() => setShowFormModal(false)} doctor={selectedItem} onSave={handleSave} />
       <ScheduleModal isOpen={showSchedModal} onClose={() => setShowSchedModal(false)} doctor={selectedItem} onChange={loadItems} />
       <DeleteModal

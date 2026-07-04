@@ -77,6 +77,33 @@ func (c *ChatController) DeleteSession(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
+
+func (c *ChatController) RenameSession(ctx *gin.Context) {
+	userID, exists := ctx.Get("user_id")
+	if !exists {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
+		return
+	}
+	sessionIDStr := ctx.Param("id")
+	sessionID, err := strconv.Atoi(sessionIDStr)
+	if err != nil {
+		ctx.Error(utils.NewValidationError("invalid session id"))
+		return
+	}
+	var req struct {
+		Title string `json:"title"`
+	}
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.Error(utils.NewValidationError(err.Error()))
+		return
+	}
+	err = c.service.RenameSession(uint(userID.(float64)), uint(sessionID), req.Title)
+	if err != nil {
+		ctx.Error(utils.NewInternalError(err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
+}
 func (c *ChatController) StreamChat(ctx *gin.Context) {
 	sessionIDStr := ctx.Param("id")
 	sessionID, err := strconv.ParseUint(sessionIDStr, 10, 32)

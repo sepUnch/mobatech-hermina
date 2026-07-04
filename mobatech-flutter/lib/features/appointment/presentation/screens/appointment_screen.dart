@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/error_handler.dart';
@@ -17,6 +18,7 @@ class AppointmentScreen extends ConsumerStatefulWidget {
 
 class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
   late TextEditingController _searchController;
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -24,11 +26,18 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
     _searchController = TextEditingController(
       text: ref.read(searchQueryProvider),
     );
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 200) {
+        ref.read(doctorsProvider.notifier).fetchNextPage();
+      }
+    });
   }
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -52,6 +61,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
           );
         },
         child: CustomScrollView(
+          controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
             AppointmentSliverHeader(
@@ -71,8 +81,17 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                       ),
                     );
                   }
+                  final isFetchingNextPage = ref.read(doctorsProvider.notifier).isFetchingNextPage;
                   return SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
+                      if (index == doctors.length) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(
+                            child: CupertinoActivityIndicator(radius: 14),
+                          ),
+                        );
+                      }
                       final doctor = doctors[index];
                       return DoctorCard(
                         doctor: doctor,
@@ -86,7 +105,7 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
                           );
                         },
                       );
-                    }, childCount: doctors.length),
+                    }, childCount: doctors.length + (isFetchingNextPage ? 1 : 0)),
                   );
                 },
                 loading: () => const SliverToBoxAdapter(

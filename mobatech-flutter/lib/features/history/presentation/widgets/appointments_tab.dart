@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,22 +10,55 @@ import '../../../../core/utils/error_handler.dart';
 import '../../../appointment/providers/appointment_provider.dart';
 import 'history_card.dart';
 
-class AppointmentsTab extends ConsumerWidget {
+class AppointmentsTab extends ConsumerStatefulWidget {
   const AppointmentsTab({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AppointmentsTab> createState() => _AppointmentsTabState();
+}
+
+class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        ref.read(userAppointmentsProvider.notifier).fetchNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appointmentsAsync = ref.watch(userAppointmentsProvider);
     return appointmentsAsync.when(
       data: (appointments) {
         if (appointments.isEmpty) {
           return const Center(child: Text(AppStrings.noAppointmentHistory));
         }
+        final isFetchingNextPage = ref.read(userAppointmentsProvider.notifier).isFetchingNextPage;
         return ListView.separated(
+          controller: _scrollController,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-          itemCount: appointments.length,
+          itemCount: appointments.length + (isFetchingNextPage ? 1 : 0),
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (context, index) {
+            if (index == appointments.length) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(
+                  child: CupertinoActivityIndicator(radius: 14),
+                ),
+              );
+            }
             final appt = appointments[index];
             final title =
                 '${AppStrings.appointmentWith} ${appt.doctor?.name ?? AppStrings.defaultDoctorName}';

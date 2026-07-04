@@ -25,6 +25,22 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   XFile? _selectedImage;
   FilePickerResult? _selectedFile;
 
+  String _generateSmartTitle(String text) {
+    if (text.isEmpty) return AppStrings.chatMediaAttachmentTitle;
+    final words = text.trim().split(RegExp(r'\s+'));
+    final takeCount = words.length > 4 ? 4 : words.length;
+    final titleWords = words.take(takeCount).map((w) {
+      if (w.isEmpty) return '';
+      return w[0].toUpperCase() + w.substring(1).toLowerCase();
+    }).toList();
+
+    String title = titleWords.join(' ');
+    if (words.length > 4) {
+      title += '...';
+    }
+    return title.length > 30 ? '${title.substring(0, 27)}...' : title;
+  }
+
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty && _selectedImage == null && _selectedFile == null) return;
@@ -39,9 +55,7 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       ref
           .read(chatMessagesProvider.notifier)
           .createNewSessionAndSend(
-            text.isNotEmpty
-                ? (text.length > 20 ? text.substring(0, 20) : text)
-                : AppStrings.chatMediaAttachmentTitle,
+            _generateSmartTitle(text),
             text,
             imagePath: imgPath,
             filePath: filePath,

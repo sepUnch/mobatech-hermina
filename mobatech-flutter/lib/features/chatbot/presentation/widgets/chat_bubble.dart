@@ -104,13 +104,13 @@ class ChatBubble extends StatelessWidget {
             width: 36,
             height: 36,
             decoration: const BoxDecoration(
-              color: AppColors.borderGrey,
+              color: AppColors.primary,
               shape: BoxShape.circle,
-              image: DecorationImage(
-                image: AssetImage('assets/doctor.png'),
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-              ),
+            ),
+            child: const Icon(
+              Icons.person,
+              color: AppColors.backgroundWhite,
+              size: 20,
             ),
           ),
         ] else

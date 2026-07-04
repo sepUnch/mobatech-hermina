@@ -9,8 +9,8 @@ import (
 )
 
 type AppointmentService interface {
-	GetAllAppointments(search string, filter string, userID uint, role string) ([]models.Appointment, error)
-	GetUserAppointments(userID uint) ([]models.Appointment, error)
+	GetAllAppointments(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error)
+	GetUserAppointments(userID uint, limit, offset int) ([]models.Appointment, int64, error)
 	BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error)
 	CancelAppointment(id uint, userID uint, isAdmin bool) error
 	ApproveAppointment(id uint) error
@@ -26,12 +26,12 @@ func NewAppointmentService(appointmentRepo repositories.AppointmentRepository, s
 	return &appointmentService{appointmentRepo, scheduleRepo}
 }
 
-func (s *appointmentService) GetAllAppointments(search string, filter string, userID uint, role string) ([]models.Appointment, error) {
-	return s.appointmentRepo.FindAll(search, filter, userID, role)
+func (s *appointmentService) GetAllAppointments(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error) {
+	return s.appointmentRepo.FindAll(search, filter, userID, role, limit, offset)
 }
 
-func (s *appointmentService) GetUserAppointments(userID uint) ([]models.Appointment, error) {
-	return s.appointmentRepo.FindByUserID(userID)
+func (s *appointmentService) GetUserAppointments(userID uint, limit, offset int) ([]models.Appointment, int64, error) {
+	return s.appointmentRepo.FindByUserID(userID, limit, offset)
 }
 
 func (s *appointmentService) BookAppointment(userID uint, req *models.Appointment) (*models.Appointment, error) {

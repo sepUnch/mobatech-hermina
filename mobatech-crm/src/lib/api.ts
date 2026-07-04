@@ -6,11 +6,20 @@ import { encryptData, decryptData } from "./crypto";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
+export interface PaginationMeta {
+  current_page: number;
+  limit: number;
+  total_pages: number;
+  total_data: number;
+}
+
 export interface ApiResponse<T = unknown> {
-  success: boolean;
-  code: string;
-  message: string;
+  success?: boolean;
+  status?: string;
+  code?: string;
+  message?: string;
   data: T;
+  meta?: PaginationMeta;
 }
 
 export class ApiError extends Error {

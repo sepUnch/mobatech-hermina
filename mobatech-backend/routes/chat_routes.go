@@ -22,6 +22,7 @@ func SetupChatRoutes(r *gin.Engine, db *gorm.DB) {
 		chatGroup.POST("/sessions", controller.CreateSession)
 		chatGroup.GET("/sessions/:id/messages", controller.GetSessionMessages)
 		chatGroup.POST("/sessions/:id/stream", controller.StreamChat)
+		chatGroup.PUT("/sessions/:id", controller.RenameSession)
 		chatGroup.DELETE("/sessions/:id", controller.DeleteSession)
 	}
 

@@ -1,7 +1,10 @@
 package utils
 
 import (
+	"math"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 type MetaData struct {
@@ -45,6 +48,26 @@ func BuildError(code, message string, errors interface{}) ErrorResponse {
 		Errors:  errors,
 		Meta: MetaData{
 			Timestamp: time.Now().Format(time.RFC3339),
+		},
+	}
+}
+
+func BuildPaginatedSuccess(message string, data interface{}, page int, limit int, totalData int64) gin.H {
+	totalPages := 0
+	if limit > 0 {
+		totalPages = int(math.Ceil(float64(totalData) / float64(limit)))
+	}
+	return gin.H{
+		"success": true,
+		"code":    "OK",
+		"message": message,
+		"data":    data,
+		"meta": gin.H{
+			"timestamp":    time.Now().Format(time.RFC3339),
+			"current_page": page,
+			"limit":        limit,
+			"total_data":   totalData,
+			"total_pages":  totalPages,
 		},
 	}
 }

@@ -23,15 +23,19 @@ func (c *DoctorController) GetDoctors(ctx *gin.Context) {
 	filter := ctx.Query("filter")
 	specialization := ctx.Query("specialization")
 	polyclinicID, _ := strconv.ParseUint(ctx.DefaultQuery("polyclinic_id", "0"), 10, 32)
-	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "100"))
-	offset, _ := strconv.Atoi(ctx.DefaultQuery("offset", "0"))
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	if page < 1 {
+		page = 1
+	}
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
 
-	doctors, err := c.doctorService.GetAllDoctors(search, filter, specialization, uint(polyclinicID), limit, offset)
+	doctors, totalCount, err := c.doctorService.GetAllDoctors(search, filter, specialization, uint(polyclinicID), limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", doctors))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", doctors, page, limit, totalCount))
 }
 
 func (c *DoctorController) GetDoctorByID(ctx *gin.Context) {

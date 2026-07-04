@@ -56,6 +56,10 @@ final dioProvider = Provider<Dio>((ref) {
         if (response.data != null && response.data is Map<String, dynamic>) {
           if (response.data['success'] == true &&
               response.data.containsKey('data')) {
+            // PRESERVE META BEFORE STRIPPING
+            if (response.data.containsKey('meta')) {
+              response.extra['meta'] = response.data['meta'];
+            }
             response.data = response.data['data'];
           }
         }

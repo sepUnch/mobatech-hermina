@@ -8,9 +8,17 @@ class AppointmentRepository {
 
   AppointmentRepository(this._dio);
 
-  Future<List<Doctor>> getDoctors({String? specialization, int? polyclinicId}) async {
+  Future<(List<Doctor>, bool)> getDoctors({
+    String? specialization,
+    int? polyclinicId,
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
-      final Map<String, dynamic> params = {};
+      final Map<String, dynamic> params = {
+        'page': page,
+        'limit': limit,
+      };
       if (specialization != null && specialization.isNotEmpty && specialization != 'All') {
         params['specialization'] = specialization;
       }
@@ -19,10 +27,17 @@ class AppointmentRepository {
       }
       final response = await _dio.get(
         '/doctors',
-        queryParameters: params.isNotEmpty ? params : null,
+        queryParameters: params,
       );
-      final List<dynamic> data = response.data ?? [];
-      return data.map((json) => Doctor.fromJson(json)).toList();
+      
+      final responseData = response.data as List<dynamic>? ?? [];
+      final meta = response.extra['meta'] as Map<String, dynamic>?;
+      
+      final doctors = responseData.map((json) => Doctor.fromJson(json)).toList();
+      final currentPage = meta?['current_page'] as int? ?? 1;
+      final totalPages = meta?['total_pages'] as int? ?? 1;
+      
+      return (doctors, currentPage < totalPages);
     } catch (e) {
       rethrow;
     }
@@ -47,11 +62,24 @@ class AppointmentRepository {
     }
   }
 
-  Future<List<Appointment>> getUserAppointments() async {
+  Future<(List<Appointment>, bool)> getUserAppointments({
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
-      final response = await _dio.get('/appointments');
-      final List<dynamic> data = response.data ?? [];
-      return data.map((json) => Appointment.fromJson(json)).toList();
+      final response = await _dio.get(
+        '/appointments',
+        queryParameters: {'page': page, 'limit': limit},
+      );
+      
+      final responseData = response.data as List<dynamic>? ?? [];
+      final meta = response.extra['meta'] as Map<String, dynamic>?;
+      
+      final appointments = responseData.map((json) => Appointment.fromJson(json)).toList();
+      final currentPage = meta?['current_page'] as int? ?? 1;
+      final totalPages = meta?['total_pages'] as int? ?? 1;
+      
+      return (appointments, currentPage < totalPages);
     } catch (e) {
       rethrow;
     }

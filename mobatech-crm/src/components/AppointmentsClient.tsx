@@ -16,6 +16,7 @@ import { AppointmentsTable } from "@/components/AppointmentsTable";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export function AppointmentsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
@@ -29,6 +30,8 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{
     isOpen: boolean;
     message: string;
@@ -38,11 +41,16 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
   const loadItems = async () => {
     try {
       const queryParams = new URLSearchParams();
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", "10");
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
       const res = await api.get<Appointment[]>(`/api/admin/appointments${qs}`);
       setItems(res.data || []);
+      if (res.meta) {
+        setTotalPages(res.meta.total_pages);
+      }
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.login.networkError, type: "error" });
     } finally {
@@ -51,8 +59,12 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
   };
 
   useEffect(() => {
-    loadItems();
+    setCurrentPage(1);
   }, [searchQuery, filterValue]);
+
+  useEffect(() => {
+    loadItems();
+  }, [searchQuery, filterValue, currentPage]);
 
   const handleApprove = async (id: number) => {
     if (processingId) return;
@@ -126,6 +138,8 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
           onComplete={handleComplete}
         />
       </Card>
+
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
       <ConfirmModal
         isOpen={cancelConfirmId !== null}

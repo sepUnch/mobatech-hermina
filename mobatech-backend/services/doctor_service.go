@@ -6,7 +6,7 @@ import (
 )
 
 type DoctorService interface {
-	GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error)
+	GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error)
 	GetDoctorByID(id uint) (*models.Doctor, error)
 	CreateDoctor(doctor *models.Doctor) error
 	UpdateDoctor(id uint, input *models.Doctor) (*models.Doctor, error)
@@ -21,7 +21,7 @@ func NewDoctorService(doctorRepo repositories.DoctorRepository) DoctorService {
 	return &doctorService{doctorRepo}
 }
 
-func (s *doctorService) GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, error) {
+func (s *doctorService) GetAllDoctors(search string, filter string, specialization string, polyclinicID uint, limit, offset int) ([]models.Doctor, int64, error) {
 	return s.doctorRepo.FindAll(search, filter, specialization, polyclinicID, limit, offset)
 }
 

@@ -36,6 +36,15 @@ class ChatMessagesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
     }
   }
 
+  Future<void> renameSession(int sessionId, String newTitle) async {
+    try {
+      await _repository.renameSession(sessionId, newTitle);
+      _ref.invalidate(chatSessionsProvider);
+    } catch (e) {
+      // Ignored for now
+    }
+  }
+
   Future<void> createNewSessionAndSend(
     String title,
     String message, {

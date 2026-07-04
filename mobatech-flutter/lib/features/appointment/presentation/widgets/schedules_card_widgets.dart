@@ -19,14 +19,15 @@ class ScheduleItemCard extends StatelessWidget {
     bool isExpired = false;
     if (schedule.date != null && schedule.endTime.isNotEmpty) {
       final now = DateTime.now();
+      final localDate = schedule.date!.toLocal();
       final timeParts = schedule.endTime.split(':');
       if (timeParts.length >= 2) {
         final endHour = int.tryParse(timeParts[0]) ?? 0;
         final endMinute = int.tryParse(timeParts[1]) ?? 0;
         final scheduleEnd = DateTime(
-          schedule.date!.year,
-          schedule.date!.month,
-          schedule.date!.day,
+          localDate.year,
+          localDate.month,
+          localDate.day,
           endHour,
           endMinute,
         );
@@ -38,8 +39,9 @@ class ScheduleItemCard extends StatelessWidget {
 
     final isAvailable =
         !isExpired && schedule.isAvailable && (schedule.quota - schedule.booked > 0);
-    final dateStr = schedule.date != null
-        ? '${schedule.date!.day}/${schedule.date!.month}/${schedule.date!.year}'
+    final localDate = schedule.date?.toLocal();
+    final dateStr = localDate != null
+        ? '${localDate.day}/${localDate.month}/${localDate.year}'
         : '';
 
     return GestureDetector(

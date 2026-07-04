@@ -22,8 +22,9 @@ func (s *chatService) setupGemini(ctx context.Context) (*genai.GenerativeModel, 
 
 	model := client.GenerativeModel("gemini-2.5-flash")
 	
-	currentDate := time.Now().Format("2006-01-02")
-	formattedPrompt := fmt.Sprintf(constants.GeminiSystemPrompt, currentDate)
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	currentTime := time.Now().In(loc).Format("15:04 WIB, Monday, 02 January 2006")
+	formattedPrompt := fmt.Sprintf(constants.GeminiSystemPrompt, currentTime)
 	
 	model.SystemInstruction = &genai.Content{
 		Parts: []genai.Part{genai.Text(formattedPrompt)},

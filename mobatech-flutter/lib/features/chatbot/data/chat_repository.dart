@@ -19,6 +19,12 @@ class ChatRepository {
     } on DioException { rethrow; }
   }
 
+  Future<void> renameSession(int sessionId, String title) async {
+    try {
+      await dio.put('/chat/sessions/$sessionId', data: {'title': title});
+    } on DioException { rethrow; }
+  }
+
   Future<List<dynamic>> getSessionMessages(int sessionId) async {
     try {
       final response = await dio.get('/chat/sessions/$sessionId/messages');

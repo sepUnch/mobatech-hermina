@@ -7,8 +7,8 @@ import (
 )
 
 type AppointmentRepository interface {
-	FindAll(search string, filter string, userID uint, role string) ([]models.Appointment, error)
-	FindByUserID(userID uint) ([]models.Appointment, error)
+	FindAll(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error)
+	FindByUserID(userID uint, limit, offset int) ([]models.Appointment, int64, error)
 	FindByID(id uint) (*models.Appointment, error)
 	Create(appointment *models.Appointment) error
 	Update(appointment *models.Appointment) error
@@ -22,9 +22,11 @@ func NewAppointmentRepository(db *gorm.DB) AppointmentRepository {
 	return &appointmentRepository{db}
 }
 
-func (r *appointmentRepository) FindAll(search string, filter string, userID uint, role string) ([]models.Appointment, error) {
+func (r *appointmentRepository) FindAll(search string, filter string, userID uint, role string, limit, offset int) ([]models.Appointment, int64, error) {
 	var appointments []models.Appointment
-	query := r.db.Preload("User").Preload("Doctor").Preload("Schedule").
+	var totalCount int64
+
+	query := r.db.Model(&models.Appointment{}).
 		Joins("LEFT JOIN users ON users.id = appointments.user_id").
 		Joins("LEFT JOIN doctor_schedules ON doctor_schedules.id = appointments.doctor_schedule_id")
 		
@@ -41,18 +43,45 @@ func (r *appointmentRepository) FindAll(search string, filter string, userID uin
 	} else if filter == "tomorrow" {
 		query = query.Where("DATE(doctor_schedules.date) = CURDATE() + INTERVAL 1 DAY")
 	}
+
+	err := query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, err
+	}
 	
-	err := query.Order("appointments.created_at desc").Find(&appointments).Error
-	return appointments, err
+	query = query.Preload("User").Preload("Doctor").Preload("Schedule").Order("appointments.created_at desc")
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	if offset > 0 {
+		query = query.Offset(offset)
+	}
+
+	err = query.Find(&appointments).Error
+	return appointments, totalCount, err
 }
 
-func (r *appointmentRepository) FindByUserID(userID uint) ([]models.Appointment, error) {
+func (r *appointmentRepository) FindByUserID(userID uint, limit, offset int) ([]models.Appointment, int64, error) {
 	var appointments []models.Appointment
-	err := r.db.Preload("Doctor").Preload("Schedule").
-		Where("user_id = ?", userID).
-		Order("created_at desc").
-		Find(&appointments).Error
-	return appointments, err
+	var totalCount int64
+
+	query := r.db.Model(&models.Appointment{}).Where("user_id = ?", userID)
+	
+	err := query.Count(&totalCount).Error
+	if err != nil {
+		return nil, 0, err
+	}
+
+	query = query.Preload("Doctor").Preload("Schedule").Order("created_at desc")
+	if limit > 0 {
+		query = query.Limit(limit)
+	}
+	if offset > 0 {
+		query = query.Offset(offset)
+	}
+
+	err = query.Find(&appointments).Error
+	return appointments, totalCount, err
 }
 
 func (r *appointmentRepository) FindByID(id uint) (*models.Appointment, error) {

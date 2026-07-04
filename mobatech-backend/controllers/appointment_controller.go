@@ -34,12 +34,19 @@ func (c *AppointmentController) GetAllAppointments(ctx *gin.Context) {
 		userID = uint(userIDFloat.(float64))
 	}
 
-	appointments, err := c.appointmentService.GetAllAppointments(search, filter, userID, role)
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	if page < 1 {
+		page = 1
+	}
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	appointments, totalCount, err := c.appointmentService.GetAllAppointments(search, filter, userID, role, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", appointments))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", appointments, page, limit, totalCount))
 }
 
 func (c *AppointmentController) GetUserAppointments(ctx *gin.Context) {
@@ -50,12 +57,19 @@ func (c *AppointmentController) GetUserAppointments(ctx *gin.Context) {
 	}
 	userID := uint(userIDFloat.(float64))
 
-	appointments, err := c.appointmentService.GetUserAppointments(userID)
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	if page < 1 {
+		page = 1
+	}
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	appointments, totalCount, err := c.appointmentService.GetUserAppointments(userID, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", appointments))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", appointments, page, limit, totalCount))
 }
 
 func (c *AppointmentController) BookAppointment(ctx *gin.Context) {

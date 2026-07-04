@@ -1,6 +1,7 @@
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/error_handler.dart';
@@ -10,20 +11,44 @@ import '../widgets/appointment_card.dart';
 import '../widgets/user_appointments_app_bar.dart';
 import '../widgets/user_appointments_empty.dart';
 
-class UserAppointmentsScreen extends ConsumerWidget {
+class UserAppointmentsScreen extends ConsumerStatefulWidget {
   const UserAppointmentsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UserAppointmentsScreen> createState() => _UserAppointmentsScreenState();
+}
+
+class _UserAppointmentsScreenState extends ConsumerState<UserAppointmentsScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+        ref.read(userAppointmentsProvider.notifier).fetchNextPage();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final appointmentsAsync = ref.watch(userAppointmentsProvider);
 
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       body: appointmentsAsync.when(
         data: (appointments) {
+          final isFetchingNextPage = ref.read(userAppointmentsProvider.notifier).isFetchingNextPage;
           return RefreshIndicator(
             onRefresh: () async {
-              final _ = ref.refresh(userAppointmentsProvider);
+              ref.invalidate(userAppointmentsProvider);
             },
             child: TweenAnimationBuilder<double>(
               tween: Tween(begin: 0.0, end: 1.0),
@@ -42,6 +67,7 @@ class UserAppointmentsScreen extends ConsumerWidget {
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 800),
                   child: CustomScrollView(
+                    controller: _scrollController,
                     slivers: [
                       const UserAppointmentsAppBar(),
                       if (appointments.isEmpty)
@@ -54,13 +80,21 @@ class UserAppointmentsScreen extends ConsumerWidget {
                               context,
                               index,
                             ) {
+                              if (index == appointments.length) {
+                                return const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Center(
+                                    child: CupertinoActivityIndicator(radius: 14),
+                                  ),
+                                );
+                              }
                               final appointment = appointments[index];
                               return AppointmentCard(
                                 appointment: appointment,
                                 onCancel: () =>
                                     _handleCancel(context, ref, appointment.id),
                               );
-                            }, childCount: appointments.length),
+                            }, childCount: appointments.length + (isFetchingNextPage ? 1 : 0)),
                           ),
                         ),
                     ],
@@ -110,7 +144,7 @@ class UserAppointmentsScreen extends ConsumerWidget {
       try {
         final repo = ref.read(appointmentRepositoryProvider);
         await repo.cancelAppointment(id);
-        final _ = ref.refresh(userAppointmentsProvider);
+        ref.invalidate(userAppointmentsProvider);
         if (context.mounted) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           CustomSnackbar.showSuccess(context, AppStrings.extJanjitemuberhasildibatalkan);

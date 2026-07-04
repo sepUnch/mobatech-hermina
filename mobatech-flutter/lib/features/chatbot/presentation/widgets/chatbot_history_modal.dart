@@ -10,6 +10,48 @@ import '../providers/chat_provider.dart';
 class ChatbotHistoryModal extends ConsumerWidget {
   const ChatbotHistoryModal({super.key});
 
+  void _showRenameDialog(BuildContext context, WidgetRef ref, int sessionId, String currentTitle) {
+    final controller = TextEditingController(text: currentTitle);
+    showDialog(
+      context: context,
+      builder: (ctx) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+        child: AlertDialog(
+          backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.9),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Ubah Nama Percakapan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          content: TextField(
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'Nama baru...',
+              border: OutlineInputBorder(),
+              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: const Text('Batal', style: TextStyle(color: AppColors.textGrey)),
+            ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              onPressed: () {
+                if (controller.text.trim().isNotEmpty) {
+                  ref.read(chatMessagesProvider.notifier).renameSession(sessionId, controller.text.trim());
+                }
+                Navigator.pop(ctx);
+              },
+              child: const Text('Simpan', style: TextStyle(color: AppColors.backgroundWhite)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(chatSessionsProvider);
@@ -110,17 +152,37 @@ class ChatbotHistoryModal extends ConsumerWidget {
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                    icon: const Icon(
-                                      Icons.delete_outline,
-                                      color: AppColors.errorRed,
-                                      size: 20,
-                                    ),
-                                    padding: EdgeInsets.zero,
-                                    constraints: const BoxConstraints(),
-                                    onPressed: () => ref
-                                        .read(chatMessagesProvider.notifier)
-                                        .deleteSession(session['ID']),
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit_outlined,
+                                          color: AppColors.primary,
+                                          size: 20,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => _showRenameDialog(
+                                          context,
+                                          ref,
+                                          session['ID'],
+                                          session['title'] ?? AppStrings.chatNewConversation,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.delete_outline,
+                                          color: AppColors.errorRed,
+                                          size: 20,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => ref
+                                            .read(chatMessagesProvider.notifier)
+                                            .deleteSession(session['ID']),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
