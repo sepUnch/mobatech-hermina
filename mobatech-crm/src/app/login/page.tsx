@@ -18,9 +18,7 @@ export default function LoginPage() {
   });
 
   useEffect(() => {
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    setDark(prefersDark);
-    if (prefersDark) document.documentElement.classList.add("dark");
+    setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggleTheme = () => {
