@@ -16,7 +16,6 @@ func SetupPolyclinicRoutes(router *gin.Engine, db *gorm.DB) {
 
 	api := router.Group("/api")
 
-	// Mobile public endpoints
 	api.GET("/polyclinics", controller.GetPolyclinics)
 	api.GET("/polyclinics/:id", controller.GetPolyclinicByID)
 

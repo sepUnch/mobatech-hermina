@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -19,10 +17,6 @@ import { RagStatus, ChatSession, ChatMessage } from "@/types/api";
 export function AiAuditClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-
-  if (!["admin"].includes(role)) {
-    return <ForbiddenView />;
-  }
   const [ragStatus, setRagStatus] = useState<RagStatus | null>(null);
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [loadingStats, setLoadingStats] = useState(true);
@@ -92,6 +86,11 @@ export function AiAuditClient({ initialData, searchParams }: { initialData?: unk
     }
   };
 
+  
+
+  if (!["admin"].includes(role)) {
+    return <ForbiddenView />;
+  }
   return (
     <div className="space-y-6 animate-slide-in">
       <AiAuditHeader />

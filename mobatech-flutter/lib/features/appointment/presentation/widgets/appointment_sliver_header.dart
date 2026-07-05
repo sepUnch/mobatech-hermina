@@ -81,10 +81,8 @@ class AppointmentSliverHeader extends ConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    // Search Bar
                     AppointmentSearchBar(searchController: searchController),
                     const SizedBox(height: 16),
-                    // Filter Chips
                     const AppointmentFilterChips(),
                   ],
                 ),

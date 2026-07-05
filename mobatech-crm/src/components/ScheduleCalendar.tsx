@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState } from "react";
 import { DoctorSchedule } from "@/types/api";
@@ -54,7 +52,6 @@ export function ScheduleCalendar({ groupedSchedules }: Props) {
           {days.map((d, i) => {
             if (!d) return <div key={i} className="aspect-square" />;
             
-            // Format YYYY-MM-DD local timezone safely
             const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
             const hasSchedules = !!groupedSchedules[dStr];
             const schedCount = hasSchedules ? groupedSchedules[dStr].length : 0;

@@ -32,7 +32,7 @@ class AppButton extends StatelessWidget {
 
     Color bgColor;
     Color fgColor;
-    Color borderColor = Colors.transparent;
+    Color borderColor = AppColors.transparent;
     
     switch (variant) {
       case AppButtonVariant.primary:
@@ -40,7 +40,7 @@ class AppButton extends StatelessWidget {
         fgColor = AppColors.backgroundWhite;
         break;
       case AppButtonVariant.secondary:
-        bgColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.5);
+        bgColor = isDark ? AppColors.backgroundWhite.withValues(alpha: 0.1) : AppColors.backgroundWhite.withValues(alpha: 0.5);
         fgColor = AppColors.getTextPrimary(isDark);
         borderColor = AppColors.getGlassBorder(isDark);
         break;
@@ -50,11 +50,11 @@ class AppButton extends StatelessWidget {
         borderColor = AppColors.errorRed.withValues(alpha: 0.2);
         break;
       case AppButtonVariant.ghost:
-        bgColor = Colors.transparent;
+        bgColor = AppColors.transparent;
         fgColor = AppColors.getTextPrimary(isDark).withValues(alpha: 0.8);
         break;
       case AppButtonVariant.outline:
-        bgColor = Colors.transparent;
+        bgColor = AppColors.transparent;
         fgColor = AppColors.primaryGreen;
         borderColor = AppColors.primaryGreen.withValues(alpha: 0.5);
         break;
@@ -86,7 +86,7 @@ class AppButton extends StatelessWidget {
       backgroundColor: bgColor,
       foregroundColor: fgColor,
       elevation: variant == AppButtonVariant.primary ? 2 : 0,
-      shadowColor: variant == AppButtonVariant.primary ? AppColors.primaryGreen.withValues(alpha: 0.4) : Colors.transparent,
+      shadowColor: variant == AppButtonVariant.primary ? AppColors.primaryGreen.withValues(alpha: 0.4) : AppColors.transparent,
       padding: padding,
       minimumSize: Size(isFullWidth ? double.infinity : 0, height),
       shape: RoundedRectangleBorder(

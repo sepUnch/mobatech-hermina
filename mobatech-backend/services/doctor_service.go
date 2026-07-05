@@ -3,6 +3,7 @@ package services
 import (
 	"backend/models"
 	"backend/repositories"
+	"backend/utils"
 )
 
 type DoctorService interface {
@@ -31,7 +32,11 @@ func (s *doctorService) GetDoctorByID(id uint) (*models.Doctor, error) {
 
 func (s *doctorService) CreateDoctor(doctor *models.Doctor) error {
 	doctor.IsActive = true
-	return s.doctorRepo.Create(doctor)
+	err := s.doctorRepo.Create(doctor)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *doctorService) UpdateDoctor(id uint, input *models.Doctor) (*models.Doctor, error) {
@@ -62,9 +67,14 @@ func (s *doctorService) UpdateDoctor(id uint, input *models.Doctor) (*models.Doc
 		return nil, err
 	}
 
+	utils.TriggerAsyncRAGSync()
 	return doctor, nil
 }
 
 func (s *doctorService) DeleteDoctor(id uint) error {
-	return s.doctorRepo.Delete(id)
+	err := s.doctorRepo.Delete(id)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }

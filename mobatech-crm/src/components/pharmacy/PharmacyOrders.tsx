@@ -1,10 +1,6 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
-
 import { PharmacyOrder } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { useState } from "react";
@@ -13,10 +9,10 @@ import { api } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
+import { Pagination } from "@/components/ui/Pagination";
 import { useEffect } from "react";
 import { APP_STRINGS } from "@/lib/constants";
 import { Formatters } from "@/lib/formatters";
-
 function StatusBadge({ value, type }: { value: string; type: "order" | "payment" }) {
   let variant: BadgeVariant = "neutral";
   if (value === "Completed" || value === "Paid") variant = "success";
@@ -25,33 +21,35 @@ function StatusBadge({ value, type }: { value: string; type: "order" | "payment"
   else if (value === "Processing" || value === "Verifying" || value === "Ready") variant = "info";
   return <Badge variant={variant}>{value}</Badge>;
 }
-
 const ORDER_STATUSES = ["Pending", "Verifying", "Processing", "Ready", "Completed", "Cancelled"];
 const PAYMENT_STATUSES = ["Unpaid", "Paid", "Refunded"];
-
 export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder[] }) {
   const role = useAuthStore((state) => state.user)?.role || "admin";
   const [orders, setOrders] = useState<PharmacyOrder[]>(initialOrders);
   const [expandedOrder, setExpandedOrder] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{isOpen: boolean; message: string; type: "success"|"error"}>({ isOpen: false, message: "", type: "success" });
   const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
   const [filterValue, setFilterValue] = useState("");
-
   const loadOrders = async () => {
     try {
       const queryParams = new URLSearchParams();
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", "10");
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
       const res = await api.get<PharmacyOrder[]>(`/api/admin/pharmacy/orders${qs}`);
       setOrders(res.data || []);
+      if (res.meta) {
+        setTotalPages(res.meta.total_pages);
+      }
     } catch { /* suppress */ }
   };
-
-  // eslint-disable-next-line
-  useEffect(() => { loadOrders(); }, [searchQuery, filterValue]);
-
+  useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
+  useEffect(() => { loadOrders(); }, [searchQuery, filterValue, currentPage]);
   const handleUpdateStatus = async (id: number, status: string) => {
     try {
       await api.put(`/api/admin/pharmacy/orders/${id}/status`, { status });
@@ -59,7 +57,6 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
       setOrders(orders.map(o => o.id === id ? { ...o, status } : o));
     } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
-
   const handleUpdatePayment = async (id: number, payment_status: string) => {
     try {
       await api.put(`/api/admin/pharmacy/orders/${id}/payment`, { payment_status });
@@ -67,11 +64,9 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
       setOrders(orders.map(o => o.id === id ? { ...o, payment_status } : o));
     } catch { showToast(APP_STRINGS.common.saveError, "error"); }
   };
-
   if (orders.length === 0) {
     return <Card noPadding><div className="p-10 text-center text-foreground/50 text-sm">Belum ada order masuk.</div></Card>;
   }
-
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2">
@@ -141,6 +136,7 @@ export function PharmacyOrders({ initialOrders }: { initialOrders: PharmacyOrder
         ))}
       </div>
     </Card>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );

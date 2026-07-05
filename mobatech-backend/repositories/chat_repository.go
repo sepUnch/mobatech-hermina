@@ -14,6 +14,7 @@ type ChatRepository interface {
 	GetSessionMessages(sessionID uint) ([]models.ChatMessage, error)
 	DeleteSession(userID uint, sessionID uint) error
 	RenameSession(userID uint, sessionID uint, newTitle string) error
+	UpdateSessionTitle(sessionID uint, newTitle string) error
 	GetAllSessions(search string) ([]models.ChatSession, error)
 }
 
@@ -58,6 +59,10 @@ func (r *chatRepository) DeleteSession(userID uint, sessionID uint) error {
 
 func (r *chatRepository) RenameSession(userID uint, sessionID uint, newTitle string) error {
 	return r.db.Model(&models.ChatSession{}).Where("id = ? AND user_id = ?", sessionID, userID).Update("title", newTitle).Error
+}
+
+func (r *chatRepository) UpdateSessionTitle(sessionID uint, newTitle string) error {
+	return r.db.Model(&models.ChatSession{}).Where("id = ?", sessionID).Update("title", newTitle).Error
 }
 
 func (r *chatRepository) GetAllSessions(search string) ([]models.ChatSession, error) {

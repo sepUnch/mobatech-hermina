@@ -12,7 +12,6 @@ void main() async {
   // Load environment variables
   await dotenv.load(fileName: ".env");
 
-  // Configure Global Error Boundary
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
     if (kReleaseMode) {

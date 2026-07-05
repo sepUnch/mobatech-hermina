@@ -1,3 +1,4 @@
+import logging
 import re
 from transformers import pipeline
 
@@ -11,7 +12,7 @@ class AnonymizationEngine:
             )
         except Exception as e:
             self.ner_pipeline = None
-            print("Warning: NER model not loaded. Using fallback regex anonymizer.")
+            logging.info("Warning: NER model not loaded. Using fallback regex anonymizer.")
 
     def normalize_text(self, text: str) -> str:
         # Pembersihan karakter encoding & whitespace (Text Normalization)

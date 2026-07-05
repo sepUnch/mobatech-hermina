@@ -1,10 +1,9 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Button } from "@/components/ui/Button";
-import { Edit2, Trash2, Pill } from "lucide-react";
+import { Edit2, Trash2, Pill, Eye, Inbox } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { Formatters } from "@/lib/formatters";
+import { ActionMenu } from "@/components/ui/ActionMenu";
+import { SkeletonTable } from "@/components/ui/SkeletonTable";
 
 interface User { id: number; full_name: string; email: string; }
 interface MedicalResult { id: number; created_at: string; user_id: number; appointment_id: number; doctor_name: string; test_type: string; test_name: string; result: string; notes: string; file_url: string; result_date: string; }
@@ -15,6 +14,7 @@ export function MedicalResultsTable({
   users, 
   onEdit, 
   onDelete,
+  onViewDetails,
   userRole 
 }: { 
   loading: boolean;
@@ -22,6 +22,7 @@ export function MedicalResultsTable({
   users: User[];
   onEdit: (r: MedicalResult) => void;
   onDelete: (id: number) => void;
+  onViewDetails?: (r: MedicalResult) => void;
   userRole?: string;
 }) {
   const router = useRouter();
@@ -30,7 +31,7 @@ export function MedicalResultsTable({
     <Card noPadding>
       <div className="w-full overflow-x-auto">
         {loading ? (
-          <div className="p-8 text-center text-foreground/50 animate-pulse text-sm">Memuat data...</div>
+          <SkeletonTable rows={5} columns={6} />
         ) : (
           <table className="w-full text-center border-collapse text-sm">
             <thead>
@@ -45,7 +46,14 @@ export function MedicalResultsTable({
             </thead>
             <tbody>
               {results.length === 0 ? (
-                <tr><td colSpan={6} className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/50">Belum ada data hasil medis.</td></tr>
+                <tr>
+                  <td colSpan={6} className="text-center py-16">
+                    <div className="flex flex-col items-center justify-center text-foreground/50">
+                      <Inbox className="w-12 h-12 mb-3 text-foreground/20" />
+                      <p className="text-sm">Belum ada data hasil medis.</p>
+                    </div>
+                  </td>
+                </tr>
               ) : results.map((r) => (
                 <tr key={r.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/70 text-xs">
@@ -61,22 +69,35 @@ export function MedicalResultsTable({
                   </td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/70 max-w-xs truncate">{r.result}</td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex gap-2 justify-center" title={userRole === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
-                      <Button 
-                        size="sm" 
-                        variant="outline" 
-                        className="text-indigo-600 border-indigo-500/30 hover:bg-indigo-500/10" 
-                        onClick={() => router.push(`/dashboard/pharmacy?action=create_prescription&appointment_id=${r.appointment_id || ''}&user_id=${r.user_id}`)} 
-                        icon={<Pill size={14} />}
-                      >
-                        E-Resep
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onEdit(r)} disabled={userRole === "admin"} className="text-primary hover:text-primary-hover px-2" icon={<Edit2 size={14} />}>
-                        Edit
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onDelete(r.id)} disabled={userRole === "admin"} className="text-rose-500 hover:text-rose-600 px-2" icon={<Trash2 size={14} />}>
-                        Hapus
-                      </Button>
+                    <div className="flex justify-center" title={userRole === "admin" ? "Aksi klinis hanya untuk Dokter/Apoteker" : undefined}>
+                      <ActionMenu
+                        items={[
+                          ...(onViewDetails ? [{
+                            label: "Lihat Detail",
+                            icon: <Eye size={14} />,
+                            onClick: () => onViewDetails(r),
+                          }] : []),
+                          {
+                            label: "E-Resep",
+                            icon: <Pill size={14} />,
+                            onClick: () => router.push(`/dashboard/pharmacy?action=create_prescription&appointment_id=${r.appointment_id || ''}&user_id=${r.user_id}`),
+                            variant: "info" as const,
+                          },
+                          {
+                            label: "Edit",
+                            icon: <Edit2 size={14} />,
+                            onClick: () => onEdit(r),
+                            disabled: userRole === "admin",
+                          },
+                          {
+                            label: "Hapus",
+                            icon: <Trash2 size={14} />,
+                            onClick: () => onDelete(r.id),
+                            disabled: userRole === "admin",
+                            variant: "danger" as const,
+                          }
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>

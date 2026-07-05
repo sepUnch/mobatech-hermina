@@ -67,6 +67,10 @@ func (s *chatService) StreamChat(ctx context.Context, sessionID uint, userMessag
 		return
 	}
 
+	if len(historyMsg) == 1 {
+		go s.asyncGenerateTitle(sessionID, userMessage)
+	}
+
 	model, client, err := s.setupGemini(ctx)
 	if err != nil {
 		errChan <- err
@@ -94,5 +98,22 @@ func (s *chatService) saveUserMessage(sessionID uint, userMessage string) error 
 		return fmt.Errorf("failed to save user message: %v", err)
 	}
 	return nil
+}
+
+func (s *chatService) asyncGenerateTitle(sessionID uint, firstMessage string) {
+	ctx := context.Background()
+	model, client, err := s.setupGemini(ctx)
+	if err != nil {
+		return
+	}
+	defer client.Close()
+	
+	prompt := fmt.Sprintf("Create a short (max 4 words) and natural title for a medical chat session starting with this prompt. No quotes, no punctuation. Prompt: %s", firstMessage)
+	
+	resp, err := model.GenerateContent(ctx, genai.Text(prompt))
+	if err == nil && len(resp.Candidates) > 0 && len(resp.Candidates[0].Content.Parts) > 0 {
+		title := fmt.Sprintf("%v", resp.Candidates[0].Content.Parts[0])
+		s.repo.UpdateSessionTitle(sessionID, title)
+	}
 }
 

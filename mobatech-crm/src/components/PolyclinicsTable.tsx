@@ -1,9 +1,8 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/Badge";
-import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, Eye, Inbox } from "lucide-react";
+import { ActionMenu } from "@/components/ui/ActionMenu";
+import { SkeletonTable } from "@/components/ui/SkeletonTable";
 import { Polyclinic } from "@/types/api";
 import { APP_STRINGS } from "@/lib/constants";
 
@@ -11,18 +10,20 @@ export function PolyclinicsTable({
   items,
   loading,
   onEdit,
-  onDelete
+  onDelete,
+  onViewDetails
 }: {
   items: Polyclinic[];
   loading: boolean;
   onEdit: (item: Polyclinic) => void;
   onDelete: (id: number) => void;
+  onViewDetails?: (item: Polyclinic) => void;
 }) {
   return (
     <Card noPadding>
       <div className="w-full overflow-x-auto">
         {loading ? (
-          <div className="p-8 text-center text-foreground/50 animate-pulse text-sm">Memuat data...</div>
+          <SkeletonTable rows={5} columns={4} />
         ) : (
           <table className="w-full text-center border-collapse text-sm">
             <thead>
@@ -34,7 +35,16 @@ export function PolyclinicsTable({
               </tr>
             </thead>
             <tbody>
-              {items.length === 0 ? (<tr><td colSpan={100} className="text-center py-12 text-foreground/50 text-sm">Tidak ada data yang ditemukan.</td></tr>) : items.map((item) => (
+              {items.length === 0 ? (
+                <tr>
+                  <td colSpan={100} className="text-center py-16">
+                    <div className="flex flex-col items-center justify-center text-foreground/50">
+                      <Inbox className="w-12 h-12 mb-3 text-foreground/20" />
+                      <p className="text-sm">Data tidak ditemukan</p>
+                    </div>
+                  </td>
+                </tr>
+              ) : items.map((item) => (
                 <tr key={item.id} className="border-b border-glass-border/50 hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm font-semibold">{item.name}</td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/75 truncate max-w-xs">{item.description}</td>
@@ -45,13 +55,27 @@ export function PolyclinicsTable({
                     </Badge>
                   </td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex gap-2 justify-center">
-                      <Button size="sm" variant="ghost" onClick={() => onEdit(item)} className="text-primary hover:text-primary-hover px-2" icon={<Edit2 size={14} />}>
-                        Ubah
-                      </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onDelete(item.id)} className="text-rose-500 hover:text-rose-600 px-2" icon={<Trash2 size={14} />}>
-                        Hapus
-                      </Button>
+                    <div className="flex justify-center">
+                      <ActionMenu
+                        items={[
+                          ...(onViewDetails ? [{
+                            label: "Lihat Detail",
+                            icon: <Eye size={14} />,
+                            onClick: () => onViewDetails(item),
+                          }] : []),
+                          {
+                            label: "Ubah",
+                            icon: <Edit2 size={14} />,
+                            onClick: () => onEdit(item),
+                          },
+                          {
+                            label: "Hapus",
+                            icon: <Trash2 size={14} />,
+                            onClick: () => onDelete(item.id),
+                            variant: "danger" as const,
+                          }
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { DashboardStats } from "@/app/dashboard/types";
 import { StatCard } from "./StatCard";
 import { Users, CalendarDays, Stethoscope, Siren } from "lucide-react";

@@ -15,7 +15,7 @@ type AuthService interface {
 	UpdateProfile(userID uint, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) (*models.User, error)
 	AddFamilyMember(member *models.FamilyMember) error
 	DeleteFamilyMember(id uint) error
-	GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string) ([]models.User, error)
+	GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string, limit int, offset int) ([]models.User, int64, error)
 	AdminCreateUser(fullName, email, phone, password, role, imageURL string) (*models.User, error)
 	AdminUpdateUser(id uint, fullName, email, phone, role, imageURL string) (*models.User, error)
 	DeleteUser(id uint) error
@@ -62,8 +62,8 @@ func (s *authService) Login(email, password string) (string, *models.User, error
 func (s *authService) GetUser(userID uint) (*models.User, error) {
 	return s.repo.FindByID(userID)
 }
-func (s *authService) GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string) ([]models.User, error) {
-	return s.repo.GetAllUsers(search, filter, roleFilter, viewerID, viewerRole)
+func (s *authService) GetAllUsers(search string, filter string, roleFilter string, viewerID uint, viewerRole string, limit int, offset int) ([]models.User, int64, error) {
+	return s.repo.GetAllUsers(search, filter, roleFilter, viewerID, viewerRole, limit, offset)
 }
 func (s *authService) AddFamilyMember(member *models.FamilyMember) error {
 	return s.repo.AddFamilyMember(member)

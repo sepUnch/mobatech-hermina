@@ -89,7 +89,6 @@ func runScheduleSweep(db *gorm.DB) {
 	
 	releasedCount := 0
 	for _, appt := range pendingAppointments {
-		// Update status to cancelled
 		db.Model(&appt).Updates(map[string]interface{}{
 			"status": "cancelled",
 			"notes":  "Batal otomatis: Waktu pembayaran/verifikasi habis (30 Menit)",

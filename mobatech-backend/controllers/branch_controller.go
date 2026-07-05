@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 	"backend/models"
 	"backend/utils"
 
@@ -20,8 +21,13 @@ func NewBranchController(db *gorm.DB) *BranchController {
 func (ctrl *BranchController) GetBranches(c *gin.Context) {
 	search := c.Query("search")
 	filter := c.Query("filter")
+	
+	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
 
 	var branches []models.Branch
+	var totalCount int64
 	query := ctrl.DB.Model(&models.Branch{})
 
 	if search != "" {
@@ -36,12 +42,21 @@ func (ctrl *BranchController) GetBranches(c *gin.Context) {
 	} else {
 		query = query.Order("id DESC")
 	}
+	
+	if err := query.Count(&totalCount).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, utils.BuildError(utils.ErrInternal, "Failed to count branches", nil))
+		return
+	}
+	
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
 
 	if err := query.Find(&branches).Error; err != nil {
 		c.JSON(http.StatusInternalServerError, utils.BuildError(utils.ErrInternal, "Failed to fetch branches", nil))
 		return
 	}
-	c.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", branches))
+	c.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", branches, page, limit, totalCount))
 }
 
 func (ctrl *BranchController) GetBranchByID(c *gin.Context) {

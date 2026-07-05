@@ -64,12 +64,17 @@ func (c *PharmacyController) AdminUpdatePrescriptionStatus(ctx *gin.Context) {
 func (c *PharmacyController) AdminGetAllOrders(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	orders, err := c.service.GetAllOrders(search, filter)
+	
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	orders, totalCount, err := c.service.GetAllOrders(search, filter, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", orders))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", orders, page, limit, totalCount))
 }
 
 func (c *PharmacyController) AdminUpdateOrderStatus(ctx *gin.Context) {

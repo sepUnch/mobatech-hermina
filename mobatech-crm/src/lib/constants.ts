@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export const APP_STRINGS = {
   promos: {
     addPromo: "Tambah Promo Baru", editPromo: "Ubah Promo",
@@ -128,5 +126,18 @@ export const APP_STRINGS = {
   errors: {
     UNAUTHENTICATED: "Email atau kata sandi salah.", UNAUTHORIZED: "Anda tidak memiliki hak akses sebagai admin.",
     VALIDATION_ERROR: "Validasi data gagal. Periksa input Anda.", INTERNAL_ERROR: "Terjadi kesalahan internal server.",
+  },
+  details: {
+    viewDetails: "Lihat Detail", userTitle: "Detail Pengguna", promoTitle: "Detail Promo", medicineTitle: "Detail Obat",
+    email: "Email", phone: "Telepon", dob: "Tanggal Lahir", gender: "Jenis Kelamin", bloodType: "Golongan Darah",
+    heightWeight: "Tinggi / Berat", allergies: "Alergi", noAllergies: "Tidak ada riwayat alergi", registeredAt: "Terdaftar Sejak",
+    promoTitleLabel: "Judul Promo", promoSubtitle: "Sub-judul", promoTheme: "Warna Tema", status: "Status",
+    statusActiveRun: "Aktif (Sedang Berjalan)", statusInactive: "Tidak Aktif", createdAt: "Dibuat Pada",
+    addedAt: "Ditambahkan Pada", category: "Kategori", dosageUnit: "Dosis / Satuan", price: "Harga (Rp)",
+    currentStock: "Stok Saat Ini",
+  },
+  theme: {
+    defaultColor: "#1E5E44",
+    defaultColorLight: "#1E5E4499",
   },
 } as const;

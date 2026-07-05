@@ -1,3 +1,4 @@
+import logging
 import pymysql
 import csv
 import os
@@ -33,7 +34,7 @@ class SyncEngine:
                 branches = cursor.fetchall()
             return doctors, schedules, polyclinics, branches
         except Exception as e:
-            print(f"DB error: {e}")
+            logging.info(f"DB error: {e}")
             return None, None, None, None
         finally:
             if 'conn' in locals() and conn:
@@ -72,7 +73,7 @@ class SyncEngine:
                 with open(self.data_path, mode='r', encoding='utf-8') as f:
                     static_items = [row for row in csv.DictReader(f) if row["kategori"] not in ["Jadwal", "Layanan", "Dokter", "Cabang"]]
             except Exception as e:
-                print(f"CSV read error: {e}")
+                logging.info(f"CSV read error: {e}")
         return static_items
 
     def _save_to_csv(self, static_items, new_knowledge):
@@ -84,7 +85,7 @@ class SyncEngine:
                 writer.writerows(new_knowledge)
             return True
         except Exception as e:
-            print(f"CSV write error: {e}")
+            logging.info(f"CSV write error: {e}")
             return False
 
     def sync_database(self) -> bool:

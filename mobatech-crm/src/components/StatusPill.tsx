@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 
 const STATUS_COLOR: Record<string, { bg: string; text: string; dot: string }> = {

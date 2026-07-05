@@ -45,7 +45,10 @@ class PharmacyOrderMock {
 final pharmacyHistoryProvider =
     FutureProvider<List<PharmacyOrderMock>>((ref) async {
       final dio = ref.read(dioProvider);
-      final response = await dio.get('/pharmacy/orders');
+      final response = await dio.get(
+        '/pharmacy/orders',
+        queryParameters: {'page': 1, 'limit': 10},
+      );
       final dynamic responseData = response.data;
       final List data = responseData is Map && responseData.containsKey('data')
           ? responseData['data']
@@ -74,7 +77,10 @@ class SpecialOffer {
 
 final specialOffersProvider = FutureProvider<List<SpecialOffer>>((ref) async {
   final dio = ref.read(dioProvider);
-  final response = await dio.get('/promos');
+  final response = await dio.get(
+    '/promos',
+    queryParameters: {'page': 1, 'limit': 10},
+  );
   final dynamic responseData = response.data;
   final List data = responseData is Map && responseData.containsKey('data') ? responseData['data'] : responseData as List;
   return data.map((e) {

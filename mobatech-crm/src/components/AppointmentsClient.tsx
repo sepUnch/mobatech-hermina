@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useAuthStore } from "@/store/useAuthStore";
@@ -16,18 +14,17 @@ import { AppointmentsTable } from "@/components/AppointmentsTable";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
 import { ConfirmModal } from "@/components/ConfirmModal";
+import { AppointmentDetailView } from "@/components/AppointmentDetailView";
 import { Pagination } from "@/components/ui/Pagination";
 
 export function AppointmentsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
 
-  if (!["admin", "doctor"].includes(role)) {
-    return <ForbiddenView />;
-  }
-
   const [items, setItems] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [drawerItem, setDrawerItem] = useState<Appointment | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterValue, setFilterValue] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -40,17 +37,12 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
 
   const loadItems = async () => {
     try {
-      const queryParams = new URLSearchParams();
-      queryParams.append("page", currentPage.toString());
-      queryParams.append("limit", "10");
-      if (searchQuery) queryParams.append("search", searchQuery);
-      if (filterValue) queryParams.append("filter", filterValue);
-      const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
-      const res = await api.get<Appointment[]>(`/api/admin/appointments${qs}`);
+      const q = new URLSearchParams({ page: currentPage.toString(), limit: "10" });
+      if (searchQuery) q.append("search", searchQuery);
+      if (filterValue) q.append("filter", filterValue);
+      const res = await api.get<Appointment[]>(`/api/admin/appointments?${q}`);
       setItems(res.data || []);
-      if (res.meta) {
-        setTotalPages(res.meta.total_pages);
-      }
+      if (res.meta) setTotalPages(res.meta.total_pages);
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.login.networkError, type: "error" });
     } finally {
@@ -66,48 +58,39 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
     loadItems();
   }, [searchQuery, filterValue, currentPage]);
 
-  const handleApprove = async (id: number) => {
-    if (processingId) return;
-    setProcessingId(id);
-    try {
-      await api.post(`/api/admin/appointments/${id}/approve`, {});
-      setToast({ isOpen: true, message: "Antrean berhasil disetujui", type: "success" });
-      await loadItems();
-    } catch (err) {
-      const msg = err instanceof ApiError ? err.message : APP_STRINGS.login.networkError;
-      setToast({ isOpen: true, message: msg, type: "error" });
-    } finally {
-      setProcessingId(null);
-    }
-  };
-
   const [cancelConfirmId, setCancelConfirmId] = useState<number | null>(null);
   const [processingId, setProcessingId] = useState<number | null>(null);
 
-  const executeCancel = async (id: number) => {
+  const handleAction = async (id: number, action: string, msg: string, onFin?: () => void) => {
     try {
-      await api.post(`/api/admin/appointments/${id}/cancel`, {});
-      setToast({ isOpen: true, message: "Antrean dibatalkan", type: "success" });
+      await api.post(`/api/admin/appointments/${id}/${action}`, {});
+      setToast({ isOpen: true, message: msg, type: "success" });
       loadItems();
     } catch (err) {
-      const msg = err instanceof ApiError ? err.message : APP_STRINGS.login.networkError;
-      setToast({ isOpen: true, message: msg, type: "error" });
+      setToast({ isOpen: true, message: err instanceof ApiError ? err.message : APP_STRINGS.login.networkError, type: "error" });
     } finally {
-      setCancelConfirmId(null);
+      onFin?.();
     }
   };
 
-  const handleComplete = async (id: number) => {
-    try {
-      await api.post(`/api/admin/appointments/${id}/complete`, {});
-      setToast({ isOpen: true, message: "Antrean diselesaikan", type: "success" });
-      loadItems();
-    } catch (err) {
-      const msg = err instanceof ApiError ? err.message : APP_STRINGS.login.networkError;
-      setToast({ isOpen: true, message: msg, type: "error" });
-    }
+  const handleApprove = async (id: number) => {
+    if (processingId) return;
+    setProcessingId(id);
+    await handleAction(id, "approve", "Antrean berhasil disetujui", () => setProcessingId(null));
+  };
+  const executeCancel = (id: number) => handleAction(id, "cancel", "Antrean dibatalkan", () => setCancelConfirmId(null));
+  const handleComplete = (id: number) => handleAction(id, "complete", "Antrean diselesaikan");
+
+  const openDrawer = (item: Appointment) => {
+    setDrawerItem(item);
+    setIsDrawerOpen(true);
   };
 
+  
+
+  if (!["admin", "doctor"].includes(role)) {
+    return <ForbiddenView />;
+  }
   return (
     <div className="space-y-6 animate-slide-in">
       <PageHeader
@@ -136,6 +119,7 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
           onApprove={handleApprove}
           onCancel={setCancelConfirmId}
           onComplete={handleComplete}
+          onViewDetails={openDrawer}
         />
       </Card>
 
@@ -150,6 +134,8 @@ export function AppointmentsClient({ initialData, searchParams }: { initialData?
         confirmText="Ya, Batalkan"
         variant="danger"
       />
+
+      <AppointmentDetailView isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} drawerItem={drawerItem} />
 
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>

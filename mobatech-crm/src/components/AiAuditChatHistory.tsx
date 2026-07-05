@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { ChatSession } from "@/types/api";
 import { Formatters } from "@/lib/formatters";

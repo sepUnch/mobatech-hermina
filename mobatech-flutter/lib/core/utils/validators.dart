@@ -37,7 +37,15 @@ class Validators {
     if (value == null || value.trim().isEmpty) {
       return AppStrings.requiredField;
     }
-    final digits = value.replaceAll(RegExp(r'\D'), '');
+    String cleanPhone = value.replaceAll(RegExp(r'[^\d+]'), '');
+    if (cleanPhone.startsWith('+62')) {
+      cleanPhone = cleanPhone.substring(3);
+    } else if (cleanPhone.startsWith('62')) {
+      cleanPhone = cleanPhone.substring(2);
+    } else if (cleanPhone.startsWith('0')) {
+      cleanPhone = cleanPhone.substring(1);
+    }
+    final digits = cleanPhone.replaceAll(RegExp(r'\D'), '');
     if (digits.length < 7 || digits.length > 12) {
       return AppStrings.errInvalidPhone;
     }

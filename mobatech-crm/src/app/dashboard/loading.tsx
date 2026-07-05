@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function DashboardLoading() {
   return (
     <div className="w-full h-[60vh] flex flex-col items-center justify-center animate-slide-in">

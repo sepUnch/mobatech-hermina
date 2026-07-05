@@ -78,7 +78,6 @@ class EmergencyFormView extends StatelessWidget {
 
                       const SizedBox(height: 24),
 
-                      // Form Fields
                       _buildSectionLabel(
                         AppStrings.patientDataLabel,
                         Icons.person_outline,
@@ -110,7 +109,6 @@ class EmergencyFormView extends StatelessWidget {
 
                       const SizedBox(height: 32),
 
-                      // Submit Button
                       EmergencySubmitButton(
                         isLoading: isLoading,
                         hasLocation: userLat != null,

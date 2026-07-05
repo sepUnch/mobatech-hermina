@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export function PrivacyComplianceBadge() {
   return (
     <div className="rounded-2xl border glass-panel p-6 shadow-sm flex flex-col justify-center items-center text-center">

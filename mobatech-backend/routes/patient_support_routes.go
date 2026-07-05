@@ -21,7 +21,6 @@ func SetupPatientSupportRoutes(r *gin.Engine, db *gorm.DB) {
 	remService := services.NewReminderService(remRepo)
 	remController := controllers.NewReminderController(remService)
 
-	// Medical Results Routes
 	mrUserGroup := r.Group("/api/medical-results")
 	mrUserGroup.Use(middleware.AuthMiddleware())
 	{
@@ -38,7 +37,6 @@ func SetupPatientSupportRoutes(r *gin.Engine, db *gorm.DB) {
 		mrAdminGroup.DELETE("/:id", mrController.Delete)
 	}
 
-	// Reminders Routes
 	remUserGroup := r.Group("/api/reminders")
 	remUserGroup.Use(middleware.AuthMiddleware())
 	{

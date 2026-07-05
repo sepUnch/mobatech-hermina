@@ -10,52 +10,29 @@ import 'attachment_preview.dart';
 import 'suggestion_chips_row.dart';
 import 'chat_input_row.dart';
 import 'chat_attachment_handler.dart';
-
 class ChatInputArea extends ConsumerStatefulWidget {
   const ChatInputArea({super.key});
-
   @override
   ConsumerState<ChatInputArea> createState() => _ChatInputAreaState();
 }
-
 class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
   final TextEditingController _controller = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-
   XFile? _selectedImage;
   FilePickerResult? _selectedFile;
-
-  String _generateSmartTitle(String text) {
-    if (text.isEmpty) return AppStrings.chatMediaAttachmentTitle;
-    final words = text.trim().split(RegExp(r'\s+'));
-    final takeCount = words.length > 4 ? 4 : words.length;
-    final titleWords = words.take(takeCount).map((w) {
-      if (w.isEmpty) return '';
-      return w[0].toUpperCase() + w.substring(1).toLowerCase();
-    }).toList();
-
-    String title = titleWords.join(' ');
-    if (words.length > 4) {
-      title += '...';
-    }
-    return title.length > 30 ? '${title.substring(0, 27)}...' : title;
-  }
 
   void _sendMessage() {
     final text = _controller.text.trim();
     if (text.isEmpty && _selectedImage == null && _selectedFile == null) return;
-
     _controller.clear();
-
     final currentSessionId = ref.read(currentSessionIdProvider);
     final imgPath = _selectedImage?.path;
     final filePath = _selectedFile?.files.single.path;
-
     if (currentSessionId == null) {
       ref
           .read(chatMessagesProvider.notifier)
           .createNewSessionAndSend(
-            _generateSmartTitle(text),
+            "Percakapan Baru",
             text,
             imagePath: imgPath,
             filePath: filePath,
@@ -70,13 +47,11 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
             filePath: filePath,
           );
     }
-
     setState(() {
       _selectedImage = null;
       _selectedFile = null;
     });
   }
-
   Future<void> _pickImage(ImageSource source) async {
     final image = await ChatAttachmentHandler.pickImage(
       context,
@@ -90,7 +65,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       });
     }
   }
-
   Future<void> _pickFile() async {
     final file = await ChatAttachmentHandler.pickFile(context);
     if (file != null) {
@@ -100,7 +74,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       });
     }
   }
-
   void _showAttachmentModal() {
     showModalBottomSheet(
       context: context,
@@ -114,18 +87,15 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
       },
     );
   }
-
   void _sendSuggestion(String text) {
     _controller.text = text;
     _sendMessage();
   }
-
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -141,7 +111,6 @@ class _ChatInputAreaState extends ConsumerState<ChatInputArea> {
               _selectedFile = null;
             }),
           ),
-
           SuggestionChipsRow(onSuggestionTap: _sendSuggestion),
           const SizedBox(height: 12),
           ChatInputRow(

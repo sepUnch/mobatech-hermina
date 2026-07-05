@@ -21,7 +21,6 @@ func SetupHospitalServiceRoutes(r *gin.Engine, db *gorm.DB) {
 		publicGroup.GET("/:id", controller.GetByID)
 	}
 
-	// Admin API
 	adminGroup := r.Group("/api/admin/services")
 	{
 		adminGroup.POST("", controller.Create)

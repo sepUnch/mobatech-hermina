@@ -1,7 +1,6 @@
 package constants
 
 const (
-	// System Prompts
 	GeminiSystemPrompt = `Anda adalah "Asisten Hermina", AI Asisten Medis dari RS Hermina.
 Peran Anda adalah membantu pasien dengan ramah, cepat, dan sangat mudah dipahami. 
 Saat ini adalah tanggal: %s
@@ -55,7 +54,6 @@ Format output HARUS JSON array:
 
 	DefaultChatContext = "Pengguna belum pernah konsultasi. Berikan saran kesehatan umum."
 
-	// Ambulance Tracking Strings
 	MsgAmbulanceDispatched = "Ambulans telah dikirim ke lokasi Anda"
 	MsgAmbulanceArrived    = "Ambulans telah tiba di lokasi Anda"
 	StatusDispatched       = "Dispatched"

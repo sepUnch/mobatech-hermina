@@ -30,10 +30,15 @@ class AppointmentRepository {
         queryParameters: params,
       );
       
-      final responseData = response.data as List<dynamic>? ?? [];
-      final meta = response.extra['meta'] as Map<String, dynamic>?;
+      final dynamic responseData = response.data;
+      final dataList = responseData is Map && responseData.containsKey('data')
+          ? responseData['data'] as List<dynamic>? ?? []
+          : (responseData as List<dynamic>? ?? []);
+      final meta = responseData is Map && responseData.containsKey('meta')
+          ? responseData['meta'] as Map<String, dynamic>?
+          : response.extra['meta'] as Map<String, dynamic>?;
       
-      final doctors = responseData.map((json) => Doctor.fromJson(json)).toList();
+      final doctors = dataList.map((json) => Doctor.fromJson(json)).toList();
       final currentPage = meta?['current_page'] as int? ?? 1;
       final totalPages = meta?['total_pages'] as int? ?? 1;
       
@@ -72,10 +77,15 @@ class AppointmentRepository {
         queryParameters: {'page': page, 'limit': limit},
       );
       
-      final responseData = response.data as List<dynamic>? ?? [];
-      final meta = response.extra['meta'] as Map<String, dynamic>?;
+      final dynamic responseData = response.data;
+      final dataList = responseData is Map && responseData.containsKey('data')
+          ? responseData['data'] as List<dynamic>? ?? []
+          : (responseData as List<dynamic>? ?? []);
+      final meta = responseData is Map && responseData.containsKey('meta')
+          ? responseData['meta'] as Map<String, dynamic>?
+          : response.extra['meta'] as Map<String, dynamic>?;
       
-      final appointments = responseData.map((json) => Appointment.fromJson(json)).toList();
+      final appointments = dataList.map((json) => Appointment.fromJson(json)).toList();
       final currentPage = meta?['current_page'] as int? ?? 1;
       final totalPages = meta?['total_pages'] as int? ?? 1;
       

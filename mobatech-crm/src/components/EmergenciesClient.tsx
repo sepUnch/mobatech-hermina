@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
@@ -18,10 +16,6 @@ import { EmergenciesHeader } from "./EmergenciesHeader";
 export function EmergenciesClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-
-  if (!["admin"].includes(role)) {
-    return <ForbiddenView />;
-  }
   const [items, setItems] = useState<EmergencyRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,7 +72,12 @@ return () => clearInterval(interval);
         return <Badge variant="neutral">{status}</Badge>;
     }
   };
-return (
+
+
+  if (!["admin"].includes(role)) {
+    return <ForbiddenView />;
+  }
+  return (
     <div className="space-y-6 animate-slide-in">
       <EmergenciesHeader
         filterValue={filterValue}

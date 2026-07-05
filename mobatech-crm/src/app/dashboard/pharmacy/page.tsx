@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { serverFetch } from "@/lib/serverApi";
 import { PharmacyClient } from "@/components/pharmacy/PharmacyClient";
 import { PharmacyOrder, Medicine, MedicineCategory } from "@/types/api";

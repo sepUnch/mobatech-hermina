@@ -55,7 +55,7 @@ class AppColors {
   // Transparent / Opacity
   static const Color transparent = Colors.transparent;
   static Color shadowColor = Colors.black.withValues(alpha: 0.05);
-  static Color overlayWhite20 = Colors.white.withValues(alpha: 0.2);
+  static Color overlayWhite20 = AppColors.backgroundWhite.withValues(alpha: 0.2);
   static Color overlayPrimary15 = primary.withValues(alpha: 0.15);
 
   // Chatbot specific / additions
@@ -63,15 +63,14 @@ class AppColors {
   static const Color iconBlue = Colors.blue;
   static const Color iconGreen = Colors.green;
 
-  // Social Colors
   static const Color googleBlue = Color(0xFF4285F4);
   static const Color googleRed = Color(0xFFEA4335);
   static const Color googleYellow = Color(0xFFFBBC05);
   static const Color googleGreen = Color(0xFF34A853);
 
   static Color black10 = Colors.black.withValues(alpha: 0.1);
-  static Color white85 = Colors.white.withValues(alpha: 0.85);
-  static Color white50 = Colors.white.withValues(alpha: 0.5);
+  static Color white85 = AppColors.backgroundWhite.withValues(alpha: 0.85);
+  static Color white50 = AppColors.backgroundWhite.withValues(alpha: 0.5);
   static Color grey20 = Colors.grey.withValues(alpha: 0.2);
   static Color primary85 = primary.withValues(alpha: 0.85);
   static Color orange10 = Colors.orange.withValues(alpha: 0.1);
@@ -81,9 +80,8 @@ class AppColors {
   static const Color warningOrange = Colors.orange;
   static Color warningLight = Colors.orange.withValues(alpha: 0.1);
 
-  // Unified Dark Mode Helpers
-  static Color getGlassBackground(bool isDark) => isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.7);
-  static Color getGlassBorder(bool isDark) => isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1);
-  static Color getTextPrimary(bool isDark) => isDark ? Colors.white : textDark;
+  static Color getGlassBackground(bool isDark) => isDark ? AppColors.backgroundWhite.withValues(alpha: 0.05) : AppColors.backgroundWhite.withValues(alpha: 0.7);
+  static Color getGlassBorder(bool isDark) => isDark ? AppColors.backgroundWhite.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.1);
+  static Color getTextPrimary(bool isDark) => isDark ? AppColors.backgroundWhite : textDark;
   static Color getTextSecondary(bool isDark) => isDark ? Colors.white70 : textGrey;
 }

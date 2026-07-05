@@ -21,12 +21,17 @@ func NewPolyclinicController(service services.PolyclinicService) *PolyclinicCont
 func (c *PolyclinicController) GetPolyclinics(ctx *gin.Context) {
 	search := ctx.Query("search")
 	filter := ctx.Query("filter")
-	polys, err := c.service.GetAllPolyclinics(search, filter)
+	
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	polys, totalCount, err := c.service.GetAllPolyclinics(search, filter, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", polys))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", polys, page, limit, totalCount))
 }
 
 func (c *PolyclinicController) GetPolyclinicByID(ctx *gin.Context) {

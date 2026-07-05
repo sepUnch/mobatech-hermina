@@ -1,11 +1,10 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/Card";
 import { Modal } from "@/components/Modal";
 import { Formatters } from "@/lib/formatters";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Trash2 } from "lucide-react";
+import { ActionMenu } from "@/components/ui/ActionMenu";
 
 import { User, Reminder } from "@/types/api";
 export function RemindersList({
@@ -56,9 +55,18 @@ export function RemindersList({
                 </div>
               </div>
 
-              <Button size="sm" variant="ghost" onClick={() => onDelete(r.id)} className="text-rose-500 hover:text-rose-600 px-2 flex-shrink-0" icon={<Trash2 size={14} />}>
-                Hapus
-              </Button>
+              <div className="flex-shrink-0">
+                <ActionMenu
+                  items={[
+                    {
+                      label: "Hapus",
+                      icon: <Trash2 size={14} />,
+                      onClick: () => onDelete(r.id),
+                      variant: "danger" as const
+                    }
+                  ]}
+                />
+              </div>
             </div>
           ))}
         </div>

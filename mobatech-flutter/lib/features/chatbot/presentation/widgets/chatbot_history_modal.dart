@@ -6,10 +6,8 @@ import '../../../../core/utils/error_handler.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/chat_provider.dart';
-
 class ChatbotHistoryModal extends ConsumerWidget {
   const ChatbotHistoryModal({super.key});
-
   void _showRenameDialog(BuildContext context, WidgetRef ref, int sessionId, String currentTitle) {
     final controller = TextEditingController(text: currentTitle);
     showDialog(
@@ -51,11 +49,9 @@ class ChatbotHistoryModal extends ConsumerWidget {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(chatSessionsProvider);
-
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Container(

@@ -33,7 +33,7 @@ final cartRepositoryProvider = Provider<CartRepository>((ref) {
 
 final categoriesProvider = FutureProvider<List<MedicineCategory>>((ref) async {
   final repo = ref.watch(medicineRepositoryProvider);
-  return repo.getCategories();
+  return repo.getCategories(page: 1, limit: 10);
 });
 
 typedef MedicineFilter = ({int? categoryId, String? search});
@@ -43,7 +43,7 @@ final medicinesProvider = FutureProvider.family<List<Medicine>, MedicineFilter>(
   filter,
 ) async {
   final repo = ref.watch(medicineRepositoryProvider);
-  return repo.getMedicines(categoryId: filter.categoryId, search: filter.search);
+  return repo.getMedicines(categoryId: filter.categoryId, search: filter.search, page: 1, limit: 10);
 });
 
 final prescriptionsProvider = FutureProvider<List<Prescription>>((ref) async {
@@ -52,7 +52,7 @@ final prescriptionsProvider = FutureProvider<List<Prescription>>((ref) async {
     ref.invalidateSelf();
   });
   ref.onDispose(() => timer.cancel());
-  return repo.getMyPrescriptions();
+  return repo.getMyPrescriptions(page: 1, limit: 10);
 });
 
 final ordersProvider = FutureProvider<List<PharmacyOrder>>((ref) async {
@@ -61,7 +61,7 @@ final ordersProvider = FutureProvider<List<PharmacyOrder>>((ref) async {
     ref.invalidateSelf();
   });
   ref.onDispose(() => timer.cancel());
-  return repo.getMyOrders();
+  return repo.getMyOrders(page: 1, limit: 10);
 });
 
 class CartNotifier extends StateNotifier<AsyncValue<Cart>> {

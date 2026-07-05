@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface GormModel {
   id: number; created_at: string;
   updated_at: string; deleted_at?: string | null;

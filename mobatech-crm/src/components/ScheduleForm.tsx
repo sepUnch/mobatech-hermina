@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { APP_STRINGS } from "@/lib/constants";
 import { Button } from "@/components/ui/Button";
 

@@ -7,7 +7,7 @@ import (
 )
 
 type PolyclinicRepository interface {
-	FindAll(search string, filter string) ([]models.Polyclinic, error)
+	FindAll(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error)
 	FindByID(id uint) (*models.Polyclinic, error)
 	Create(polyclinic *models.Polyclinic) error
 	Update(polyclinic *models.Polyclinic) error
@@ -27,9 +27,11 @@ func NewPolyclinicRepository(db *gorm.DB) PolyclinicRepository {
 	return &polyclinicRepository{db}
 }
 
-func (r *polyclinicRepository) FindAll(search string, filter string) ([]models.Polyclinic, error) {
+func (r *polyclinicRepository) FindAll(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error) {
 	var polyclinics []models.Polyclinic
-	query := r.db.Preload("Schedules").Preload("Doctors")
+	var totalCount int64
+	query := r.db.Model(&models.Polyclinic{})
+	
 	if search != "" {
 		searchTerm := "%" + search + "%"
 		query = query.Where("name LIKE ?", searchTerm)
@@ -39,8 +41,17 @@ func (r *polyclinicRepository) FindAll(search string, filter string) ([]models.P
 	} else if filter == "inactive" {
 		query = query.Where("is_active = ?", false)
 	}
-	err := query.Find(&polyclinics).Error
-	return polyclinics, err
+	
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+	
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+	
+	err := query.Preload("Schedules").Preload("Doctors").Find(&polyclinics).Error
+	return polyclinics, totalCount, err
 }
 
 func (r *polyclinicRepository) FindByID(id uint) (*models.Polyclinic, error) {

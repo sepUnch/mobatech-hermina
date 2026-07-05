@@ -48,9 +48,10 @@ func (r *pharmacyRepository) GetOrderByID(id uint) (*models.PharmacyOrder, error
 	return &order, err
 }
 
-func (r *pharmacyRepository) GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error) {
+func (r *pharmacyRepository) GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
 	var orders []models.PharmacyOrder
-	query := r.db.Preload("Items").Preload("Items.Medicine").Joins("LEFT JOIN users ON pharmacy_orders.user_id = users.id")
+	var totalCount int64
+	query := r.db.Model(&models.PharmacyOrder{}).Joins("LEFT JOIN users ON pharmacy_orders.user_id = users.id")
 
 	if search != "" {
 		searchTerm := "%" + search + "%"
@@ -61,8 +62,16 @@ func (r *pharmacyRepository) GetAllOrders(search string, filter string) ([]model
 		query = query.Where("pharmacy_orders.status = ?", filter)
 	}
 
-	err := query.Order("pharmacy_orders.created_at desc").Find(&orders).Error
-	return orders, err
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	err := query.Preload("Items").Preload("Items.Medicine").Order("pharmacy_orders.created_at desc").Find(&orders).Error
+	return orders, totalCount, err
 }
 
 func (r *pharmacyRepository) CreateOrder(order *models.PharmacyOrder) error {

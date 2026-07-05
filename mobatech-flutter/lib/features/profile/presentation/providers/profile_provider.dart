@@ -86,6 +86,5 @@ final userProfileProvider = FutureProvider<UserProfile?>((ref) async {
       return UserProfile.fromJson(decoded);
     }
   }
-  // Return null if there's no valid user data, forcing a re-login or empty state
   return null;
 });

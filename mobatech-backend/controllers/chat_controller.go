@@ -49,8 +49,7 @@ func (c *ChatController) GetUserSessions(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", sessions))
 }
 func (c *ChatController) GetSessionMessages(ctx *gin.Context) {
-	sessionIDStr := ctx.Param("id")
-	sessionID, err := strconv.ParseUint(sessionIDStr, 10, 32)
+	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err != nil {
 		ctx.Error(utils.NewValidationError("invalid session id"))
 		return
@@ -68,8 +67,7 @@ func (c *ChatController) DeleteSession(ctx *gin.Context) {
 		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
 		return
 	}
-	sessionIDStr := ctx.Param("id")
-	sessionID, _ := strconv.Atoi(sessionIDStr)
+	sessionID, _ := strconv.Atoi(ctx.Param("id"))
 	err := c.service.DeleteSession(uint(userID.(float64)), uint(sessionID))
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
@@ -84,8 +82,7 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Unauthorized"))
 		return
 	}
-	sessionIDStr := ctx.Param("id")
-	sessionID, err := strconv.Atoi(sessionIDStr)
+	sessionID, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.Error(utils.NewValidationError("invalid session id"))
 		return
@@ -105,8 +102,7 @@ func (c *ChatController) RenameSession(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", nil))
 }
 func (c *ChatController) StreamChat(ctx *gin.Context) {
-	sessionIDStr := ctx.Param("id")
-	sessionID, err := strconv.ParseUint(sessionIDStr, 10, 32)
+	sessionID, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
 	if err != nil {
 		ctx.Error(utils.NewValidationError("invalid session id"))
 		return
@@ -120,7 +116,6 @@ func (c *ChatController) StreamChat(ctx *gin.Context) {
 	}
 	outChan := make(chan string)
 	errChan := make(chan error)
-	// Context from Request is passed to manage cancellation
 	go c.service.StreamChat(ctx.Request.Context(), uint(sessionID), req.Message, outChan, errChan)
 	c.handleStream(ctx, outChan, errChan)
 }

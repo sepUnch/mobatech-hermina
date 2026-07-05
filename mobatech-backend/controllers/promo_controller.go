@@ -3,6 +3,7 @@ import (
 	"backend/models"
 	"backend/utils"
 	"net/http"
+	"strconv"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -16,9 +17,25 @@ func (c *PromoController) GetPromos(ctx *gin.Context) {
 }
 
 func (c *PromoController) GetAllPromos(ctx *gin.Context) {
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
 	var promos []models.Promo
-	c.DB.Find(&promos)
-	ctx.JSON(http.StatusOK, gin.H{"data": promos})
+	var totalCount int64
+	query := c.DB.Model(&models.Promo{})
+	
+	if err := query.Count(&totalCount).Error; err != nil {
+		ctx.JSON(http.StatusInternalServerError, utils.BuildError(utils.ErrInternal, "Failed to count promos", nil))
+		return
+	}
+	
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+	
+	query.Find(&promos)
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", promos, page, limit, totalCount))
 }
 
 func (c *PromoController) CreatePromo(ctx *gin.Context) {

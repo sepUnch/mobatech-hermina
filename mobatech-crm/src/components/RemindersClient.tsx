@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
@@ -21,9 +19,6 @@ const defaultForm = { user_id: 0, appointment_id: 0, title: "", message: "", rem
 export function RemindersClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-  if (!["admin"].includes(role)) {
-    return <ForbiddenView />;
-  }
   const [users, setUsers] = useState<User[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +55,6 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
       showToast("Pilih pasien, isi Judul, dan Tanggal", "error");
       return;
     }
-    // Go time.Time requires RFC3339 format — append seconds and timezone if missing
     const isoDate = form.reminder_date.includes(":") && form.reminder_date.length === 16
       ? form.reminder_date + ":00+07:00"
       : form.reminder_date;
@@ -83,6 +77,10 @@ export function RemindersClient({ initialData, searchParams }: { initialData?: u
     } catch { showToast("Gagal menghapus reminder", "error"); }
     finally { setDeleteConfirmId(null); }
   };
+  
+  if (!["admin"].includes(role)) {
+    return <ForbiddenView />;
+  }
   return (
     <div className="space-y-6 animate-slide-in">
       <PageHeader

@@ -35,13 +35,17 @@ func (c *PharmacyController) GetMedicines(ctx *gin.Context) {
 		parsed, _ := strconv.Atoi(catIDStr)
 		catID = uint(parsed)
 	}
+	
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
 
-	meds, err := c.service.GetAllMedicines(catID, search)
+	meds, totalCount, err := c.service.GetAllMedicines(catID, search, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", meds))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", meds, page, limit, totalCount))
 }
 
 func (c *PharmacyController) GetMedicineDetail(ctx *gin.Context) {

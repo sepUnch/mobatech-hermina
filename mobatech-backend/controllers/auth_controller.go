@@ -74,12 +74,17 @@ func (c *AuthController) GetAllUsers(ctx *gin.Context) {
 	if userIDFloat != nil {
 		viewerID = uint(userIDFloat.(float64))
 	}
-	users, err := c.service.GetAllUsers(search, filter, roleFilter, viewerID, viewerRole)
+	
+	page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+	limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+	offset := (page - 1) * limit
+
+	users, totalCount, err := c.service.GetAllUsers(search, filter, roleFilter, viewerID, viewerRole, limit, offset)
 	if err != nil {
 		ctx.Error(utils.NewInternalError(err.Error()))
 		return
 	}
-	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", users))
+	ctx.JSON(http.StatusOK, utils.BuildPaginatedSuccess("Success", users, page, limit, totalCount))
 }
 func (c *AuthController) AdminCreateUser(ctx *gin.Context) {
 	var req struct {

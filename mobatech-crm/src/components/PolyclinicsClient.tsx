@@ -1,62 +1,57 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
-
+import { Pagination } from "@/components/ui/Pagination";
 import { useState, useEffect } from "react";
 import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Polyclinic } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
+import { SideDrawer } from "@/components/ui/SideDrawer";
 import { PolyclinicsTable } from "./PolyclinicsTable";
 import { PolyclinicsHeader } from "./PolyclinicsHeader";
 import { PolyclinicsModals } from "./PolyclinicsModals";
-
 export function PolyclinicsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-
-  if (!["admin"].includes(role)) {
-    return <ForbiddenView />;
-  }
   const [items, setItems] = useState<Polyclinic[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Polyclinic | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterValue, setFilterValue] = useState("");
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [isActive, setIsActive] = useState(true);
+  const [searchQuery, setSearchQuery] = useState(""); const [filterValue, setFilterValue] = useState("");
+  const [name, setName] = useState(""); const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState(""); const [isActive, setIsActive] = useState(true);
   const [saving, setSaving] = useState(false);
-
+  const [drawerItem, setDrawerItem] = useState<Polyclinic | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [toast, setToast] = useState<{
     isOpen: boolean;
     message: string;
     type: "success" | "error" | "warning";
   }>({ isOpen: false, message: "", type: "success" });
-
   const loadItems = async () => {
     try {
       const queryParams = new URLSearchParams();
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", "10");
       if (searchQuery) queryParams.append("search", searchQuery);
       if (filterValue) queryParams.append("filter", filterValue);
       const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
-      
       const res = await api.get<Polyclinic[]>(`/api/polyclinics${qs}`);
       setItems(res.data || []);
+      if (res.meta) {
+        setTotalPages(res.meta.total_pages);
+      }
     } catch {
       setToast({ isOpen: true, message: APP_STRINGS.login.networkError, type: "error" });
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => { loadItems(); }, [searchQuery, filterValue]);
-
+  useEffect(() => { setCurrentPage(1); }, [searchQuery, filterValue]);
+  useEffect(() => { loadItems(); }, [searchQuery, filterValue, currentPage]);
   const openForm = (item: Polyclinic | null = null) => {
     setSelectedItem(item);
     setName(item ? item.name : "");
@@ -65,7 +60,6 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
     setIsActive(item ? item.is_active : true);
     setShowModal(true);
   };
-
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -75,7 +69,6 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
       image_url: imageUrl || "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=150",
       is_active: isActive,
     };
-
     try {
       if (selectedItem) {
         await api.put(`/api/admin/polyclinics/${selectedItem.id}`, payload);
@@ -93,9 +86,7 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
       setSaving(false);
     }
   };
-  
   const [deleteId, setDeleteId] = useState<number | null>(null);
-
   const handleDelete = async (id: number) => {
     setSaving(true);
     try {
@@ -110,7 +101,10 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
       setDeleteId(null);
     }
   };
-return (
+  if (!["admin"].includes(role)) {
+    return <ForbiddenView />;
+  }
+  return (
     <div className="space-y-6 animate-slide-in">
       <PolyclinicsHeader
         openForm={() => openForm(null)}
@@ -119,14 +113,14 @@ return (
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-
       <PolyclinicsTable
         items={items}
         loading={loading}
         onEdit={openForm}
         onDelete={setDeleteId}
+        onViewDetails={(item) => { setDrawerItem(item); setIsDrawerOpen(true); }}
       />
-
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       <PolyclinicsModals
         showModal={showModal} setShowModal={setShowModal}
         selectedItem={selectedItem} name={name} setName={setName}
@@ -137,7 +131,18 @@ return (
         deleteId={deleteId} setDeleteId={setDeleteId}
         handleDelete={handleDelete}
       />
-
+      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Poliklinik">
+        {drawerItem && (
+          <div className="space-y-3">
+            <div className="flex justify-center mb-4">
+              <img src={drawerItem.image_url} alt={drawerItem.name} className="w-24 h-24 rounded-xl object-cover shadow-lg border-2 border-white/20" />
+            </div>
+            <div><strong>Nama:</strong> {drawerItem.name}</div>
+            <div><strong>Deskripsi:</strong> {drawerItem.description}</div>
+            <div><strong>Status:</strong> {drawerItem.is_active ? "Aktif" : "Non-Aktif"}</div>
+          </div>
+        )}
+      </SideDrawer>
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );

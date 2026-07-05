@@ -29,7 +29,6 @@ class AssistantCard extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          // Background Icon Watermark
           Positioned(
             right: -20,
             bottom: -20,

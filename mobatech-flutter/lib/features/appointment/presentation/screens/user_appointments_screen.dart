@@ -10,17 +10,13 @@ import '../../providers/appointment_provider.dart';
 import '../widgets/appointment_card.dart';
 import '../widgets/user_appointments_app_bar.dart';
 import '../widgets/user_appointments_empty.dart';
-
 class UserAppointmentsScreen extends ConsumerStatefulWidget {
   const UserAppointmentsScreen({super.key});
-
   @override
   ConsumerState<UserAppointmentsScreen> createState() => _UserAppointmentsScreenState();
 }
-
 class _UserAppointmentsScreenState extends ConsumerState<UserAppointmentsScreen> {
   final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
@@ -30,17 +26,14 @@ class _UserAppointmentsScreenState extends ConsumerState<UserAppointmentsScreen>
       }
     });
   }
-
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     final appointmentsAsync = ref.watch(userAppointmentsProvider);
-
     return Scaffold(
       backgroundColor: AppColors.backgroundScreen,
       body: appointmentsAsync.when(
@@ -109,7 +102,6 @@ class _UserAppointmentsScreenState extends ConsumerState<UserAppointmentsScreen>
       ),
     );
   }
-
   Future<void> _handleCancel(
     BuildContext context,
     WidgetRef ref,
@@ -139,7 +131,6 @@ class _UserAppointmentsScreenState extends ConsumerState<UserAppointmentsScreen>
         ],
       ),
     );
-
     if (confirm == true) {
       try {
         final repo = ref.read(appointmentRepositoryProvider);

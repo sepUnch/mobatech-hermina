@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useAuthStore } from "@/store/useAuthStore";
 import { Card } from "@/components/ui/Card";
 import { DoctorsTable } from "./DoctorsTable";
@@ -14,6 +12,7 @@ export function DoctorsContent({
   openSchedules,
   openForm,
   setDeleteId,
+  onViewDetails,
   schedules,
 }: {
   activeTab: "doctors" | "schedules";
@@ -22,6 +21,7 @@ export function DoctorsContent({
   openSchedules: (item: Doctor) => void;
   openForm: (item: Doctor | null) => void;
   setDeleteId: (id: number | null) => void;
+  onViewDetails: (item: Doctor) => void;
   schedules: DoctorSchedule[];
 }) {
   const user = useAuthStore((state) => state.user);
@@ -37,6 +37,7 @@ export function DoctorsContent({
           openSchedules={openSchedules}
           openForm={openForm}
           setDeleteId={setDeleteId}
+          onViewDetails={onViewDetails}
         />
       ) : (
         <DoctorsScheduleTab schedules={schedules} />

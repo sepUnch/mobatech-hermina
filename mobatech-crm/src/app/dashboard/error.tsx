@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect } from "react";
@@ -21,7 +19,7 @@ export default function DashboardError({
   const handleForceLogout = async () => {
     try {
       await fetch("/api/auth/logout", { method: "POST" });
-    } catch (e) {}
+    } catch (e) { console.error(e); }
     localStorage.removeItem("hermina-crm-auth");
     window.location.href = "/login";
   };

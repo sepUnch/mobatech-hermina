@@ -25,7 +25,7 @@ scheduler = BackgroundScheduler()
 
 @scheduler.scheduled_job('cron', minute=0) # Runs every hour at minute 0
 def automated_daily_sync():
-    print("Running automated hourly Vector DB sync...")
+    logging.info("Running automated hourly Vector DB sync...")
     if sync_engine.sync_database():
         vector_search.build_index()
 

@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ForbiddenView } from "@/components/ui/ForbiddenView";
@@ -8,6 +6,7 @@ import { api } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { APP_STRINGS } from "@/lib/constants";
 import { DeleteModal } from "@/components/DeleteModal";
+import { SideDrawer } from "@/components/ui/SideDrawer";
 import { MedicalResultsTable } from "./MedicalResultsTable";
 import { MedicalResultsForm } from "./MedicalResultsForm";
 import { MedicalResultsHeader } from "./MedicalResultsHeader";
@@ -18,8 +17,6 @@ const defaultForm = { user_id: 0, appointment_id: 0, doctor_name: "", test_type:
 export function MedicalResultsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
   const user = useAuthStore((state) => state.user);
   const role = user?.role || "admin";
-  if (!["admin", "doctor"].includes(role)) {
-    return <ForbiddenView />; }
   const [users, setUsers] = useState<User[]>([]);
   const [results, setResults] = useState<MedicalResult[]>([]);
   const [loading, setLoading] = useState(true);
@@ -28,6 +25,8 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
   const [form, setForm] = useState(defaultForm);
   const [saving, setSaving] = useState(false);
   const [searchQuery, setSearchQuery] = useState(""); const [filterValue, setFilterValue] = useState("");
+  const [drawerItem, setDrawerItem] = useState<MedicalResult | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [toast, setToast] = useState<{ isOpen: boolean; message: string; type: "success" | "error" }>({ isOpen: false, message: "", type: "success" });
   const showToast = (message: string, type: "success" | "error") => setToast({ isOpen: true, message, type });
   const load = async () => {
@@ -49,7 +48,6 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
   useEffect(() => { load(); }, [searchQuery, filterValue]);
   useEffect(() => {
     loadUsers();
-    // Auto-open form if navigated from appointments table
     if (searchParams && searchParams.appointment_id) {
       setForm({
         ...defaultForm,
@@ -91,7 +89,10 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
     } finally {
       setIsDeleting(false);
       setDeleteId(null); } };
-return (
+
+  if (!["admin", "doctor"].includes(role)) {
+    return <ForbiddenView />; }
+  return (
     <div className="space-y-6 animate-slide-in">
       <MedicalResultsHeader
         openCreate={openCreate}
@@ -119,6 +120,7 @@ return (
         users={users}
         onEdit={openEdit}
         onDelete={setDeleteId}
+        onViewDetails={(item) => { setDrawerItem(item); setIsDrawerOpen(true); }}
         userRole={role}
       />
       <DeleteModal
@@ -127,5 +129,20 @@ return (
         onConfirm={() => deleteId !== null && handleDelete(deleteId)}
         isLoading={isDeleting}
       />
+      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Hasil Medis">
+        {drawerItem && (
+          <div className="space-y-3">
+            <div><strong>Pasien:</strong> {users.find((u) => u.id === drawerItem.user_id)?.full_name || `User #${drawerItem.user_id}`}</div>
+            <div><strong>Dokter:</strong> {drawerItem.doctor_name || "-"}</div>
+            <div><strong>Tanggal:</strong> {drawerItem.result_date.slice(0, 10)}</div>
+            <div><strong>Pemeriksaan:</strong> {drawerItem.test_name} ({drawerItem.test_type})</div>
+            <div><strong>Hasil:</strong> {drawerItem.result}</div>
+            {drawerItem.notes && <div><strong>Catatan:</strong> {drawerItem.notes}</div>}
+            {drawerItem.file_url && (
+              <div><strong>Dokumen:</strong> <a href={drawerItem.file_url} target="_blank" rel="noreferrer" className="text-primary hover:underline">Unduh File</a></div>
+            )}
+          </div>
+        )}
+      </SideDrawer>
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div> ); }

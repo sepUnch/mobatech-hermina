@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect, useMemo } from "react";
 import { api } from "@/lib/api";
 import { Card } from "@/components/ui/Card";
@@ -31,11 +29,10 @@ export function PharmacyPrescriptions() {
     }
   };
 
-  // eslint-disable-next-line
+   
   useEffect(() => { load(); }, []);
 
   const handleProcess = async (id: number) => {
-    // Logic to convert Prescription to PharmacyOrder
     try {
       await api.post(`/api/admin/pharmacy/prescriptions/${id}/process`, {});
       setToast({ isOpen: true, message: "Resep berhasil diproses ke pesanan", type: "success" });

@@ -49,8 +49,8 @@ func (s *pharmacyService) GetOrderByID(id uint) (*models.PharmacyOrder, error) {
 	return s.repo.GetOrderByID(id)
 }
 
-func (s *pharmacyService) GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error) {
-	return s.repo.GetAllOrders(search, filter)
+func (s *pharmacyService) GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error) {
+	return s.repo.GetAllOrders(search, filter, limit, offset)
 }
 
 func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
@@ -58,7 +58,6 @@ func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
 		return errors.New("order must have at least one item")
 	}
 
-	// Generate Order Number
 	order.OrderNumber = fmt.Sprintf("ORD-%d", time.Now().Unix())
 	order.Status = "Pending"
 	order.PaymentStatus = "Unpaid"
@@ -69,7 +68,6 @@ func (s *pharmacyService) CreateOrder(order *models.PharmacyOrder) error {
 	}
 	order.TotalPrice = total
 
-	// Create order in DB
 	if err := s.repo.CreateOrder(order); err != nil {
 		return err
 	}

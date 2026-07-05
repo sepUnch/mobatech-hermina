@@ -4,10 +4,11 @@ import (
 	"errors"
 	"backend/models"
 	"backend/repositories"
+	"backend/utils"
 )
 
 type PolyclinicService interface {
-	GetAllPolyclinics(search string, filter string) ([]models.Polyclinic, error)
+	GetAllPolyclinics(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error)
 	GetPolyclinicByID(id uint) (*models.Polyclinic, error)
 	CreatePolyclinic(polyclinic *models.Polyclinic) error
 	UpdatePolyclinic(polyclinic *models.Polyclinic) error
@@ -27,8 +28,8 @@ func NewPolyclinicService(repo repositories.PolyclinicRepository) PolyclinicServ
 	return &polyclinicService{repo}
 }
 
-func (s *polyclinicService) GetAllPolyclinics(search string, filter string) ([]models.Polyclinic, error) {
-	return s.repo.FindAll(search, filter)
+func (s *polyclinicService) GetAllPolyclinics(search string, filter string, limit int, offset int) ([]models.Polyclinic, int64, error) {
+	return s.repo.FindAll(search, filter, limit, offset)
 }
 
 func (s *polyclinicService) GetPolyclinicByID(id uint) (*models.Polyclinic, error) {
@@ -36,11 +37,19 @@ func (s *polyclinicService) GetPolyclinicByID(id uint) (*models.Polyclinic, erro
 }
 
 func (s *polyclinicService) CreatePolyclinic(polyclinic *models.Polyclinic) error {
-	return s.repo.Create(polyclinic)
+	err := s.repo.Create(polyclinic)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *polyclinicService) UpdatePolyclinic(polyclinic *models.Polyclinic) error {
-	return s.repo.Update(polyclinic)
+	err := s.repo.Update(polyclinic)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *polyclinicService) DeletePolyclinic(id uint) error {
@@ -49,12 +58,15 @@ func (s *polyclinicService) DeletePolyclinic(id uint) error {
 		return err
 	}
 
-	// Check if there are active doctors before deleting
 	if len(polyclinic.Doctors) > 0 {
 		return errors.New("Tidak bisa menghapus poliklinik karena masih ada dokter yang terdaftar di dalamnya. Pindahkan dokternya terlebih dahulu.")
 	}
 
-	return s.repo.Delete(id)
+	err = s.repo.Delete(id)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *polyclinicService) GetSchedules(polyclinicID uint) ([]models.PolyclinicSchedule, error) {
@@ -62,13 +74,25 @@ func (s *polyclinicService) GetSchedules(polyclinicID uint) ([]models.Polyclinic
 }
 
 func (s *polyclinicService) CreateSchedule(schedule *models.PolyclinicSchedule) error {
-	return s.repo.CreateSchedule(schedule)
+	err := s.repo.CreateSchedule(schedule)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *polyclinicService) UpdateSchedule(schedule *models.PolyclinicSchedule) error {
-	return s.repo.UpdateSchedule(schedule)
+	err := s.repo.UpdateSchedule(schedule)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }
 
 func (s *polyclinicService) DeleteSchedule(id uint) error {
-	return s.repo.DeleteSchedule(id)
+	err := s.repo.DeleteSchedule(id)
+	if err == nil {
+		utils.TriggerAsyncRAGSync()
+	}
+	return err
 }

@@ -7,22 +7,19 @@ import (
 )
 
 type PharmacyRepository interface {
-	// Medicine Categories
 	GetAllCategories() ([]models.MedicineCategory, error)
 	GetCategoryByID(id uint) (*models.MedicineCategory, error)
 	CreateCategory(cat *models.MedicineCategory) error
 	UpdateCategory(cat *models.MedicineCategory) error
 	DeleteCategory(id uint) error
 
-	// Medicines
-	GetAllMedicines(categoryID uint, search string) ([]models.Medicine, error)
+	GetAllMedicines(categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error)
 	GetMedicineByID(id uint) (*models.Medicine, error)
 	CreateMedicine(med *models.Medicine) error
 	UpdateMedicine(med *models.Medicine) error
 	DeleteMedicine(id uint) error
 	UpdateMedicineStock(id uint, quantityChange int) error
 
-	// Prescriptions
 	GetPrescriptionsByUserID(userID uint) ([]models.Prescription, error)
 	GetPrescriptionByID(id uint) (*models.Prescription, error)
 	GetAllPrescriptions() ([]models.Prescription, error)
@@ -30,15 +27,13 @@ type PharmacyRepository interface {
 	DeletePrescription(id uint) error
 	UpdatePrescriptionStatus(id uint, status string) error
 
-	// Orders
 	GetOrdersByUserID(userID uint) ([]models.PharmacyOrder, error)
 	GetOrderByID(id uint) (*models.PharmacyOrder, error)
-	GetAllOrders(search string, filter string) ([]models.PharmacyOrder, error)
+	GetAllOrders(search string, filter string, limit int, offset int) ([]models.PharmacyOrder, int64, error)
 	CreateOrder(order *models.PharmacyOrder) error
 	UpdateOrderStatus(id uint, status string) error
 	UpdateOrderPayment(id uint, paymentStatus string) error
 
-	// Cart
 	GetCartByUserID(userID uint) (*models.Cart, error)
 	AddToCart(userID uint, medicineID uint, quantity int) error
 	UpdateCartItemQuantity(userID uint, cartItemID uint, quantity int) error
@@ -77,9 +72,10 @@ func (r *pharmacyRepository) DeleteCategory(id uint) error {
 	return r.db.Delete(&models.MedicineCategory{}, id).Error
 }
 
-func (r *pharmacyRepository) GetAllMedicines(categoryID uint, search string) ([]models.Medicine, error) {
+func (r *pharmacyRepository) GetAllMedicines(categoryID uint, search string, limit int, offset int) ([]models.Medicine, int64, error) {
 	var meds []models.Medicine
-	query := r.db.Preload("Category")
+	var totalCount int64
+	query := r.db.Model(&models.Medicine{})
 
 	if categoryID > 0 {
 		query = query.Where("category_id = ?", categoryID)
@@ -90,8 +86,16 @@ func (r *pharmacyRepository) GetAllMedicines(categoryID uint, search string) ([]
 		query = query.Where("name LIKE ? OR generic_name LIKE ?", searchPattern, searchPattern)
 	}
 
-	err := query.Find(&meds).Error
-	return meds, err
+	if err := query.Count(&totalCount).Error; err != nil {
+		return nil, 0, err
+	}
+
+	if limit > 0 {
+		query = query.Limit(limit).Offset(offset)
+	}
+
+	err := query.Preload("Category").Find(&meds).Error
+	return meds, totalCount, err
 }
 
 func (r *pharmacyRepository) GetMedicineByID(id uint) (*models.Medicine, error) {

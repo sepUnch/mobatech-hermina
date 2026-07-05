@@ -1,18 +1,19 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { useState, useEffect } from "react";
 import { api, ApiError } from "@/lib/api";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import { Plus, Edit, Trash2 } from "lucide-react";
+import { Plus, Edit, Trash2, Eye } from "lucide-react";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { DeleteModal } from "@/components/DeleteModal";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
+import { Pagination } from "@/components/ui/Pagination";
 import { PromosFormModal } from "./PromosFormModal";
 import { APP_STRINGS } from "@/lib/constants";
 import { Promo } from "@/types/api";
+import { ActionMenu } from "@/components/ui/ActionMenu";
+import { PromoDetailView } from "./PromoDetailView";
 
 export function PromosClient() {
   const [promos, setPromos] = useState<Promo[]>([]);
@@ -23,16 +24,24 @@ export function PromosClient() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [editingPromo, setEditingPromo] = useState<Promo | null>(null);
+  const [viewingPromo, setViewingPromo] = useState<Promo | null>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const loadPromos = async () => {
     try {
       setLoading(true);
-      const res = await api.get<Promo[]>("/api/admin/promos");
-      let data = res.data || [];
-      if (searchQuery) {
-        data = data.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.subtitle.toLowerCase().includes(searchQuery.toLowerCase()));
+      const queryParams = new URLSearchParams();
+      queryParams.append("page", currentPage.toString());
+      queryParams.append("limit", "10");
+      if (searchQuery) queryParams.append("search", searchQuery);
+      const qs = queryParams.toString() ? `?${queryParams.toString()}` : "";
+      const res = await api.get<Promo[]>(`/api/admin/promos${qs}`);
+      setPromos(res.data || []);
+      if (res.meta) {
+        setTotalPages(res.meta.total_pages);
       }
-      setPromos(data);
     } catch {
       setToast({ isOpen: true, message: "Gagal memuat promo", type: "error" });
     } finally {
@@ -40,7 +49,8 @@ export function PromosClient() {
     }
   };
 
-  useEffect(() => { loadPromos(); }, [searchQuery]);
+  useEffect(() => { setCurrentPage(1); }, [searchQuery]);
+  useEffect(() => { loadPromos(); }, [searchQuery, currentPage]);
 
   const handleDelete = async () => {
     if (!deleteConfirm) return;
@@ -96,9 +106,27 @@ export function PromosClient() {
                     </span>
                   </td>
                   <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
-                    <div className="flex gap-2 justify-center">
-                      <button onClick={() => { setEditingPromo(p); setShowModal(true); }} className="p-1.5 text-info hover:bg-info/10 rounded-lg transition-colors"><Edit size={16} /></button>
-                      <button onClick={() => setDeleteConfirm({id: p.id, title: `Hapus promo "${p.title}"?`})} className="p-1.5 text-error hover:bg-error/10 rounded-lg transition-colors"><Trash2 size={16} /></button>
+                    <div className="flex justify-center">
+                      <ActionMenu
+                        items={[
+                          {
+                            label: "Lihat Detail",
+                            icon: <Eye size={14} />,
+                            onClick: () => { setViewingPromo(p); setIsDrawerOpen(true); }
+                          },
+                          {
+                            label: "Ubah",
+                            icon: <Edit size={14} />,
+                            onClick: () => { setEditingPromo(p); setShowModal(true); }
+                          },
+                          {
+                            label: "Hapus",
+                            icon: <Trash2 size={14} />,
+                            onClick: () => setDeleteConfirm({ id: p.id, title: `Hapus promo "${p.title}"?` }),
+                            variant: "danger" as const
+                          }
+                        ]}
+                      />
                     </div>
                   </td>
                 </tr>
@@ -110,9 +138,11 @@ export function PromosClient() {
           </table>
         </div>
       </Card>
+      <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
       <PromosFormModal isOpen={showModal} onClose={() => setShowModal(false)} promo={editingPromo} onSuccess={loadPromos} setToast={setToast} />
       <DeleteModal isOpen={!!deleteConfirm} onClose={() => setDeleteConfirm(null)} onConfirm={handleDelete} description={deleteConfirm?.title} />
-      <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({...t, isOpen: false}))} />
+      <PromoDetailView isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} promo={viewingPromo} />
+      <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );
 }

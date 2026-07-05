@@ -1,7 +1,8 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge } from "@/components/ui/Badge";
 import { Formatters } from "@/lib/formatters";
+import { Eye, Inbox } from "lucide-react";
+import { ActionMenu } from "@/components/ui/ActionMenu";
+import { SkeletonTable } from "@/components/ui/SkeletonTable";
 
 export interface FamilyMember {
   id: number;
@@ -28,11 +29,12 @@ export interface User {
 interface PatientsTableProps {
   items: User[];
   loading: boolean;
+  onViewDetails?: (item: User) => void;
 }
 
-export function PatientsTable({ items, loading }: PatientsTableProps) {
+export function PatientsTable({ items, loading, onViewDetails }: PatientsTableProps) {
   if (loading) {
-    return <div className="p-8 text-center text-foreground/50 animate-pulse text-sm">Memuat data...</div>;
+    return <SkeletonTable rows={5} columns={5} />;
   }
 
   return (
@@ -45,13 +47,17 @@ export function PatientsTable({ items, loading }: PatientsTableProps) {
             <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Kontak</th>
             <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Data Medis Dasar</th>
             <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Anggota Keluarga</th>
+            <th className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">Aksi</th>
           </tr>
         </thead>
         <tbody>
           {items.length === 0 ? (
             <tr>
-              <td colSpan={5} className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm text-foreground/50">
-                Tidak ada pasien ditemukan.
+              <td colSpan={6} className="text-center py-16">
+                <div className="flex flex-col items-center justify-center text-foreground/50">
+                  <Inbox className="w-12 h-12 mb-3 text-foreground/20" />
+                  <p className="text-sm">Tidak ada pasien ditemukan.</p>
+                </div>
               </td>
             </tr>
           ) : (
@@ -92,6 +98,19 @@ export function PatientsTable({ items, loading }: PatientsTableProps) {
                   <Badge variant="neutral">
                     {user.family_members?.length || 0} Terhubung
                   </Badge>
+                </td>
+                <td className="text-center align-middle whitespace-nowrap py-2 px-4 text-sm">
+                  <div className="flex justify-center">
+                    <ActionMenu
+                      items={[
+                        ...(onViewDetails ? [{
+                          label: "Lihat Detail",
+                          icon: <Eye size={14} />,
+                          onClick: () => onViewDetails(user),
+                        }] : [])
+                      ]}
+                    />
+                  </div>
                 </td>
               </tr>
             ))

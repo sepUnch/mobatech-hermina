@@ -1,18 +1,13 @@
-/* eslint-disable react-hooks/set-state-in-effect */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosRequestConfig, AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from "@/store/useAuthStore";
 import { encryptData, decryptData } from "./crypto";
-
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
 export interface PaginationMeta {
   current_page: number;
   limit: number;
   total_pages: number;
   total_data: number;
 }
-
 export interface ApiResponse<T = unknown> {
   success?: boolean;
   status?: string;
@@ -21,7 +16,6 @@ export interface ApiResponse<T = unknown> {
   data: T;
   meta?: PaginationMeta;
 }
-
 export class ApiError extends Error {
   code: string;
   status: number;
@@ -34,25 +28,20 @@ export class ApiError extends Error {
     this.name = "ApiError";
   }
 }
-
 const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   }
 });
-
 export interface CustomRequestConfig extends AxiosRequestConfig {
   securePayload?: boolean;
 }
-
 interface CustomInternalConfig extends InternalAxiosRequestConfig {
   securePayload?: boolean;
 }
-
 axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
   let token = useAuthStore.getState().token;
-  
   if (!token && typeof window !== "undefined") {
     try {
       const stored = localStorage.getItem("hermina-crm-auth");
@@ -64,11 +53,9 @@ axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
       console.error("Failed to read token from localStorage", e);
     }
   }
-
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
-  
   if (config.securePayload && config.data) {
     try {
       const stringData = JSON.stringify(config.data);
@@ -80,7 +67,6 @@ axiosInstance.interceptors.request.use(async (config: CustomInternalConfig) => {
   }
   return config;
 }, (error) => Promise.reject(error));
-
 axiosInstance.interceptors.response.use(
   async (response) => {
     if (response.data && response.data.encrypted_payload) {
@@ -91,7 +77,6 @@ axiosInstance.interceptors.response.use(
         console.error("Decryption failed for response payload", e);
       }
     }
-    
     const normalizeKeys = (obj: unknown): unknown => {
       if (Array.isArray(obj)) return obj.map(normalizeKeys);
       else if (obj !== null && typeof obj === "object") {
@@ -110,14 +95,12 @@ axiosInstance.interceptors.response.use(
       }
       return obj;
     };
-    
     response.data = normalizeKeys(response.data);
     return response;
   },
   (error: AxiosError<unknown>) => {
     const status = error.response?.status || 500;
     const responseData = (error.response?.data || {}) as Record<string, unknown>;
-    
     let errorCode = (responseData.code as string) || "INTERNAL_ERROR";
     if (!responseData.code) {
       switch (status) {
@@ -129,11 +112,9 @@ axiosInstance.interceptors.response.use(
       }
     }
     const errorMessage = (responseData.message as string) || error.message || "Terjadi kesalahan koneksi.";
-    
     return Promise.reject(new ApiError(errorCode, status, errorMessage, responseData.errors));
   }
 );
-
 export const api = {
   get: async <T>(path: string, options?: CustomRequestConfig): Promise<ApiResponse<T>> => {
     const res = await axiosInstance.get<ApiResponse<T>>(path, options);

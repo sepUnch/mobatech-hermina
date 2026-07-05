@@ -57,10 +57,8 @@ class AppointmentDetailScreen extends StatelessWidget {
             // Status and QR Code section
             BookingQRCard(appointment: appointment),
             const SizedBox(height: 24),
-            // Doctor Details
             AppointmentDoctorCard(appointment: appointment),
             const SizedBox(height: 24),
-            // Schedule Details
             ScheduleDetailsCard(appointment: appointment),
           ],
         ),

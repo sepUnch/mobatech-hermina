@@ -104,7 +104,7 @@ class HospitalCard extends StatelessWidget {
             : null,
       ),
       child: !hasImage
-          ? const Icon(Icons.local_hospital, color: Colors.white)
+          ? const Icon(Icons.local_hospital, color: AppColors.backgroundWhite)
           : null,
     );
   }
