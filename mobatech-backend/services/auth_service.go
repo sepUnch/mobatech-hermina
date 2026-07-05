@@ -1,5 +1,6 @@
 package services
 import (
+	"context"
 	"backend/models"
 	"backend/repositories"
 	"errors"
@@ -11,6 +12,7 @@ import (
 type AuthService interface {
 	Register(fullName, email, phone, password string) (*models.User, error)
 	Login(email, password string) (string, *models.User, error)
+	GoogleLogin(ctx context.Context, idToken string) (string, *models.User, error)
 	GetUser(userID uint) (*models.User, error)
 	UpdateProfile(userID uint, fullName, phone, imagePath, bloodType string, height int, weight int, allergies, dob, gender string) (*models.User, error)
 	AddFamilyMember(member *models.FamilyMember) error
@@ -95,4 +97,45 @@ func (s *authService) applyProfileUpdates(user *models.User, fullName, phone, im
 	if allergies != "" { user.Allergies = allergies }
 	if dob != "" { user.DateOfBirth = dob }
 	if gender != "" { user.Gender = gender }
+}
+
+func (s *authService) GoogleLogin(ctx context.Context, idToken string) (string, *models.User, error) {
+	email, name, photo, err := VerifyFirebaseIDToken(ctx, idToken)
+	if err != nil {
+		return "", nil, err
+	}
+
+	if email == "" {
+		return "", nil, errors.New("firebase token does not contain a valid email address")
+	}
+
+	user, err := s.repo.FindByEmail(email)
+	if err != nil {
+		user = &models.User{
+			FullName:    name,
+			Email:       email,
+			PhoneNumber: "-",
+			Password:    "",
+			Role:        "patient",
+			ImageURL:    photo,
+		}
+		if err := s.repo.CreateUser(user); err != nil {
+			return "", nil, err
+		}
+	}
+
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		return "", nil, errors.New("JWT_SECRET is not configured on the server")
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": user.ID,
+		"role":    user.Role,
+		"exp":     time.Now().Add(time.Hour * 72).Unix(),
+	})
+	tokenString, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", nil, err
+	}
+	return tokenString, user, nil
 }

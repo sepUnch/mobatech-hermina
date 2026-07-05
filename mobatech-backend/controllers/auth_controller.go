@@ -46,6 +46,21 @@ func (c *AuthController) Login(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", gin.H{"token": token, "user": user}))
 }
+func (c *AuthController) GoogleLogin(ctx *gin.Context) {
+	var req struct {
+		IDToken string `json:"id_token" binding:"required"`
+	}
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.Error(utils.NewValidationError(err.Error()))
+		return
+	}
+	token, user, err := c.service.GoogleLogin(ctx.Request.Context(), req.IDToken)
+	if err != nil {
+		ctx.Error(utils.NewAppError(utils.ErrUnauthenticated, http.StatusUnauthorized, "Gagal masuk menggunakan Google: " + err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, utils.BuildSuccess("OK", "Success", gin.H{"token": token, "user": user}))
+}
 func (c *AuthController) Me(ctx *gin.Context) {
 	userID, exists := ctx.Get("user_id")
 	if !exists {

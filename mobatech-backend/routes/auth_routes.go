@@ -21,6 +21,7 @@ func SetupAuthRoutes(r *gin.Engine, db *gorm.DB) {
 	{
 		authGroup.POST("/register", authController.Register)
 		authGroup.POST("/login", authController.Login)
+		authGroup.POST("/google", authController.GoogleLogin)
 		authGroup.GET("/me", middleware.AuthMiddleware(), authController.Me)
 	}
 
