@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/utils/custom_snackbar.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
@@ -31,7 +30,12 @@ class LoginSubmitButton extends StatelessWidget {
 }
 
 class LoginFooter extends StatelessWidget {
-  const LoginFooter({super.key});
+  final VoidCallback onGooglePressed;
+
+  const LoginFooter({
+    super.key,
+    required this.onGooglePressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +66,7 @@ class LoginFooter extends StatelessWidget {
         const SizedBox(height: 16),
         SocialLoginButton(
           text: AppStrings.continueWithGoogle,
-          onPressed: () {
-            CustomSnackbar.showInfo(context, AppStrings.extFirebaseauthgooglesignincomingsoon);
-          },
+          onPressed: onGooglePressed,
         ),
         const SizedBox(height: 16),
         Row(

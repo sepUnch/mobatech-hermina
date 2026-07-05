@@ -65,10 +65,12 @@ class _PasswordInputSection extends StatelessWidget {
 class _LoginFormOptions extends StatelessWidget {
   final bool rememberMe;
   final ValueChanged<bool?> onRememberMeChanged;
+  final VoidCallback onForgotPasswordPressed;
 
   const _LoginFormOptions({
     required this.rememberMe,
     required this.onRememberMeChanged,
+    required this.onForgotPasswordPressed,
   });
 
   @override
@@ -103,7 +105,7 @@ class _LoginFormOptions extends StatelessWidget {
           ],
         ),
         TextButton(
-          onPressed: () {},
+          onPressed: onForgotPasswordPressed,
           child: const Text(
             AppStrings.forgotPassword,
             style: TextStyle(

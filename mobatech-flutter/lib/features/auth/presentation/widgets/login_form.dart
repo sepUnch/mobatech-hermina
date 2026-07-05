@@ -57,6 +57,46 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     }
   }
 
+  void _handleGoogleLogin() async {
+    try {
+      await ref.read(authStateProvider.notifier).loginWithGoogle();
+      ref.invalidate(userProfileProvider);
+      ref.invalidate(userAppointmentsProvider);
+      ref.invalidate(servicesProvider);
+      ref.invalidate(chatSessionsProvider);
+      if (mounted) context.go('/home');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
+      }
+    }
+  }
+
+  void _handleForgotPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty || Validators.validateEmail(email) != null) {
+      CustomSnackbar.showError(
+        context,
+        "Silakan masukkan email yang valid terlebih dahulu.",
+      );
+      return;
+    }
+    try {
+      await ref.read(authStateProvider.notifier).sendPasswordResetEmail(email);
+      if (mounted) {
+        CustomSnackbar.showSuccess(
+          context,
+          "Link reset password telah dikirim ke email Anda.",
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        CustomSnackbar.showError(context, ErrorHandler.getMessage(e));
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -89,6 +129,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       _LoginFormOptions(
         rememberMe: _rememberMe,
         onRememberMeChanged: (v) => setState(() => _rememberMe = v ?? false),
+        onForgotPasswordPressed: _handleForgotPassword,
       ),
       const SizedBox(height: 24),
       LoginSubmitButton(
@@ -97,7 +138,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         onPressed: _handleLogin,
       ),
       const SizedBox(height: 16),
-      const LoginFooter(),
+      LoginFooter(
+        onGooglePressed: _handleGoogleLogin,
+      ),
     ];
   }
 }

@@ -66,6 +66,21 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
             '+62${_phoneController.text}',
             _passwordController.text,
           );
+      if (mounted) {
+        CustomSnackbar.showSuccess(
+          context,
+          "Registrasi sukses! Silakan periksa email Anda untuk verifikasi.",
+        );
+        context.pop();
+      }
+    } catch (e) {
+      _showError(ErrorHandler.getMessage(e));
+    }
+  }
+
+  void _handleGoogleLogin() async {
+    try {
+      await ref.read(authStateProvider.notifier).loginWithGoogle();
       ref.invalidate(userProfileProvider);
       if (mounted) context.go('/home');
     } catch (e) {
@@ -127,6 +142,7 @@ class _RegisterFormState extends ConsumerState<RegisterForm> {
       RegisterSubmitButton(
         isLoading: isLoading,
         onPressed: isLoading ? null : _handleRegister,
+        onGooglePressed: _handleGoogleLogin,
       ),
     ];
   }

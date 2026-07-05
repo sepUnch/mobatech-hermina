@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../providers/profile_provider.dart';
@@ -104,6 +105,7 @@ class ProfileMenuSection extends ConsumerWidget {
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.clear();
                     globalAuthToken = null;
+                    await FirebaseAuth.instance.signOut();
                     ref.invalidate(userProfileProvider);
                     if (context.mounted) {
                       context.go('/login');

@@ -15,6 +15,16 @@ class AuthRepository {
     } on DioException { rethrow; }
   }
 
+  Future<Map<String, dynamic>> loginWithGoogle(String idToken) async {
+    try {
+      final response = await _dio.post(
+        '/auth/google',
+        data: {'id_token': idToken},
+      );
+      return response.data;
+    } on DioException { rethrow; }
+  }
+
   Future<Map<String, dynamic>> register(
     String fullName,
     String email,

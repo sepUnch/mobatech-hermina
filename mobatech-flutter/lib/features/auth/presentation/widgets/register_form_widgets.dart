@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -8,11 +7,13 @@ import 'social_login_button.dart';
 class RegisterSubmitButton extends StatelessWidget {
   final bool isLoading;
   final VoidCallback? onPressed;
+  final VoidCallback onGooglePressed;
 
   const RegisterSubmitButton({
     super.key,
     required this.isLoading,
     this.onPressed,
+    required this.onGooglePressed,
   });
 
   @override
@@ -52,9 +53,7 @@ class RegisterSubmitButton extends StatelessWidget {
         const SizedBox(height: 24),
         SocialLoginButton(
           text: AppStrings.continueWithGoogle,
-          onPressed: () {
-            CustomSnackbar.showInfo(context, AppStrings.extFirebaseauthgooglesignincomingsoon);
-          },
+          onPressed: onGooglePressed,
         ),
       ],
     );
