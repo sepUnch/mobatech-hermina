@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "979315173437",
+    "project_id": "mobatech-firebase",
+    "storage_bucket": "mobatech-firebase.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:979315173437:android:e058d3964875e99999e254",
+        "android_client_info": {
+          "package_name": "com.mobatech.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "979315173437-h80pn8lb6m4u7u30n4hnoko69img1dll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobatech.app",
+            "certificate_hash": "b5e1d21bf1120f3ba40811522e22851faee4af78"
+          }
+        },
+        {
+          "client_id": "979315173437-2391f8js8g3cg7emc8pe4fsg89ka53br.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxSWyseRs1WZlyeyK3g5PlVVe03_yQE7s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "979315173437-2391f8js8g3cg7emc8pe4fsg89ka53br.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

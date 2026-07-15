@@ -63,7 +63,7 @@ class ErrorHandler {
 
     e = e.replaceAll('Exception:', '').replaceAll('Error:', '').trim();
     if (e.isEmpty) return AppStrings.errRequestFailed;
-    if (e.length > 50) return AppStrings.errTimeout;
+    if (e.length > 100) return e.substring(0, 100) + '...';
 
     return '${e[0].toUpperCase()}${e.substring(1)}';
   }

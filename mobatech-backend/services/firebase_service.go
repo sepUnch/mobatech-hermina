@@ -5,6 +5,7 @@ import (
 	"os"
 
 	firebase "firebase.google.com/go/v4"
+	"google.golang.org/api/option"
 )
 
 var firebaseApp *firebase.App
@@ -21,7 +22,7 @@ func InitFirebase() error {
 		ProjectID: projectID,
 	}
 
-	app, err := firebase.NewApp(context.Background(), config)
+	app, err := firebase.NewApp(context.Background(), config, option.WithoutAuthentication())
 	if err != nil {
 		return err
 	}

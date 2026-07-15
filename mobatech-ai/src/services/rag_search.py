@@ -21,6 +21,10 @@ class VectorSearchEngine:
         self.knowledge_base = df.to_dict('records')
         texts = [item['teks'] for item in self.knowledge_base]
         
+        if not texts:
+            self.index = faiss.IndexFlatL2(self.dimension)
+            return True
+
         # Create embeddings
         embeddings = self.model.encode(texts)
         faiss.normalize_L2(embeddings)

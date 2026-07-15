@@ -1,4 +1,4 @@
-package com.example.mobatech_app
+package com.mobatech.app
 
 import io.flutter.embedding.android.FlutterActivity
 
