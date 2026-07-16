@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Package } from "lucide-react";
 import { APP_STRINGS } from "@/lib/constants";
 import { Formatters } from "@/lib/formatters";
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 
 interface MedicineDetailViewProps {
   isOpen: boolean;
@@ -13,7 +13,7 @@ interface MedicineDetailViewProps {
 
 export function MedicineDetailView({ isOpen, onClose, medicine }: MedicineDetailViewProps) {
   return (
-    <SideDrawer isOpen={isOpen} onClose={onClose} title="Detail Obat">
+    <Modal isOpen={isOpen} onClose={onClose} title="Detail Obat">
       {medicine && (
         <div className="space-y-4">
           <div className="flex items-center gap-4 border-b border-glass-border pb-4">
@@ -42,6 +42,6 @@ export function MedicineDetailView({ isOpen, onClose, medicine }: MedicineDetail
           </div>
         </div>
       )}
-    </SideDrawer>
+    </Modal>
   );
 }

@@ -1,9 +1,16 @@
 package models
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Medicine struct {
-	gorm.Model
+	ID                   uint             `json:"id" gorm:"primarykey"`
+	CreatedAt            time.Time        `json:"created_at"`
+	UpdatedAt            time.Time        `json:"updated_at"`
+	DeletedAt            gorm.DeletedAt   `json:"deleted_at" gorm:"index"`
 	CategoryID           uint             `json:"category_id"`
 	Category             MedicineCategory `json:"category" gorm:"foreignKey:CategoryID"`
 	Name                 string           `json:"name"`

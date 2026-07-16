@@ -6,7 +6,7 @@ import { api } from "@/lib/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
 import { APP_STRINGS } from "@/lib/constants";
 import { DeleteModal } from "@/components/DeleteModal";
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { MedicalResultsTable } from "./MedicalResultsTable";
 import { MedicalResultsForm } from "./MedicalResultsForm";
 import { MedicalResultsHeader } from "./MedicalResultsHeader";
@@ -64,12 +64,18 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
       showToast("User ID, Nama Tes, dan Tanggal wajib diisi", "error");
       return; }
     setSaving(true);
+
+    const payload = {
+      ...form,
+      result_date: form.result_date ? (form.result_date.includes("T") ? form.result_date : form.result_date + "T00:00:00Z") : undefined
+    };
+
     try {
       if (editId) {
-        await api.put(`/api/admin/medical-results/${editId}`, form);
+        await api.put(`/api/admin/medical-results/${editId}`, payload);
         showToast(APP_STRINGS.common.medicalResultsUpdated, "success");
       } else {
-        await api.post("/api/admin/medical-results", form);
+        await api.post("/api/admin/medical-results", payload);
         showToast(APP_STRINGS.common.medicalResultsAdded, "success"); }
       setShowForm(false);
       setForm(defaultForm);
@@ -129,7 +135,7 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
         onConfirm={() => deleteId !== null && handleDelete(deleteId)}
         isLoading={isDeleting}
       />
-      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Hasil Medis">
+      <Modal isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Hasil Medis">
         {drawerItem && (
           <div className="space-y-3">
             <div><strong>Pasien:</strong> {users.find((u) => u.id === drawerItem.user_id)?.full_name || `User #${drawerItem.user_id}`}</div>
@@ -143,6 +149,6 @@ export function MedicalResultsClient({ initialData, searchParams }: { initialDat
             )}
           </div>
         )}
-      </SideDrawer>
+      </Modal>
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div> ); }

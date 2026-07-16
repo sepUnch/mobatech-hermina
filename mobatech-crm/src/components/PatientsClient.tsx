@@ -12,7 +12,7 @@ import { Card } from "@/components/ui/Card";
 import { PatientsTable, User } from "@/components/PatientsTable";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { Pagination } from "@/components/ui/Pagination";
 
 export function PatientsClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
@@ -100,7 +100,7 @@ export function PatientsClient({ initialData, searchParams }: { initialData?: un
       
       <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
 
-      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Pasien">
+      <Modal isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Pasien">
         {drawerItem && (
           <div className="space-y-3">
             <div><strong>Nama:</strong> {drawerItem.full_name}</div>
@@ -112,7 +112,7 @@ export function PatientsClient({ initialData, searchParams }: { initialData?: un
             <div><strong>Alergi:</strong> {drawerItem.allergies || "-"}</div>
           </div>
         )}
-      </SideDrawer>
+      </Modal>
 
       <CustomSnackbar
         isOpen={toast.isOpen}

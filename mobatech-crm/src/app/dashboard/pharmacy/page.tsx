@@ -14,12 +14,15 @@ export default async function PharmacyPage({ searchParams }: { searchParams: Pro
   let categories: MedicineCategory[] = [];
 
   try {
-    if (tab === "orders") {
-      orders = await serverFetch(`/api/admin/pharmacy/orders?page=${page}&search=${search}`);
-    } else if (tab === "medicines") {
-      medicines = await serverFetch(`/api/pharmacy/medicines?page=${page}&search=${search}`);
-      categories = await serverFetch(`/api/pharmacy/categories`);
-    }
+    // Fetch all required data for the client-side tabs to work seamlessly
+    const [ordersRes, medicinesRes, categoriesRes] = await Promise.all([
+      serverFetch(`/api/admin/pharmacy/orders?page=${page}&search=${search}`).catch(() => []),
+      serverFetch(`/api/pharmacy/medicines?page=${page}&search=${search}`).catch(() => []),
+      serverFetch(`/api/pharmacy/categories`).catch(() => [])
+    ]);
+    orders = ordersRes || [];
+    medicines = medicinesRes || [];
+    categories = categoriesRes || [];
   } catch (e) {
     console.error(e);
   }

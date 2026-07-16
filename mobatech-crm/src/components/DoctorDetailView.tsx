@@ -1,4 +1,4 @@
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { Doctor } from "@/types/api";
 
 interface DoctorDetailViewProps {
@@ -9,7 +9,7 @@ interface DoctorDetailViewProps {
 
 export function DoctorDetailView({ isOpen, onClose, drawerItem }: DoctorDetailViewProps) {
   return (
-    <SideDrawer isOpen={isOpen} onClose={onClose} title="Detail Dokter">
+    <Modal isOpen={isOpen} onClose={onClose} title="Detail Dokter">
       {drawerItem && (
         <div className="space-y-3">
           <div><strong>Nama:</strong> {drawerItem.name}</div>
@@ -19,6 +19,6 @@ export function DoctorDetailView({ isOpen, onClose, drawerItem }: DoctorDetailVi
           <div><strong>Status:</strong> {drawerItem.is_active ? "Aktif" : "Non-Aktif"}</div>
         </div>
       )}
-    </SideDrawer>
+    </Modal>
   );
 }

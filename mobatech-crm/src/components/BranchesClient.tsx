@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button";
 import { Plus } from "lucide-react";
 import { SearchFilterBar } from "@/components/ui/SearchFilterBar";
 import { FilterDropdown } from "@/components/ui/FilterDropdown";
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { BranchesTable } from "./BranchesTable";
 import { BranchFormModal } from "./BranchFormModal";
 export function BranchesClient({ initialData, searchParams }: { initialData?: unknown, searchParams?: Record<string, string | string[] | undefined> }) {
@@ -122,7 +122,7 @@ export function BranchesClient({ initialData, searchParams }: { initialData?: un
         onConfirm={() => deleteId !== null && handleDelete(deleteId)}
         isLoading={isDeleting}
       />
-      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Cabang">
+      <Modal isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Cabang">
         {drawerItem && (
           <div className="space-y-3">
             <div className="flex justify-center mb-4">
@@ -135,7 +135,7 @@ export function BranchesClient({ initialData, searchParams }: { initialData?: un
             )}
           </div>
         )}
-      </SideDrawer>
+      </Modal>
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );

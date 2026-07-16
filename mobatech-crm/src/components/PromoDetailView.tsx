@@ -1,4 +1,4 @@
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { Formatters } from "@/lib/formatters";
 import { APP_STRINGS } from "@/lib/constants";
 import { Promo } from "@/types/api";
@@ -15,7 +15,7 @@ export function PromoDetailView({
   if (!promo) return null;
 
   return (
-    <SideDrawer isOpen={isOpen} onClose={onClose} title={APP_STRINGS.details.promoTitle}>
+    <Modal isOpen={isOpen} onClose={onClose} title={APP_STRINGS.details.promoTitle}>
       <div className="space-y-4">
         <div
           className="w-full h-32 rounded-xl border border-glass-border shadow-inner p-4 flex flex-col justify-end"
@@ -34,6 +34,6 @@ export function PromoDetailView({
           <div className="flex flex-col mt-2"><span className="text-xs text-foreground/50">{APP_STRINGS.details.createdAt}</span><span className="text-sm font-medium">{Formatters.date(promo.created_at, "datetime")}</span></div>
         </div>
       </div>
-    </SideDrawer>
+    </Modal>
   );
 }

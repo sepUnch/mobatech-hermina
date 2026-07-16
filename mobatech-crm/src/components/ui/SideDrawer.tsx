@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
+import { createPortal } from "react-dom";
 
 export function SideDrawer({
   isOpen,
@@ -15,6 +16,12 @@ export function SideDrawer({
 }) {
   const [isRendered, setIsRendered] = useState(isOpen);
   const [isVisible, setIsVisible] = useState(false);
+
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
@@ -33,9 +40,9 @@ export function SideDrawer({
     }
   }, [isOpen]);
 
-  if (!isRendered) return null;
+  if (!isRendered || !mounted) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end">
       {/* Overlay */}
       <div
@@ -51,7 +58,7 @@ export function SideDrawer({
           isVisible ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between p-6 border-b border-glass-border/50 bg-black/5 dark:bg-white/5">
+        <div className="flex items-center justify-between p-6 border-b border-glass-border/50 bg-black/5 dark:bg-white/5 shrink-0">
           <h2 className="text-xl font-bold text-foreground">{title}</h2>
           <button
             onClick={onClose}
@@ -64,6 +71,7 @@ export function SideDrawer({
           {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

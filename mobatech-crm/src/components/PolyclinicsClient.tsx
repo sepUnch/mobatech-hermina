@@ -7,7 +7,7 @@ import { api, ApiError } from "@/lib/api";
 import { APP_STRINGS } from "@/lib/constants";
 import { Polyclinic } from "@/types/api";
 import { CustomSnackbar } from "@/components/CustomSnackbar";
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { PolyclinicsTable } from "./PolyclinicsTable";
 import { PolyclinicsHeader } from "./PolyclinicsHeader";
 import { PolyclinicsModals } from "./PolyclinicsModals";
@@ -131,7 +131,7 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
         deleteId={deleteId} setDeleteId={setDeleteId}
         handleDelete={handleDelete}
       />
-      <SideDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Poliklinik">
+      <Modal isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} title="Detail Poliklinik">
         {drawerItem && (
           <div className="space-y-3">
             <div className="flex justify-center mb-4">
@@ -142,7 +142,7 @@ export function PolyclinicsClient({ initialData, searchParams }: { initialData?:
             <div><strong>Status:</strong> {drawerItem.is_active ? "Aktif" : "Non-Aktif"}</div>
           </div>
         )}
-      </SideDrawer>
+      </Modal>
       <CustomSnackbar isOpen={toast.isOpen} message={toast.message} type={toast.type} onClose={() => setToast((t) => ({ ...t, isOpen: false }))} />
     </div>
   );

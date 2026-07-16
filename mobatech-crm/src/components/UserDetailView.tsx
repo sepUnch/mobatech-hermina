@@ -1,4 +1,4 @@
-import { SideDrawer } from "@/components/ui/SideDrawer";
+import { Modal } from "@/components/Modal";
 import { Formatters } from "@/lib/formatters";
 import { APP_STRINGS } from "@/lib/constants";
 import { User } from "@/types/api";
@@ -15,7 +15,7 @@ export function UserDetailView({
   if (!user) return null;
 
   return (
-    <SideDrawer isOpen={isOpen} onClose={onClose} title={APP_STRINGS.details.userTitle}>
+    <Modal isOpen={isOpen} onClose={onClose} title={APP_STRINGS.details.userTitle}>
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <img src={user.image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name)}&background=113c2b&color=fff`} alt={user.full_name} className="w-16 h-16 rounded-full border border-glass-border object-cover" />
@@ -35,6 +35,6 @@ export function UserDetailView({
           <div className="flex flex-col"><span className="text-xs text-foreground/50">{APP_STRINGS.details.registeredAt}</span><span className="text-sm font-medium">{Formatters.date(user.created_at, "datetime")}</span></div>
         </div>
       </div>
-    </SideDrawer>
+    </Modal>
   );
 }
