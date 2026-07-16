@@ -66,14 +66,14 @@ class AppButton extends StatelessWidget {
     
     switch (size) {
       case AppButtonSize.small:
-        height = 32;
-        fontSize = 12;
-        padding = const EdgeInsets.symmetric(horizontal: 12);
+        height = 40;
+        fontSize = 13;
+        padding = const EdgeInsets.symmetric(horizontal: 14);
         break;
       case AppButtonSize.medium:
-        height = 44;
-        fontSize = 14;
-        padding = const EdgeInsets.symmetric(horizontal: 16);
+        height = 48;
+        fontSize = 15;
+        padding = const EdgeInsets.symmetric(horizontal: 20);
         break;
       case AppButtonSize.large:
         height = 56;

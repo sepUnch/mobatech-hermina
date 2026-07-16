@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class EmergencyAppBar extends StatelessWidget {
@@ -10,19 +12,19 @@ class EmergencyAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
-      backgroundColor: AppColors.errorRed,
-      foregroundColor: AppColors.backgroundWhite,
-      title: const Text(
+      backgroundColor: AppColors.error,
+      foregroundColor: AppColors.textOnPrimary,
+      title: Text(
         AppStrings.emergencyTitle,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+        style: AppTypography.h3.copyWith(color: AppColors.textOnPrimary),
       ),
       centerTitle: true,
       elevation: 0,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppSpacing.radiusXl)),
       ),
       flexibleSpace: ClipRRect(
-        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
+        borderRadius: const BorderRadius.vertical(bottom: Radius.circular(AppSpacing.radiusXl)),
         child: Stack(
           clipBehavior: Clip.none,
           children: [
@@ -30,7 +32,7 @@ class EmergencyAppBar extends StatelessWidget {
               right: -20,
               top: -20,
               child: Opacity(
-                opacity: 0.4,
+                opacity: 0.2,
                 child: Image.asset('assets/header_logo.png', width: 220),
               ),
             ),
@@ -48,30 +50,29 @@ class EmergencyWarningBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.errorRed.withAlpha(13),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.errorRed.withAlpha(51)),
+        color: AppColors.error.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: AppColors.error.withValues(alpha: 0.2)),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: const Padding(
-            padding: EdgeInsets.all(16),
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.md),
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.warning_amber_rounded,
-                  color: AppColors.errorRed,
+                  color: AppColors.error,
                   size: 32,
                 ),
-                SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.sm),
                 Expanded(
                   child: Text(
                     AppStrings.emergencyWarning,
-                    style: TextStyle(
-                      color: AppColors.errorRed,
-                      fontSize: 13,
+                    style: AppTypography.labelSmall.copyWith(
+                      color: AppColors.error,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -84,5 +85,3 @@ class EmergencyWarningBanner extends StatelessWidget {
     );
   }
 }
-
-

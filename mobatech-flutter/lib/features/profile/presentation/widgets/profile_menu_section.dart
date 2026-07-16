@@ -1,6 +1,5 @@
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/custom_snackbar.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../providers/profile_provider.dart';
 
 class ProfileMenuSection extends ConsumerWidget {
@@ -23,99 +25,81 @@ class ProfileMenuSection extends ConsumerWidget {
       {'icon': Icons.help_outline, 'title': 'Bantuan & Dukungan'},
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Material(
-            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-            child: Column(
-              children: [
-                ...menuItems.map(
-                  (item) => ListTile(
-                    leading: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryLight,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Icon(
-                        item['icon'] as IconData,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    title: Text(
-                      item['title'] as String,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.textDark,
-                      ),
-                    ),
-                    trailing: const Icon(
-                      Icons.chevron_right,
-                      color: AppColors.iconGrey,
-                    ),
-                    onTap: () {
-                      if (item['title'] == 'Ubah Profil') {
-                        context.push('/profile/edit');
-                      } else if (item['title'] == 'Data Rekam Medis') {
-                        context.push('/medical-results');
-                      } else if (item['title'] == 'Anggota Keluarga') {
-                        context.push('/profile/family-members');
-                      } else if (item['title'] == 'Pengaturan') {
-                        context.push('/profile/settings');
-                      } else if (item['title'] == 'Bantuan & Dukungan') {
-                        context.push('/profile/help-support');
-                      } else {
-                        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                        CustomSnackbar.showInfo(context, 'Menu ${item['title']} segera hadir!',);
-                      }
-                    },
-                  ),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      child: Column(
+        children: [
+          ...menuItems.map(
+            (item) => ListTile(
+              leading: Container(
+                padding: const EdgeInsets.all(AppSpacing.sm),
+                decoration: BoxDecoration(
+                  color: AppColors.primaryLight,
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.errorRed.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const Icon(Icons.logout, color: AppColors.errorRed),
-                  ),
-                  title: Text(
-                    AppStrings.extKeluar,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.errorRed,
-                    ),
-                  ),
-                  onTap: () async {
-                    final prefs = await SharedPreferences.getInstance();
-                    await prefs.clear();
-                    globalAuthToken = null;
-                    await FirebaseAuth.instance.signOut();
-                    ref.invalidate(userProfileProvider);
-                    if (context.mounted) {
-                      context.go('/login');
-                    }
-                  },
+                child: Icon(
+                  item['icon'] as IconData,
+                  color: AppColors.primary,
                 ),
-              ],
+              ),
+              title: Text(
+                item['title'] as String,
+                style: AppTypography.body.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.chevron_right,
+                color: AppColors.textSecondary,
+              ),
+              onTap: () {
+                if (item['title'] == 'Ubah Profil') {
+                  context.push('/profile/edit');
+                } else if (item['title'] == 'Data Rekam Medis') {
+                  context.push('/medical-results');
+                } else if (item['title'] == 'Anggota Keluarga') {
+                  context.push('/profile/family-members');
+                } else if (item['title'] == 'Pengaturan') {
+                  context.push('/profile/settings');
+                } else if (item['title'] == 'Bantuan & Dukungan') {
+                  context.push('/profile/help-support');
+                } else {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  CustomSnackbar.showInfo(context, 'Menu ${item['title']} segera hadir!',);
+                }
+              },
             ),
           ),
-        ),
+          const Divider(height: 1, color: AppColors.border),
+          ListTile(
+            leading: Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
+              decoration: BoxDecoration(
+                color: AppColors.error.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              ),
+              child: const Icon(Icons.logout, color: AppColors.error),
+            ),
+            title: Text(
+              AppStrings.extKeluar,
+              style: AppTypography.body.copyWith(
+                fontWeight: FontWeight.w600,
+                color: AppColors.error,
+              ),
+            ),
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear();
+              globalAuthToken = null;
+              await FirebaseAuth.instance.signOut();
+              ref.invalidate(userProfileProvider);
+              if (context.mounted) {
+                context.go('/login');
+              }
+            },
+          ),
+        ],
       ),
     );
   }

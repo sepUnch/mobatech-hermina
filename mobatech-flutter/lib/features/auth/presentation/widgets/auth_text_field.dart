@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_text_field.dart';
 
 class AuthTextField extends StatelessWidget {
+  final String label;
   final String hint;
   final bool isPassword;
   final bool obscureText;
@@ -14,6 +15,7 @@ class AuthTextField extends StatelessWidget {
 
   const AuthTextField({
     super.key,
+    required this.label,
     required this.hint,
     this.isPassword = false,
     this.obscureText = false,
@@ -27,20 +29,20 @@ class AuthTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppTextField(
-      label: "", // No floating label for auth fields initially
+      label: label,
       hint: hint,
       controller: controller,
-      isPassword: obscureText, // Using the current toggled state
+      isPassword: obscureText,
       keyboardType: keyboardType ?? TextInputType.text,
       validator: validator,
       onChanged: onChanged,
       suffixIcon: isPassword
           ? IconButton(
               icon: Icon(
-                obscureText ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? AppColors.textLightGrey 
-                    : AppColors.textDark,
+                obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+                color: AppColors.textSecondary,
                 size: 22,
               ),
               onPressed: onTogglePassword,

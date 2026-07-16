@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/app_spacing.dart';
 import '../../providers/pharmacy_provider.dart';
 import 'catalog_tab_view_components.dart';
 
@@ -56,7 +57,7 @@ class _CatalogTabViewState extends ConsumerState<CatalogTabView> {
             categoriesAsync: categoriesAsync,
           ),
           MedicinesList(medicinesAsync: medicinesAsync),
-          const SliverPadding(padding: EdgeInsets.only(bottom: 24)),
+          const SliverPadding(padding: EdgeInsets.only(bottom: AppSpacing.xl)),
         ],
       ),
     );

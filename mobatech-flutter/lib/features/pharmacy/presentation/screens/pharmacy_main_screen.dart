@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../widgets/catalog_tab_view.dart';
@@ -44,7 +46,7 @@ class _PharmacyMainScreenState extends ConsumerState<PharmacyMainScreen>
     );
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundScreen,
+      backgroundColor: AppColors.surface,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
@@ -55,7 +57,7 @@ class _PharmacyMainScreenState extends ConsumerState<PharmacyMainScreen>
           ];
         },
         body: Container(
-          color: AppColors.backgroundWhite,
+          color: AppColors.surface,
           child: TabBarView(
             controller: _tabController,
             children: const [

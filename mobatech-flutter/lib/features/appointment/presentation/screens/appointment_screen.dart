@@ -8,6 +8,7 @@ import '../widgets/doctor_card.dart';
 import '../../providers/appointment_provider.dart';
 import 'doctor_detail_screen.dart';
 import '../widgets/appointment_sliver_header.dart';
+import '../widgets/appointment_header_widgets.dart';
 
 class AppointmentScreen extends ConsumerStatefulWidget {
   const AppointmentScreen({super.key});
@@ -64,8 +65,18 @@ class _AppointmentScreenState extends ConsumerState<AppointmentScreen> {
           controller: _scrollController,
           physics: const BouncingScrollPhysics(),
           slivers: [
-            AppointmentSliverHeader(
-              searchController: _searchController,
+            const AppointmentSliverHeader(),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  children: [
+                    AppointmentSearchBar(searchController: _searchController),
+                    const SizedBox(height: 16),
+                    const AppointmentFilterChips(),
+                  ],
+                ),
+              ),
             ),
             SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),

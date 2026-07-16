@@ -1,9 +1,11 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/constants/app_strings.dart';
 import 'location_card_map_preview.dart';
 
@@ -27,28 +29,19 @@ class LocationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return AppCard(
+      padding: EdgeInsets.zero,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Container(
-            color: AppColors.backgroundWhite.withAlpha(217),
+            color: AppColors.surface.withValues(alpha: 0.85),
             child: Column(
               children: [
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16),
+                    top: Radius.circular(AppSpacing.radiusMd),
                   ),
                   child: SizedBox(
                     height: 180,
@@ -62,28 +55,28 @@ class LocationCard extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(AppSpacing.md),
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(AppSpacing.sm),
                         decoration: BoxDecoration(
                           color: userLat != null
-                              ? AppColors.successGreen.withAlpha(25)
-                              : AppColors.errorRed.withAlpha(25),
-                          borderRadius: BorderRadius.circular(12),
+                              ? AppColors.success.withValues(alpha: 0.1)
+                              : AppColors.error.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                         ),
                         child: Icon(
                           userLat != null
                               ? Icons.location_on
                               : Icons.location_searching,
                           color: userLat != null
-                              ? AppColors.successGreen
-                              : AppColors.errorRed,
+                              ? AppColors.success
+                              : AppColors.error,
                           size: 22,
                         ),
                       ),
-                      const SizedBox(width: 12),
+                      const SizedBox(width: AppSpacing.sm),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -94,12 +87,10 @@ class LocationCard extends StatelessWidget {
                                   : locationError != null
                                   ? AppStrings.detectFailed
                                   : AppStrings.locationDetected,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                              style: AppTypography.labelSmall.copyWith(
                                 color: locationError != null
-                                    ? AppColors.errorRed
-                                    : AppColors.textDark,
+                                    ? AppColors.error
+                                    : AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -108,11 +99,10 @@ class LocationCard extends StatelessWidget {
                                   ? AppStrings.usingGps
                                   : locationError ??
                                         '${userLat?.toStringAsFixed(6)}, ${userLng?.toStringAsFixed(6)}',
-                              style: TextStyle(
-                                fontSize: 12,
+                              style: AppTypography.caption.copyWith(
                                 color: locationError != null
-                                    ? AppColors.errorRed
-                                    : AppColors.textGrey,
+                                    ? AppColors.error
+                                    : AppColors.textSecondary,
                               ),
                             ),
                           ],
@@ -124,7 +114,7 @@ class LocationCard extends StatelessWidget {
                           icon: Icon(
                             Icons.refresh,
                             color: isLocating
-                                ? AppColors.textLightGrey
+                                ? AppColors.textTertiary
                                 : AppColors.primary,
                           ),
                         ),

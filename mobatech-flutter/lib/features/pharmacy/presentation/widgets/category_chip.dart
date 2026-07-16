@@ -15,7 +15,7 @@ class CategoryChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(right: 8.0),
+      padding: EdgeInsets.only(right: AppSpacing.sm),
       child: ChoiceChip(
         label: Text(label),
         selected: isSelected,
@@ -25,15 +25,20 @@ class CategoryChip extends StatelessWidget {
           }
         },
         selectedColor: AppColors.primary,
-        labelStyle: TextStyle(
-          color: isSelected ? AppColors.textWhite : AppColors.textDark,
+        labelStyle: AppTypography.labelSmall.copyWith(
+          color: isSelected ? AppColors.textOnPrimary : AppColors.textPrimary,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        color: WidgetStateProperty.resolveWith((states) {
+          if (states.contains(WidgetState.selected)) {
+            return AppColors.primary;
+          }
+          return AppColors.surface;
+        }),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           side: BorderSide(
-            color: isSelected ? AppColors.primary : AppColors.borderGrey,
+            color: isSelected ? AppColors.primary : AppColors.border,
           ),
         ),
       ),

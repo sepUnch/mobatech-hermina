@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../providers/polyclinic_provider.dart';
@@ -14,7 +16,7 @@ class PolyclinicScreen extends ConsumerWidget {
     final polyclinicsAsync = ref.watch(polyclinicsProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundScreen,
+      backgroundColor: AppColors.surface,
       body: TweenAnimationBuilder<double>(
         tween: Tween(begin: 0.0, end: 1.0),
         duration: const Duration(milliseconds: 600),
@@ -39,70 +41,72 @@ class PolyclinicScreen extends ConsumerWidget {
                   expandedHeight: 120,
                   pinned: true,
                   elevation: 0,
-                  iconTheme: const IconThemeData(color: AppColors.textWhite),
-                  title: const Text(
+                  iconTheme:
+                      const IconThemeData(color: AppColors.textOnPrimary),
+                  title: Text(
                     'Jadwal Poli',
-                    style: TextStyle(
-                      color: AppColors.textWhite,
-                      fontWeight: FontWeight.bold,
+                    style: AppTypography.h3.copyWith(
+                      color: AppColors.textOnPrimary,
                     ),
                   ),
                   centerTitle: true,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                  ),
-                  flexibleSpace: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(
-                      bottom: Radius.circular(24),
-                    ),
-                    child: FlexibleSpaceBar(
-                      background: Stack(
-                        clipBehavior: Clip.none,
-                        children: [
-                          Positioned(
-                            right: -20,
-                            top: -20,
-                            child: Opacity(
-                              opacity: 0.4,
-                              child: Image.asset(
-                                'assets/header_logo.png',
-                                width: 220,
-                              ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        Positioned(
+                          right: -20,
+                          top: -20,
+                          child: Opacity(
+                            opacity: 0.2,
+                            child: Image.asset(
+                              'assets/header_logo.png',
+                              width: 220,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.pagePadding,
+                    vertical: AppSpacing.lg,
+                  ),
                   sliver: polyclinicsAsync.when(
                     data: (polys) {
                       if (polys.isEmpty) {
-                        return const SliverToBoxAdapter(
+                        return SliverToBoxAdapter(
                           child: Center(
                             child: Text(
                               'Belum ada jadwal poli',
-                              style: TextStyle(color: AppColors.textDark),
+                              style: AppTypography.bodySmall,
                             ),
                           ),
                         );
                       }
                       return SliverList(
-                        delegate: SliverChildBuilderDelegate((context, index) {
-                          final poly = polys[index];
-                          return PolyclinicCard(poly: poly);
-                        }, childCount: polys.length),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final poly = polys[index];
+                            return PolyclinicCard(poly: poly);
+                          },
+                          childCount: polys.length,
+                        ),
                       );
                     },
                     loading: () => const SliverToBoxAdapter(
                       child: CardSkeletonLoader(count: 6),
                     ),
                     error: (err, stack) => SliverToBoxAdapter(
-                      child: Center(child: Text(ErrorHandler.getMessage(err))),
+                      child: Center(
+                        child: Text(
+                          ErrorHandler.getMessage(err),
+                          style: AppTypography.bodySmall
+                              .copyWith(color: AppColors.error),
+                        ),
+                      ),
                     ),
                   ),
                 ),

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
-import '../../../../core/constants/app_constants.dart';
 import '../widgets/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -10,7 +11,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundWhite,
+      backgroundColor: AppColors.surface,
       body: LayoutBuilder(
         builder: (context, constraints) {
           return SingleChildScrollView(
@@ -23,11 +24,7 @@ class LoginScreen extends StatelessWidget {
                   Container(
                     height: constraints.maxHeight * 0.35,
                     decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [AppColors.primary, AppColors.primaryDark],
-                      ),
+                      color: AppColors.primary,
                     ),
                     child: Stack(
                       children: [
@@ -40,14 +37,6 @@ class LoginScreen extends StatelessWidget {
                               'assets/header_logo.png',
                               width: 220,
                             ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 150,
-                          right: 40,
-                          child: Opacity(
-                            opacity: 0.8,
-                            child: Image.asset('assets/plus.png', width: 32),
                           ),
                         ),
                         Align(
@@ -74,41 +63,32 @@ class LoginScreen extends StatelessWidget {
                     ),
                     width: double.infinity,
                     decoration: const BoxDecoration(
-                      color: AppColors.backgroundWhite,
+                      color: AppColors.surface,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSizes.borderRadiusCard),
-                        topRight: Radius.circular(AppSizes.borderRadiusCard),
+                        topLeft: Radius.circular(AppSpacing.radiusXl),
+                        topRight: Radius.circular(AppSpacing.radiusXl),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.textDark,
-                          blurRadius: 20,
-                          offset: Offset(0, -5),
-                        ),
-                      ],
                     ),
-                    padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
-                    child: const Column(
+                    padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.xxl,
+                      AppSpacing.xxxl,
+                      AppSpacing.xxl,
+                      AppSpacing.xxl,
+                    ),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           AppStrings.loginGreeting,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
-                          ),
+                          style: AppTypography.h1,
                         ),
-                        SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.xs),
                         Text(
                           AppStrings.loginSubtitle,
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppColors.textGrey,
-                          ),
+                          style: AppTypography.bodySmall,
                         ),
-                        SizedBox(height: 24),
-                        LoginForm(),
+                        const SizedBox(height: AppSpacing.xxl),
+                        const LoginForm(),
                       ],
                     ),
                   ),

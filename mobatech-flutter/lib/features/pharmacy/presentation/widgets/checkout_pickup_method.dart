@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_card.dart';
 
 class CheckoutPickupMethod extends StatelessWidget {
   final String pickupMethod;
@@ -23,7 +26,7 @@ class CheckoutPickupMethod extends StatelessWidget {
             onTap: () => onChanged('Delivery'),
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: AppSpacing.md),
         Expanded(
           child: _buildSelectableCard(
             title: 'Pickup at Counter',
@@ -44,33 +47,23 @@ class CheckoutPickupMethod extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isSelected
-              ? AppColors.primaryLight
-              : AppColors.backgroundWhite,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.borderGrey,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
+      child: AppCard(
+        backgroundColor: isSelected ? AppColors.primaryLight : AppColors.surface,
+        borderColor: isSelected ? AppColors.primary : AppColors.border,
         child: Column(
           children: [
             Icon(
               icon,
               size: 32,
-              color: isSelected ? AppColors.primary : AppColors.iconGrey,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               title,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
+              style: AppTypography.caption.copyWith(
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? AppColors.primary : AppColors.textGrey,
+                color: isSelected ? AppColors.primary : AppColors.textSecondary,
               ),
             ),
           ],

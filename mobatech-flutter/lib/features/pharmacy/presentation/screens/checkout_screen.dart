@@ -1,6 +1,8 @@
 import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../widgets/checkout_order_summary.dart';
 import '../widgets/checkout_pickup_method.dart';
 import '../widgets/checkout_payment_method.dart';
@@ -24,38 +26,37 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
     final cartAsync = ref.watch(cartProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightGrey,
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Checkout',
-          style: TextStyle(
-            color: AppColors.textDark,
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppTypography.h3,
         ),
-        backgroundColor: AppColors.backgroundWhite,
+        backgroundColor: AppColors.surface,
         elevation: 0,
-        iconTheme: const IconThemeData(color: AppColors.textDark),
+        iconTheme: const IconThemeData(color: AppColors.textPrimary),
       ),
       body: cartAsync.when(
         data: (cart) {
           if (cart.items.isEmpty) {
-            return const Center(child: Text(AppStrings.extKeranjangandakosong));
+            return Center(
+                child: Text(AppStrings.extKeranjangandakosong,
+                    style: AppTypography.body));
           }
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(AppSpacing.pagePadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildSectionTitle('Ringkasan Pesanan'),
                 CheckoutOrderSummary(pickupMethod: _pickupMethod, cart: cart),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 _buildSectionTitle('Metode Pengambilan'),
                 CheckoutPickupMethod(
                   pickupMethod: _pickupMethod,
                   onChanged: (val) => setState(() => _pickupMethod = val),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 _buildSectionTitle('Metode Pembayaran'),
                 CheckoutPaymentMethod(
                   paymentMethod: _paymentMethod,
@@ -66,9 +67,11 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
             ),
           );
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) =>
-            const Center(child: Text(AppStrings.extGagalmemuatpesanan)),
+        loading: () =>
+            const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+        error: (e, s) => Center(
+            child: Text(AppStrings.extGagalmemuatpesanan,
+                style: AppTypography.body.copyWith(color: AppColors.error))),
       ),
       bottomSheet: cartAsync.whenOrNull(
         data: (cart) {
@@ -88,14 +91,10 @@ class _CheckoutScreenState extends ConsumerState<CheckoutScreen> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Text(
         title,
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-          color: AppColors.textDark,
-        ),
+        style: AppTypography.h4,
       ),
     );
   }

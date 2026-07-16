@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
 
 class BookingQRCard extends StatelessWidget {
@@ -9,39 +12,23 @@ class BookingQRCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         children: [
           Text(
             'ID Booking: #${appointment.id.toString().padLeft(6, '0')}',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-              color: AppColors.textDark,
-            ),
+            style: AppTypography.h4,
           ),
-          const SizedBox(height: 16),
-          if (appointment.status.toLowerCase() == 'pending' || appointment.status.toLowerCase() == 'approved') ...[
+          const SizedBox(height: AppSpacing.lg),
+          if (appointment.status.toLowerCase() == 'pending' ||
+              appointment.status.toLowerCase() == 'approved') ...[
             Container(
               width: 150,
               height: 150,
               decoration: BoxDecoration(
-                color: AppColors.backgroundScreen,
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppColors.borderGrey, width: 2),
+                color: AppColors.surfaceVariant,
+                borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                border: Border.all(color: AppColors.border, width: 2),
               ),
               child: const Icon(
                 Icons.qr_code_2,
@@ -49,12 +36,12 @@ class BookingQRCard extends StatelessWidget {
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            const SizedBox(height: AppSpacing.md),
+            Text(
               'Tunjukkan QR Code ini di mesin antrean',
-              style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+              style: AppTypography.caption,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
           ] else if (appointment.status.toLowerCase() == 'completed') ...[
             Container(
               width: 100,
@@ -69,32 +56,32 @@ class BookingQRCard extends StatelessWidget {
                 color: AppColors.primary,
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            const SizedBox(height: AppSpacing.md),
+            Text(
               'Konsultasi telah selesai dilakukan',
-              style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+              style: AppTypography.caption,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
           ] else ...[
             Container(
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: AppColors.errorRed.withValues(alpha: 0.1),
+                color: AppColors.error.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
                 Icons.cancel,
                 size: 60,
-                color: AppColors.errorRed,
+                color: AppColors.error,
               ),
             ),
-            const SizedBox(height: 16),
-            const Text(
+            const SizedBox(height: AppSpacing.md),
+            Text(
               'Janji temu ini telah dibatalkan',
-              style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+              style: AppTypography.caption,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
           ],
           GlassStatusChip(status: appointment.status, fontSize: 13),
         ],

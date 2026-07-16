@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import 'location_card.dart';
 import 'emergency_form_field.dart';
@@ -52,21 +54,22 @@ class EmergencyFormView extends StatelessWidget {
               child: Form(
                 key: formKey,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+                  padding: const EdgeInsets.fromLTRB(
+                      AppSpacing.pagePadding, AppSpacing.md, AppSpacing.pagePadding, 40),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Warning banner
                       const EmergencyWarningBanner(),
 
-                      const SizedBox(height: 28),
+                      const SizedBox(height: AppSpacing.xxl),
 
                       // GPS Location Section
                       _buildSectionLabel(
                         AppStrings.locationLabel,
                         Icons.my_location,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.sm),
                       LocationCard(
                         userLat: userLat,
                         userLng: userLng,
@@ -76,13 +79,13 @@ class EmergencyFormView extends StatelessWidget {
                         onDetectLocation: onDetectLocation,
                       ),
 
-                      const SizedBox(height: 24),
+                      const SizedBox(height: AppSpacing.xl),
 
                       _buildSectionLabel(
                         AppStrings.patientDataLabel,
                         Icons.person_outline,
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: AppSpacing.sm),
                       EmergencyFormField(
                         controller: patientNameController,
                         hint: AppStrings.patientNameHint,
@@ -90,7 +93,7 @@ class EmergencyFormView extends StatelessWidget {
                         validator: (v) => Validators.validateName(v, 'Nama Pasien'),
                       ),
 
-                      const SizedBox(height: 14),
+                      const SizedBox(height: AppSpacing.md),
                       EmergencyFormField(
                         controller: conditionController,
                         hint: AppStrings.conditionHint,
@@ -98,7 +101,7 @@ class EmergencyFormView extends StatelessWidget {
                         maxLines: 3,
                       ),
 
-                      const SizedBox(height: 14),
+                      const SizedBox(height: AppSpacing.md),
                       EmergencyFormField(
                         controller: phoneController,
                         hint: AppStrings.phoneActiveHint,
@@ -107,7 +110,7 @@ class EmergencyFormView extends StatelessWidget {
                         validator: Validators.validatePhone,
                       ),
 
-                      const SizedBox(height: 32),
+                      const SizedBox(height: AppSpacing.xxl),
 
                       EmergencySubmitButton(
                         isLoading: isLoading,
@@ -128,14 +131,13 @@ class EmergencyFormView extends StatelessWidget {
   Widget _buildSectionLabel(String text, IconData icon) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppColors.textGrey),
-        const SizedBox(width: 8),
+        Icon(icon, size: 18, color: AppColors.textSecondary),
+        const SizedBox(width: AppSpacing.xs),
         Text(
           text,
-          style: const TextStyle(
-            fontSize: 12,
+          style: AppTypography.caption.copyWith(
             fontWeight: FontWeight.w700,
-            color: AppColors.textGrey,
+            color: AppColors.textSecondary,
             letterSpacing: 1.2,
           ),
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class AttachmentBottomSheet extends StatelessWidget {
@@ -17,10 +19,11 @@ class AttachmentBottomSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: const BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusXl)),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -28,9 +31,9 @@ class AttachmentBottomSheet extends StatelessWidget {
           Container(
             width: 40,
             height: 4,
-            margin: const EdgeInsets.only(bottom: 24),
+            margin: const EdgeInsets.only(bottom: AppSpacing.lg),
             decoration: BoxDecoration(
-              color: AppColors.dividerGrey,
+              color: AppColors.border,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -40,24 +43,24 @@ class AttachmentBottomSheet extends StatelessWidget {
               _buildOption(
                 Icons.image,
                 AppStrings.chatAttachmentGallery,
-                AppColors.iconBlue,
+                AppColors.info,
                 onPickGallery,
               ),
               _buildOption(
                 Icons.camera_alt,
                 AppStrings.chatAttachmentCamera,
-                AppColors.iconGreen,
+                AppColors.success,
                 onPickCamera,
               ),
               _buildOption(
                 Icons.description,
                 AppStrings.chatAttachmentDocument,
-                AppColors.iconOrange,
+                AppColors.warning,
                 onPickDocument,
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: AppSpacing.md),
         ],
       ),
     );
@@ -83,10 +86,10 @@ class AttachmentBottomSheet extends StatelessWidget {
             ),
             child: Icon(icon, color: color, size: 28),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             label,
-            style: const TextStyle(fontSize: 12, color: AppColors.textDark),
+            style: AppTypography.caption,
           ),
         ],
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'social_login_button.dart';
@@ -44,51 +46,40 @@ class LoginFooter extends StatelessWidget {
         Row(
           children: [
             const Expanded(
-              child: Divider(color: AppColors.dividerGrey, thickness: 1.5),
+              child: Divider(color: AppColors.border, thickness: 1),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
                 AppStrings.orContinueWith,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.textLightGrey 
-                      : AppColors.textGrey, 
-                  fontSize: 14,
-                ),
+                style: AppTypography.caption,
               ),
             ),
             const Expanded(
-              child: Divider(color: AppColors.dividerGrey, thickness: 1.5),
+              child: Divider(color: AppColors.border, thickness: 1),
             ),
           ],
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         SocialLoginButton(
           text: AppStrings.continueWithGoogle,
           onPressed: onGooglePressed,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: AppSpacing.lg),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               AppStrings.noAccount,
-              style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark 
-                    ? AppColors.textLightGrey 
-                    : AppColors.textGrey, 
-                fontSize: 14,
-              ),
+              style: AppTypography.bodySmall,
             ),
             GestureDetector(
               onTap: () => context.push('/register'),
-              child: const Text(
+              child: Text(
                 AppStrings.registerLink,
-                style: TextStyle(
+                style: AppTypography.bodySmall.copyWith(
                   color: AppColors.primary,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class AttachmentPreview extends StatelessWidget {
   final XFile? selectedImage;
@@ -23,18 +25,18 @@ class AttachmentPreview extends StatelessWidget {
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(8),
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primaryLight),
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
           if (selectedImage != null)
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               child: Image.file(
                 File(selectedImage!.path),
                 width: 50,
@@ -47,22 +49,24 @@ class AttachmentPreview extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: AppColors.orange10,
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.warning.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
               ),
-              child: const Icon(Icons.description, color: AppColors.iconOrange),
+              child: const Icon(Icons.description, color: AppColors.warning),
             ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Text(
               selectedImage?.name ?? selectedFile?.files.single.name ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+              style: AppTypography.bodySmall.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.close, color: AppColors.textGrey),
+            icon: const Icon(Icons.close, color: AppColors.textSecondary),
             onPressed: onRemove,
           ),
         ],

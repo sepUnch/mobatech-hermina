@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'social_login_button.dart';
@@ -27,30 +29,25 @@ class RegisterSubmitButton extends StatelessWidget {
           isFullWidth: true,
           size: AppButtonSize.large,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.lg),
         Row(
           children: [
             const Expanded(
-              child: Divider(color: AppColors.dividerGrey, thickness: 1.5),
+              child: Divider(color: AppColors.border, thickness: 1),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
               child: Text(
                 AppStrings.orContinueWith,
-                style: TextStyle(
-                  color: Theme.of(context).brightness == Brightness.dark 
-                      ? AppColors.textLightGrey 
-                      : AppColors.textGrey, 
-                  fontSize: 14,
-                ),
+                style: AppTypography.caption,
               ),
             ),
             const Expanded(
-              child: Divider(color: AppColors.dividerGrey, thickness: 1.5),
+              child: Divider(color: AppColors.border, thickness: 1),
             ),
           ],
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.lg),
         SocialLoginButton(
           text: AppStrings.continueWithGoogle,
           onPressed: onGooglePressed,
@@ -68,22 +65,19 @@ class PasswordValidationRules extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: AppSpacing.sm,
+      runSpacing: AppSpacing.xs,
       children: [
-        _validationItem(context, AppStrings.passMinChars, password.length >= 8),
+        _validationItem(AppStrings.passMinChars, password.length >= 8),
         _validationItem(
-          context,
           AppStrings.passUppercase,
           RegExp(r'[A-Z]').hasMatch(password),
         ),
         _validationItem(
-          context,
           AppStrings.passLowercase,
           RegExp(r'[a-z]').hasMatch(password),
         ),
         _validationItem(
-          context,
           AppStrings.passDigit,
           RegExp(r'[0-9]').hasMatch(password),
         ),
@@ -91,23 +85,20 @@ class PasswordValidationRules extends StatelessWidget {
     );
   }
 
-  Widget _validationItem(BuildContext context, String text, bool isValid) {
+  Widget _validationItem(String text, bool isValid) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           isValid ? Icons.check_circle : Icons.check_circle_outline,
-          color: isValid ? AppColors.successGreen : AppColors.iconLightGrey,
+          color: isValid ? AppColors.success : AppColors.textTertiary,
           size: 16,
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.xs),
         Text(
           text,
-          style: TextStyle(
-            fontSize: 12,
-            color: isValid 
-                ? AppColors.getTextPrimary(Theme.of(context).brightness == Brightness.dark)
-                : AppColors.getTextSecondary(Theme.of(context).brightness == Brightness.dark),
+          style: AppTypography.caption.copyWith(
+            color: isValid ? AppColors.textPrimary : AppColors.textSecondary,
           ),
         ),
       ],

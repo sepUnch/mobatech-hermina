@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../data/models/doctor.dart';
 
 class DoctorImageWidget extends StatelessWidget {
@@ -10,7 +12,7 @@ class DoctorImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
       child: doctor.imageUrl.isNotEmpty
           ? Image.network(
               doctor.imageUrl
@@ -47,16 +49,12 @@ class DoctorInfoWidget extends StatelessWidget {
       children: [
         Text(
           doctor.name,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textDark,
-          ),
+          style: AppTypography.h3,
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.xs),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: AppSpacing.sm,
+          runSpacing: AppSpacing.sm,
           children: [
             _buildBadge(doctor.polyclinicName ?? 'Belum ada poli'),
             _buildBadge(doctor.specialization),
@@ -69,19 +67,17 @@ class DoctorInfoWidget extends StatelessWidget {
   Widget _buildBadge(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 4,
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
         color: AppColors.primaryLight,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontSize: 12,
+        style: AppTypography.labelSmall.copyWith(
           color: AppColors.primary,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );
@@ -99,25 +95,17 @@ class DoctorAboutWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Padding(
-          padding: EdgeInsets.symmetric(vertical: 16),
-          child: Divider(height: 1, color: AppColors.backgroundScreen),
+          padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: Divider(height: 1, color: AppColors.border),
         ),
-        const Text(
+        Text(
           'Tentang Dokter',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: AppColors.textDark,
-          ),
+          style: AppTypography.h4,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           doctor.description,
-          style: const TextStyle(
-            fontSize: 14,
-            color: AppColors.textGrey,
-            height: 1.5,
-          ),
+          style: AppTypography.bodySmall,
         ),
       ],
     );

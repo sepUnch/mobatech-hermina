@@ -3,6 +3,9 @@ import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../../models/cart.dart';
@@ -25,12 +28,12 @@ class CheckoutBottomSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppColors.shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -4),
           ),
@@ -44,21 +47,19 @@ class CheckoutBottomSheet extends ConsumerWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                Text(
                   'Total Pembayaran',
-                  style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
                 ),
                 Text(
                   'Rp ${grandTotal.toInt()}',
-                  style: const TextStyle(
+                  style: AppTypography.h4.copyWith(
                     color: AppColors.primary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-            ElevatedButton(
+            AppButton(
               onPressed: () async {
                 try {
                   final orderData = {
@@ -92,24 +93,7 @@ class CheckoutBottomSheet extends ConsumerWidget {
                   }
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 14,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'Bayar Sekarang',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.textWhite,
-                  fontSize: 16,
-                ),
-              ),
+              text: 'Bayar Sekarang',
             ),
           ],
         ),

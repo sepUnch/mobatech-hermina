@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../providers/chat_provider.dart';
 
@@ -16,8 +18,8 @@ class ChatbotHeader extends ConsumerWidget {
       decoration: const BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(AppSpacing.radiusXl),
+          bottomRight: Radius.circular(AppSpacing.radiusXl),
         ),
       ),
       child: Stack(
@@ -26,20 +28,23 @@ class ChatbotHeader extends ConsumerWidget {
             right: -20,
             top: -10,
             child: Opacity(
-              opacity: 0.4,
+              opacity: 0.2,
               child: Image.asset('assets/header_logo.png', width: 160),
             ),
           ),
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.pagePadding,
+                vertical: AppSpacing.xl,
+              ),
               child: Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(AppSpacing.sm),
                     decoration: const BoxDecoration(
-                      color: AppColors.backgroundWhite,
+                      color: AppColors.surface,
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
@@ -48,26 +53,23 @@ class ChatbotHeader extends ConsumerWidget {
                       size: 30,
                     ),
                   ),
-                  const SizedBox(width: 16),
-                  const Expanded(
+                  const SizedBox(width: AppSpacing.md),
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           AppStrings.chatHospitalName,
-                          style: TextStyle(
-                            color: AppColors.textWhite,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          style: AppTypography.h3.copyWith(
+                            color: AppColors.textOnPrimary,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xs),
                         Text(
                           AppStrings.chatSubtitle,
-                          style: TextStyle(
-                            color: AppColors.textWhite,
-                            fontSize: 13,
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.textOnPrimary,
                           ),
                         ),
                       ],
@@ -76,7 +78,7 @@ class ChatbotHeader extends ConsumerWidget {
                   IconButton(
                     icon: const Icon(
                       Icons.add_circle_outline,
-                      color: AppColors.backgroundWhite,
+                      color: AppColors.textOnPrimary,
                     ),
                     tooltip: AppStrings.chatNewTooltip,
                     onPressed: () {
@@ -85,7 +87,8 @@ class ChatbotHeader extends ConsumerWidget {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.history, color: AppColors.backgroundWhite),
+                    icon: const Icon(Icons.history,
+                        color: AppColors.textOnPrimary),
                     tooltip: AppStrings.chatHistoryTooltip,
                     onPressed: onShowHistory,
                   ),

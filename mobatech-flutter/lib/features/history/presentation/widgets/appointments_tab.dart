@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../../../../core/utils/error_handler.dart';
@@ -42,18 +44,23 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
     return appointmentsAsync.when(
       data: (appointments) {
         if (appointments.isEmpty) {
-          return const Center(child: Text(AppStrings.noAppointmentHistory));
+          return Center(
+            child: Text(
+              AppStrings.noAppointmentHistory,
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
+            ),
+          );
         }
         final isFetchingNextPage = ref.read(userAppointmentsProvider.notifier).isFetchingNextPage;
         return ListView.separated(
           controller: _scrollController,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding, vertical: AppSpacing.md),
           itemCount: appointments.length + (isFetchingNextPage ? 1 : 0),
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.sm),
           itemBuilder: (context, index) {
             if (index == appointments.length) {
               return const Padding(
-                padding: EdgeInsets.all(16.0),
+                padding: EdgeInsets.all(AppSpacing.md),
                 child: Center(
                   child: CupertinoActivityIndicator(radius: 14),
                 ),
@@ -83,20 +90,20 @@ class _AppointmentsTabState extends ConsumerState<AppointmentsTab> {
   Widget _buildErrorState(String message) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(AppSpacing.xxl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(
               Icons.cloud_off,
               size: 64,
-              color: AppColors.textLightGrey,
+              color: AppColors.textTertiary,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.md),
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(color: AppColors.textGrey, fontSize: 16),
+              style: AppTypography.body.copyWith(color: AppColors.textSecondary),
             ),
           ],
         ),

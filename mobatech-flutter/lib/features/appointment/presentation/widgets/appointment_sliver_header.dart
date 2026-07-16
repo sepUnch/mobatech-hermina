@@ -3,21 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../screens/polyclinic_screen.dart';
-import 'appointment_header_widgets.dart';
 
 class AppointmentSliverHeader extends ConsumerWidget {
-  final TextEditingController searchController;
-
-  const AppointmentSliverHeader({
-    super.key,
-    required this.searchController,
-  });
+  const AppointmentSliverHeader({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SliverAppBar(
       backgroundColor: AppColors.primary,
-      expandedHeight: 210,
       pinned: true,
       elevation: 0,
       iconTheme: const IconThemeData(color: AppColors.backgroundWhite),
@@ -62,33 +55,18 @@ class AppointmentSliverHeader extends ConsumerWidget {
       ],
       flexibleSpace: ClipRRect(
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(30)),
-        child: FlexibleSpaceBar(
-          background: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                right: -20,
-                top: -20,
-                child: Opacity(
-                  opacity: 0.4,
-                  child: Image.asset('assets/header_logo.png', width: 220),
-                ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            Positioned(
+              right: -20,
+              top: -20,
+              child: Opacity(
+                opacity: 0.4,
+                child: Image.asset('assets/header_logo.png', width: 220),
               ),
-              Positioned(
-                bottom: 16,
-                left: 0,
-                right: 0,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    AppointmentSearchBar(searchController: searchController),
-                    const SizedBox(height: 16),
-                    const AppointmentFilterChips(),
-                  ],
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

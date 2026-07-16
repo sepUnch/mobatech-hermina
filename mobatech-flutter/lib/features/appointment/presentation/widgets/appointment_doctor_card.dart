@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 
 class AppointmentDoctorCard extends StatelessWidget {
   final dynamic appointment;
@@ -8,76 +11,47 @@ class AppointmentDoctorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.06),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child:
-                appointment.doctor?.imageUrl != null &&
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+            child: appointment.doctor?.imageUrl != null &&
                     appointment.doctor!.imageUrl.isNotEmpty
                 ? Image.network(
                     appointment.doctor!.imageUrl
                         .replaceAll('/svg', '/png')
                         .replaceAll('.svg', '.png'),
-                    width: 60,
-                    height: 60,
+                    width: 64,
+                    height: 64,
                     fit: BoxFit.cover,
-                    errorBuilder: (ctx, err, stack) => Container(
-                      width: 60,
-                      height: 60,
-                      color: AppColors.primaryLight,
-                      child: const Icon(Icons.person, color: AppColors.primary),
-                    ),
+                    errorBuilder: (ctx, err, stack) => _buildPlaceholder(),
                   )
-                : Container(
-                    width: 60,
-                    height: 60,
-                    color: AppColors.primaryLight,
-                    child: const Icon(Icons.person, color: AppColors.primary),
-                  ),
+                : _buildPlaceholder(),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   appointment.doctor?.name ?? 'Dokter',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: AppColors.textDark,
-                  ),
+                  style: AppTypography.h4,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                    horizontal: AppSpacing.sm,
+                    vertical: AppSpacing.xs,
                   ),
                   decoration: BoxDecoration(
                     color: AppColors.primaryLight,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                   ),
                   child: Text(
                     appointment.doctor?.specialization ?? '-',
-                    style: const TextStyle(
-                      fontSize: 12,
+                    style: AppTypography.labelSmall.copyWith(
                       color: AppColors.primary,
-                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -86,6 +60,15 @@ class AppointmentDoctorCard extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      width: 64,
+      height: 64,
+      color: AppColors.surfaceVariant,
+      child: const Icon(Icons.person, color: AppColors.primary),
     );
   }
 }

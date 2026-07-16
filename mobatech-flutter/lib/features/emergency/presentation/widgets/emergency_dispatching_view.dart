@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class EmergencyDispatchingView extends StatefulWidget {
@@ -39,13 +41,7 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
   Widget build(BuildContext context) {
     return Container(
       key: const ValueKey('dispatching'),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [AppColors.emergencyDark1, AppColors.emergencyDark2],
-        ),
-      ),
+      color: AppColors.primaryDark,
       child: SafeArea(
         child: Center(
           child: Column(
@@ -62,47 +58,44 @@ class _EmergencyDispatchingViewState extends State<EmergencyDispatchingView>
                       height: 120,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: AppColors.errorRed.withAlpha(30),
+                        color: AppColors.error.withValues(alpha: 0.1),
                         border: Border.all(
-                          color: AppColors.errorRed.withAlpha(
-                            (100 * _pulseAnimation.value).toInt(),
+                          color: AppColors.error.withValues(
+                            alpha: _pulseAnimation.value * 0.5,
                           ),
                           width: 3,
                         ),
                       ),
                       child: const Icon(
                         Icons.local_hospital,
-                        color: AppColors.errorRed,
+                        color: AppColors.error,
                         size: 52,
                       ),
                     ),
                   );
                 },
               ),
-              const SizedBox(height: 40),
-              const Text(
+              const SizedBox(height: AppSpacing.xxl),
+              Text(
                 AppStrings.searchingAmbulance,
-                style: TextStyle(
-                  color: AppColors.backgroundWhite,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+                style: AppTypography.h3.copyWith(
+                  color: AppColors.surface,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: AppSpacing.sm),
               Text(
                 AppStrings.contactingEmergencyUnit,
-                style: TextStyle(
-                  color: AppColors.backgroundWhite.withAlpha(180),
-                  fontSize: 14,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.surface.withValues(alpha: 0.8),
                 ),
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: AppSpacing.xxl),
               SizedBox(
                 width: 200,
                 child: LinearProgressIndicator(
-                  backgroundColor: AppColors.backgroundWhite.withAlpha(25),
+                  color: AppColors.surface.withValues(alpha: 0.2),
                   valueColor: const AlwaysStoppedAnimation<Color>(
-                    AppColors.errorRed,
+                    AppColors.error,
                   ),
                   minHeight: 3,
                 ),

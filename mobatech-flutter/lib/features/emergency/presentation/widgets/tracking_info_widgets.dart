@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class EstimatedTimeCircle extends StatelessWidget {
@@ -15,14 +17,10 @@ class EstimatedTimeCircle extends StatelessWidget {
       height: 64,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.ambulanceBlue, AppColors.ambulanceBlueDark],
-        ),
+        color: AppColors.primary,
         boxShadow: [
           BoxShadow(
-            color: AppColors.ambulanceBlue.withAlpha(80),
+            color: AppColors.primary.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -33,19 +31,16 @@ class EstimatedTimeCircle extends StatelessWidget {
         children: [
           Text(
             '$estimatedMinutes',
-            style: const TextStyle(
-              color: AppColors.backgroundWhite,
-              fontSize: 22,
-              fontWeight: FontWeight.w900,
+            style: AppTypography.h3.copyWith(
+              color: AppColors.textOnPrimary,
               height: 1,
             ),
           ),
-          const Text(
+          Text(
             AppStrings.min,
-            style: TextStyle(
-              color: AppColors.textWhite70,
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
+            style: AppTypography.caption.copyWith(
+              color: AppColors.textOnPrimary.withValues(alpha: 0.7),
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
@@ -59,66 +54,66 @@ class DriverInfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 48,
-          height: 48,
-          decoration: BoxDecoration(
-            color: AppColors.primary.withAlpha(25),
-            shape: BoxShape.circle,
+    return Expanded(
+      child: Row(
+        children: [
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: AppColors.primaryLight,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.person, color: AppColors.primary, size: 26),
           ),
-          child: const Icon(Icons.person, color: AppColors.primary, size: 26),
-        ),
-        const SizedBox(width: 14),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppStrings.driverName,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  color: AppColors.textDark,
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.driverName,
+                  style: AppTypography.bodySmall.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                AppStrings.driverDetails,
-                style: TextStyle(fontSize: 12, color: AppColors.textGrey),
-              ),
-            ],
+                const SizedBox(height: 2),
+                Text(
+                  AppStrings.driverDetails,
+                  style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
+                ),
+              ],
+            ),
           ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: AppColors.successGreen,
-            borderRadius: BorderRadius.circular(14),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.successGreen.withAlpha(80),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Material(
-            color: AppColors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(14),
-              onTap: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                CustomSnackbar.showInfo(context, AppStrings.contactingDriver);
-              },
-              child: const Padding(
-                padding: EdgeInsets.all(12),
-                child: Icon(Icons.phone, color: AppColors.backgroundWhite, size: 22),
+          Container(
+            decoration: BoxDecoration(
+              color: AppColors.success,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.success.withValues(alpha: 0.3),
+                  blurRadius: 8,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+                onTap: () {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  CustomSnackbar.showInfo(context, AppStrings.contactingDriver);
+                },
+                child: const Padding(
+                  padding: EdgeInsets.all(AppSpacing.sm),
+                  child: Icon(Icons.phone, color: AppColors.textOnPrimary, size: 22),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

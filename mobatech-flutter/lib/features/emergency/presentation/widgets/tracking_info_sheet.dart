@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import 'tracking_info_widgets.dart';
 
 class TrackingInfoSheet extends StatelessWidget {
@@ -13,11 +15,11 @@ class TrackingInfoSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        color: AppColors.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusXl)),
         boxShadow: [
           BoxShadow(
-            color: AppColors.textDark.withAlpha(30),
+            color: AppColors.shadowColor,
             blurRadius: 20,
             offset: const Offset(0, -5),
           ),
@@ -27,39 +29,36 @@ class TrackingInfoSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            margin: const EdgeInsets.only(top: 12),
+            margin: const EdgeInsets.only(top: AppSpacing.sm),
             width: 40,
             height: 4,
             decoration: BoxDecoration(
-              color: AppColors.borderGrey,
+              color: AppColors.border,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
-
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 8),
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pagePadding, AppSpacing.xl, AppSpacing.pagePadding, AppSpacing.sm),
             child: Row(
               children: [
                 EstimatedTimeCircle(estimatedMinutes: estimatedMinutes),
-                const SizedBox(width: 16),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         AppStrings.ambulanceHeading,
-                        style: TextStyle(
-                          fontSize: 15,
+                        style: AppTypography.body.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: AppColors.textDark,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: AppSpacing.xs),
                       Text(
                         '${AppStrings.estimateArrival}$estimatedMinutes${AppStrings.minuteText}',
-                        style: const TextStyle(
-                          fontSize: 13,
-                          color: AppColors.textGrey,
+                        style: AppTypography.bodySmall.copyWith(
+                          color: AppColors.textSecondary,
                         ),
                       ),
                     ],
@@ -68,15 +67,13 @@ class TrackingInfoSheet extends StatelessWidget {
               ],
             ),
           ),
-
-          const Divider(height: 24),
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-            child: Row(children: [const DriverInfoRow()]),
+          const Divider(height: AppSpacing.xxl, color: AppColors.border),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(
+                AppSpacing.pagePadding, 0, AppSpacing.pagePadding, AppSpacing.sm),
+            child: Row(children: [DriverInfoRow()]),
           ),
-
-          SizedBox(height: MediaQuery.of(context).padding.bottom + 16),
+          SizedBox(height: MediaQuery.of(context).padding.bottom + AppSpacing.md),
         ],
       ),
     );

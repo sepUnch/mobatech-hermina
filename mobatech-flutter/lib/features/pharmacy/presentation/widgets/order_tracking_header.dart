@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_card.dart';
 import '../../models/pharmacy_order.dart';
 
 class OrderTrackingHeader extends StatelessWidget {
@@ -16,19 +19,7 @@ class OrderTrackingHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -38,40 +29,37 @@ class OrderTrackingHeader extends StatelessWidget {
               Expanded(
                 child: Text(
                   orderTitle,
-                  style: const TextStyle(
+                  style: AppTypography.body.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: AppColors.textDark,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.sm),
               Container(
                 padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 6,
+                  horizontal: AppSpacing.sm,
+                  vertical: AppSpacing.xs,
                 ),
                 decoration: BoxDecoration(
                   color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
                 child: Text(
                   status,
-                  style: const TextStyle(
+                  style: AppTypography.caption.copyWith(
                     color: AppColors.primary,
-                    fontSize: 12,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Text(
             'Tgl Pemesanan: Hari ini',
-            style: const TextStyle(color: AppColors.textGrey),
+            style: AppTypography.bodySmall.copyWith(color: AppColors.textSecondary),
           ),
         ],
       ),

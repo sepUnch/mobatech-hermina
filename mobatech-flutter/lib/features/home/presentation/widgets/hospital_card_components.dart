@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/theme/app_spacing.dart';
 
 class HospitalInfoColumn extends StatelessWidget {
   final String name;
@@ -25,11 +27,7 @@ class HospitalInfoColumn extends StatelessWidget {
             Expanded(
               child: Text(
                 name,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: AppColors.textDark,
-                ),
+                style: AppTypography.h4,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -44,23 +42,18 @@ class HospitalInfoColumn extends StatelessWidget {
                 const SizedBox(width: 4),
                 Text(
                   distance,
-                  style: const TextStyle(
+                  style: AppTypography.labelSmall.copyWith(
                     color: AppColors.primary,
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: AppSpacing.xs),
         Text(
           address,
-          style: const TextStyle(
-            fontSize: 12,
-            color: AppColors.textGrey,
-          ),
+          style: AppTypography.bodySmall,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
@@ -87,30 +80,30 @@ class HospitalActionButtons extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildIconContainer(Icons.directions_outlined),
-              const SizedBox(height: 4),
-              const Text(
+              const SizedBox(height: AppSpacing.xs),
+              Text(
                 AppStrings.extRute,
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
+                style: AppTypography.caption.copyWith(
                   color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 10,
                 ),
               ),
             ],
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _buildIconContainer(Icons.more_vert),
-            const SizedBox(height: 4),
-            const Text(
+            const SizedBox(height: AppSpacing.xs),
+            Text(
               AppStrings.extMore,
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+              style: AppTypography.caption.copyWith(
                 color: AppColors.primary,
+                fontWeight: FontWeight.w600,
+                fontSize: 10,
               ),
             ),
           ],
@@ -121,12 +114,10 @@ class HospitalActionButtons extends StatelessWidget {
 
   Widget _buildIconContainer(IconData icon) {
     return Container(
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(AppSpacing.sm),
       decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.borderGrey.withValues(alpha: 0.5),
-        ),
-        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: AppColors.border),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
       ),
       child: Icon(
         icon,

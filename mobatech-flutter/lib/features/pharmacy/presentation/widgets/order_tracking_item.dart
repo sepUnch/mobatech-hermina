@@ -23,7 +23,7 @@ class _TimelineItem extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildIndicator(),
-        const SizedBox(width: 16),
+        const SizedBox(width: AppSpacing.md),
         _buildDetails(),
       ],
     );
@@ -36,24 +36,30 @@ class _TimelineItem extends StatelessWidget {
           width: 24,
           height: 24,
           decoration: BoxDecoration(
-            color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.backgroundLightGrey),
+            color: isError
+                ? AppColors.error
+                : (isCompleted ? AppColors.primary : AppColors.surfaceVariant),
             shape: BoxShape.circle,
             border: Border.all(
-              color: isError ? AppColors.errorRed : (isCompleted ? AppColors.primary : AppColors.borderGrey),
+              color: isError
+                  ? AppColors.error
+                  : (isCompleted ? AppColors.primary : AppColors.border),
               width: 2,
             ),
           ),
           child: isError
-              ? const Icon(Icons.close, size: 16, color: AppColors.textWhite)
+              ? const Icon(Icons.close,
+                  size: 16, color: AppColors.textOnPrimary)
               : (isCompleted
-                  ? const Icon(Icons.check, size: 16, color: AppColors.textWhite)
+                  ? const Icon(Icons.check,
+                      size: 16, color: AppColors.textOnPrimary)
                   : null),
         ),
         if (!isLast)
           Container(
             width: 2,
             height: 50,
-            color: isCompleted ? AppColors.primary : AppColors.dividerGrey,
+            color: isCompleted ? AppColors.primary : AppColors.border,
           ),
       ],
     );
@@ -69,30 +75,35 @@ class _TimelineItem extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
+                style: AppTypography.bodySmall.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
-                  color: isError ? AppColors.errorRed : (isCompleted ? AppColors.textDark : AppColors.textGrey),
+                  color: isError
+                      ? AppColors.error
+                      : (isCompleted
+                          ? AppColors.textPrimary
+                          : AppColors.textSecondary),
                 ),
               ),
               Text(
                 time,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: isCompleted ? AppColors.textGrey : AppColors.textLightGrey,
+                style: AppTypography.caption.copyWith(
+                  color: isCompleted
+                      ? AppColors.textSecondary
+                      : AppColors.textTertiary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: AppSpacing.xs),
           Text(
             description,
-            style: TextStyle(
-              fontSize: 14,
-              color: isCompleted ? AppColors.textGrey : AppColors.textLightGrey,
+            style: AppTypography.caption.copyWith(
+              color: isCompleted
+                  ? AppColors.textSecondary
+                  : AppColors.textTertiary,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: AppSpacing.xl),
         ],
       ),
     );

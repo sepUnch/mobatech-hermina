@@ -1,6 +1,9 @@
 import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_card.dart';
 import '../../models/cart.dart';
 
 class CheckoutOrderSummary extends StatelessWidget {
@@ -15,64 +18,64 @@ class CheckoutOrderSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         children: [
           ...cart.items.map(
             (item) => Padding(
-              padding: const EdgeInsets.only(bottom: 8.0),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     '${item.medicine.name} (${item.quantity})',
-                    style: const TextStyle(color: AppColors.textDark),
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.textPrimary,
+                    ),
                   ),
                   Text(
                     'Rp ${(item.medicine.price * item.quantity).toInt()}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: AppTypography.bodySmall.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
             ),
           ),
-          const Divider(height: 24, color: AppColors.dividerGrey),
+          const Divider(height: AppSpacing.xl, color: AppColors.border),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 AppStrings.extSubtotal,
-                style: TextStyle(color: AppColors.textGrey),
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
               Text(
                 'Rp ${cart.totalPrice.toInt()}',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: AppTypography.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 AppStrings.extOngkoskirim,
-                style: TextStyle(color: AppColors.textGrey),
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
               Text(
                 pickupMethod == 'Delivery' ? 'Rp 10.000' : 'Rp 0',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: AppTypography.bodySmall.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ],
           ),

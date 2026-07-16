@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_card.dart';
 
 part 'order_tracking_item.dart';
 
@@ -20,19 +23,7 @@ class OrderTrackingTimeline extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (isCancelled) {
-      return Container(
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.shadowColor,
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
+      return AppCard(
         child: Column(
           children: [
             _TimelineItem(
@@ -48,19 +39,7 @@ class OrderTrackingTimeline extends StatelessWidget {
       );
     }
 
-    return Container(
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+    return AppCard(
       child: Column(
         children: [
           _TimelineItem(
@@ -97,4 +76,3 @@ class OrderTrackingTimeline extends StatelessWidget {
     );
   }
 }
-

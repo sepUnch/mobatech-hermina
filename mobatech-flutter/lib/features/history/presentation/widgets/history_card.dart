@@ -1,6 +1,9 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 
 class HistoryCard extends StatelessWidget {
   final String title;
@@ -20,97 +23,76 @@ class HistoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color getStatusColor(String s) {
       final text = s.toLowerCase();
-      if (text == 'pending' || text == 'menunggu') return AppColors.warningYellow;
-      if (text == 'cancelled' || text == 'batal') return AppColors.errorRed;
+      if (text == 'pending' || text == 'menunggu') return AppColors.warning;
+      if (text == 'cancelled' || text == 'batal') return AppColors.error;
       if (text == 'completed' || text == 'selesai') return AppColors.primary;
-      return AppColors.successGreen;
+      return AppColors.success;
     }
 
     final statusColor = getStatusColor(status);
 
-    return Card(
-      elevation: 0,
-      color: AppColors.transparent,
-      margin: EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+    return AppCard(
+      padding: EdgeInsets.zero,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
-                color: AppColors.primaryLight.withValues(alpha: 0.5),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.2),
-                ),
+                color: AppColors.primaryLight,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.shadowColor,
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
-              child: Row(
+              child: const Icon(Icons.history, color: AppColors.primary),
+            ),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: AppColors.backgroundWhite,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.shadowColor,
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Icon(Icons.history, color: AppColors.primary),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
-                            color: AppColors.textDark,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          date,
-                          style: const TextStyle(
-                            color: AppColors.textGrey,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ],
+                  Text(
+                    title,
+                    style: AppTypography.body.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: statusColor.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status,
-                      style: TextStyle(
-                        color: statusColor,
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const SizedBox(height: AppSpacing.xs),
+                  Text(
+                    date,
+                    style: AppTypography.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm,
+                vertical: AppSpacing.xs,
+              ),
+              decoration: BoxDecoration(
+                color: statusColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+              ),
+              child: Text(
+                status,
+                style: AppTypography.caption.copyWith(
+                  color: statusColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

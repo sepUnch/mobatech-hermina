@@ -2,67 +2,83 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/utils/error_handler.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/widgets/skeleton_loader.dart';
 import '../providers/chat_provider.dart';
+
 class ChatbotHistoryModal extends ConsumerWidget {
   const ChatbotHistoryModal({super.key});
-  void _showRenameDialog(BuildContext context, WidgetRef ref, int sessionId, String currentTitle) {
+
+  void _showRenameDialog(BuildContext context, WidgetRef ref, int sessionId,
+      String currentTitle) {
     final controller = TextEditingController(text: currentTitle);
     showDialog(
       context: context,
       builder: (ctx) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: AlertDialog(
-          backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.9),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          title: const Text('Ubah Nama Percakapan', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          backgroundColor: AppColors.surface.withValues(alpha: 0.9),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+          title: Text('Ubah Nama Percakapan', style: AppTypography.h4),
           content: TextField(
             controller: controller,
             decoration: const InputDecoration(
               hintText: 'Nama baru...',
               border: OutlineInputBorder(),
-              focusedBorder: OutlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.primary)),
             ),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(ctx),
-              child: const Text('Batal', style: TextStyle(color: AppColors.textGrey)),
+              child: Text('Batal',
+                  style:
+                      AppTypography.label.copyWith(color: AppColors.textSecondary)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(AppSpacing.radiusSm)),
               ),
               onPressed: () {
                 if (controller.text.trim().isNotEmpty) {
-                  ref.read(chatMessagesProvider.notifier).renameSession(sessionId, controller.text.trim());
+                  ref
+                      .read(chatMessagesProvider.notifier)
+                      .renameSession(sessionId, controller.text.trim());
                 }
                 Navigator.pop(ctx);
               },
-              child: const Text('Simpan', style: TextStyle(color: AppColors.backgroundWhite)),
+              child: Text('Simpan',
+                  style: AppTypography.label.copyWith(
+                      color: AppColors.textOnPrimary)),
             ),
           ],
         ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionsAsync = ref.watch(chatSessionsProvider);
     return BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: BoxDecoration(
-          color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          color: AppColors.surface.withValues(alpha: 0.85),
+          borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(AppSpacing.radiusXl)),
           boxShadow: [
             BoxShadow(
-              color: AppColors.textDark.withValues(alpha: 0.1),
+              color: AppColors.shadowColor.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -74,9 +90,9 @@ class ChatbotHistoryModal extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   AppStrings.chatHistoryTitle,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: AppTypography.h3,
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -89,10 +105,11 @@ class ChatbotHistoryModal extends ConsumerWidget {
               child: sessionsAsync.when(
                 data: (sessions) {
                   if (sessions.isEmpty) {
-                    return const Center(
+                    return Center(
                       child: Text(
                         AppStrings.chatNoHistory,
-                        style: TextStyle(color: AppColors.textGrey),
+                        style: AppTypography.body.copyWith(
+                            color: AppColors.textSecondary),
                       ),
                     );
                   }
@@ -103,16 +120,18 @@ class ChatbotHistoryModal extends ConsumerWidget {
                       return Card(
                         elevation: 0,
                         color: AppColors.transparent,
-                        margin: const EdgeInsets.only(bottom: 8),
+                        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusMd),
                           side: BorderSide(
-                            color: AppColors.textGrey.withValues(alpha: 0.2),
+                            color: AppColors.border,
                           ),
                         ),
                         child: Material(
-                          color: AppColors.backgroundWhite.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(12),
+                          color: AppColors.surface.withValues(alpha: 0.5),
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusMd),
                           child: InkWell(
                             onTap: () {
                               ref
@@ -120,11 +139,12 @@ class ChatbotHistoryModal extends ConsumerWidget {
                                   .loadSession(session['ID']);
                               Navigator.pop(context);
                             },
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.radiusMd),
                             child: ListTile(
                               contentPadding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
+                                horizontal: AppSpacing.md,
+                                vertical: AppSpacing.xs,
                               ),
                               leading: const CircleAvatar(
                                 backgroundColor: AppColors.primaryLight,
@@ -142,9 +162,8 @@ class ChatbotHistoryModal extends ConsumerWidget {
                                           AppStrings.chatNewConversation,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
+                                      style: AppTypography.bodySmall.copyWith(
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 14,
                                       ),
                                     ),
                                   ),
@@ -157,22 +176,25 @@ class ChatbotHistoryModal extends ConsumerWidget {
                                           color: AppColors.primary,
                                           size: 20,
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
                                         constraints: const BoxConstraints(),
                                         onPressed: () => _showRenameDialog(
                                           context,
                                           ref,
                                           session['ID'],
-                                          session['title'] ?? AppStrings.chatNewConversation,
+                                          session['title'] ??
+                                              AppStrings.chatNewConversation,
                                         ),
                                       ),
                                       IconButton(
                                         icon: const Icon(
                                           Icons.delete_outline,
-                                          color: AppColors.errorRed,
+                                          color: AppColors.error,
                                           size: 20,
                                         ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
                                         constraints: const BoxConstraints(),
                                         onPressed: () => ref
                                             .read(chatMessagesProvider.notifier)
@@ -190,8 +212,10 @@ class ChatbotHistoryModal extends ConsumerWidget {
                   );
                 },
                 loading: () => const CardSkeletonLoader(count: 3),
-                error: (err, stack) =>
-                    Center(child: Text(ErrorHandler.getMessage(err))),
+                error: (err, stack) => Center(
+                    child: Text(ErrorHandler.getMessage(err),
+                        style: AppTypography.bodySmall
+                            .copyWith(color: AppColors.error))),
               ),
             ),
           ],

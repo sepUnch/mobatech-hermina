@@ -2,6 +2,9 @@ import '../../../../core/constants/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../models/pharmacy_order.dart';
 import '../widgets/order_tracking_header.dart';
 import '../widgets/order_tracking_timeline.dart';
@@ -17,31 +20,32 @@ class OrderTrackingScreen extends StatelessWidget {
     final status = order?.status ?? 'Pending';
     final statusLower = status.toLowerCase();
 
-    bool isProcessing = statusLower == 'processing' || statusLower == 'ready' || statusLower == 'completed';
+    bool isProcessing = statusLower == 'processing' ||
+        statusLower == 'ready' ||
+        statusLower == 'completed';
     bool isReady = statusLower == 'ready' || statusLower == 'completed';
     bool isCompleted = statusLower == 'completed';
     bool isCancelled = statusLower == 'cancelled';
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightGrey,
+      backgroundColor: AppColors.surface,
       appBar: AppBar(
         title: Text(
           AppStrings.extDetaillacakpesanan,
-          style: TextStyle(
-            color: AppColors.textWhite,
-            fontWeight: FontWeight.bold,
+          style: AppTypography.h3.copyWith(
+            color: AppColors.textOnPrimary,
           ),
         ),
         backgroundColor: AppColors.primary,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: AppColors.textWhite),
+        iconTheme: const IconThemeData(color: AppColors.textOnPrimary),
         shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppSpacing.radiusXl)),
         ),
         flexibleSpace: ClipRRect(
           borderRadius: const BorderRadius.vertical(
-            bottom: Radius.circular(24),
+            bottom: Radius.circular(AppSpacing.radiusXl),
           ),
           child: Stack(
             clipBehavior: Clip.none,
@@ -50,7 +54,7 @@ class OrderTrackingScreen extends StatelessWidget {
                 right: -20,
                 top: -20,
                 child: Opacity(
-                  opacity: 0.3,
+                  opacity: 0.2,
                   child: Image.asset('assets/header_logo.png', width: 220),
                 ),
               ),
@@ -59,7 +63,7 @@ class OrderTrackingScreen extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(AppSpacing.pagePadding),
         child: Column(
           children: [
             OrderTrackingHeader(
@@ -67,38 +71,24 @@ class OrderTrackingScreen extends StatelessWidget {
               orderTitle: orderTitle,
               status: status,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppSpacing.xl),
             OrderTrackingTimeline(
               isProcessing: isProcessing,
               isReady: isReady,
               isCompleted: isCompleted,
               isCancelled: isCancelled,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: AppSpacing.xxl),
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
+              child: AppButton(
                 onPressed: () {
                   context.go('/home');
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'Kembali ke Beranda',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textWhite,
-                  ),
-                ),
+                text: 'Kembali ke Beranda',
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: AppSpacing.xl),
           ],
         ),
       ),

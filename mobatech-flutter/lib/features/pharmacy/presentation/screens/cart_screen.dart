@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../providers/pharmacy_provider.dart';
 
 part 'cart_screen_widgets.dart';
@@ -16,7 +20,7 @@ class CartScreen extends ConsumerWidget {
     final cartAsync = ref.watch(cartProvider);
 
     return Scaffold(
-      backgroundColor: AppColors.backgroundLightGrey,
+      backgroundColor: AppColors.surface,
       body: cartAsync.when(
         data: (cart) => CustomScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -25,16 +29,15 @@ class CartScreen extends ConsumerWidget {
               expandedHeight: 40,
               pinned: true,
               backgroundColor: AppColors.primary,
-              iconTheme: const IconThemeData(color: AppColors.textWhite),
+              iconTheme: const IconThemeData(color: AppColors.textOnPrimary),
               centerTitle: true,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppSpacing.radiusXl)),
               ),
-              title: const Text(
+              title: Text(
                 AppStrings.extKeranjang,
-                style: TextStyle(
-                  color: AppColors.textWhite,
-                  fontWeight: FontWeight.bold,
+                style: AppTypography.h3.copyWith(
+                  color: AppColors.textOnPrimary,
                 ),
               ),
               flexibleSpace: FlexibleSpaceBar(
@@ -55,9 +58,9 @@ class CartScreen extends ConsumerWidget {
             _CartItemList(cart: cart),
           ],
         ),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
         error: (err, stack) =>
-            const Center(child: Text(AppStrings.extGagalmemuatkeranjang)),
+             Center(child: Text(AppStrings.extGagalmemuatkeranjang, style: AppTypography.body)),
       ),
       bottomNavigationBar: cartAsync.whenOrNull(
         data: (cart) {
@@ -68,4 +71,3 @@ class CartScreen extends ConsumerWidget {
     );
   }
 }
-

@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/utils/error_handler.dart';
-import 'auth_label.dart';
+// removed auth_label.dart
 import 'auth_text_field.dart';
 import 'phone_text_field.dart';
 import '../providers/auth_provider.dart';

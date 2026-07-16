@@ -7,12 +7,12 @@ class _CartBottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite,
+        color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadowColor,
+            color: AppColors.shadowColor.withValues(alpha: 0.1),
             blurRadius: 10,
             offset: const Offset(0, -4),
           ),
@@ -23,7 +23,8 @@ class _CartBottomBar extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             _buildTotalText(),
-            _buildCheckoutButton(context),
+            const SizedBox(width: AppSpacing.md),
+            Expanded(child: _buildCheckoutButton(context)),
           ],
         ),
       ),
@@ -35,38 +36,22 @@ class _CartBottomBar extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           AppStrings.extTotalpembayaran,
-          style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+          style: AppTypography.caption.copyWith(color: AppColors.textSecondary),
         ),
         Text(
           'Rp ${cart.totalPrice.toInt()}',
-          style: const TextStyle(
-            color: AppColors.primary,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
+          style: AppTypography.h4.copyWith(color: AppColors.primary),
         ),
       ],
     );
   }
 
   Widget _buildCheckoutButton(BuildContext context) {
-    return ElevatedButton(
+    return AppButton(
+      text: AppStrings.extCheckout,
       onPressed: () => context.push('/pharmacy/checkout'),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primary,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 14),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      child: const Text(
-        AppStrings.extCheckout,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: AppColors.textWhite,
-          fontSize: 16,
-        ),
-      ),
     );
   }
 }

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/formatters.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/widgets/glass_status_chip.dart';
+import '../../../../core/widgets/app_button.dart';
 
 class AppointmentCardTopSection extends StatelessWidget {
   final dynamic appointment;
@@ -11,11 +14,14 @@ class AppointmentCardTopSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: AppColors.backgroundScreen.withValues(alpha: 0.5),
-        border: const Border(
-          bottom: BorderSide(color: AppColors.backgroundScreen),
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.md,
+        vertical: AppSpacing.sm,
+      ),
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceVariant,
+        border: Border(
+          bottom: BorderSide(color: AppColors.border),
         ),
       ),
       child: Row(
@@ -28,13 +34,11 @@ class AppointmentCardTopSection extends StatelessWidget {
                 size: 16,
                 color: AppColors.primary,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.xs),
               Text(
                 '${appointment.schedule?.date != null ? Formatters.formatDateID(appointment.schedule!.date!) : '-'} • ${appointment.schedule?.startTime ?? ''}',
-                style: const TextStyle(
-                  fontSize: 13,
+                style: AppTypography.bodySmall.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textDark,
                 ),
               ),
             ],
@@ -62,24 +66,13 @@ class AppointmentCardBottomSection extends StatelessWidget {
       return const SizedBox.shrink();
     }
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-      child: SizedBox(
-        width: double.infinity,
-        child: OutlinedButton(
-          onPressed: onCancel,
-          style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.errorRed,
-            side: BorderSide(color: AppColors.errorRed.withValues(alpha: 0.3)),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-          child: const Text(
-            'Batalkan Janji Temu',
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-          ),
-        ),
+      padding: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
+      child: AppButton(
+        text: 'Batalkan Janji Temu',
+        onPressed: onCancel,
+        variant: AppButtonVariant.outline,
+        size: AppButtonSize.small,
+        isFullWidth: true,
       ),
     );
   }

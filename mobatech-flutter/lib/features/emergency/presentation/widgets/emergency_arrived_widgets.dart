@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class ArrivedCheckmark extends StatelessWidget {
@@ -12,10 +14,10 @@ class ArrivedCheckmark extends StatelessWidget {
       height: 120,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.backgroundWhite.withAlpha(30),
-        border: Border.all(color: AppColors.backgroundWhite.withAlpha(60), width: 3),
+        color: AppColors.surface.withValues(alpha: 0.2),
+        border: Border.all(color: AppColors.surface.withValues(alpha: 0.4), width: 3),
       ),
-      child: const Icon(Icons.check_rounded, color: AppColors.backgroundWhite, size: 64),
+      child: const Icon(Icons.check_rounded, color: AppColors.surface, size: 64),
     );
   }
 }
@@ -27,22 +29,18 @@ class ArrivedMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text(
+        Text(
           AppStrings.ambulanceArrived,
-          style: TextStyle(
-            color: AppColors.backgroundWhite,
-            fontSize: 26,
-            fontWeight: FontWeight.w900,
+          style: AppTypography.h2.copyWith(
+            color: AppColors.surface,
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           AppStrings.arrivedMessage,
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: AppColors.backgroundWhite.withAlpha(200),
-            fontSize: 15,
-            height: 1.5,
+          style: AppTypography.body.copyWith(
+            color: AppColors.surface.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -56,32 +54,33 @@ class ArrivedDriverCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.backgroundWhite.withAlpha(25),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.backgroundWhite.withAlpha(40)),
+        color: AppColors.surface.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+        border: Border.all(color: AppColors.surface.withValues(alpha: 0.2)),
       ),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.local_shipping, color: AppColors.backgroundWhite, size: 28),
-          SizedBox(width: 14),
+          const Icon(Icons.local_shipping, color: AppColors.surface, size: 28),
+          const SizedBox(width: AppSpacing.md),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 AppStrings.driverInfoArrived,
-                style: TextStyle(
-                  color: AppColors.backgroundWhite,
-                  fontSize: 14,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.surface,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-              SizedBox(height: 2),
+              const SizedBox(height: 2),
               Text(
                 AppStrings.ambulanceType,
-                style: TextStyle(color: AppColors.textWhite70, fontSize: 12),
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.surface.withValues(alpha: 0.7),
+                ),
               ),
             ],
           ),
@@ -103,17 +102,17 @@ class BackToHomeButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.backgroundWhite,
-          foregroundColor: AppColors.arrivedGreen2,
-          padding: const EdgeInsets.symmetric(vertical: 16),
+          backgroundColor: AppColors.surface,
+          foregroundColor: AppColors.primary,
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
           ),
           elevation: 0,
         ),
-        child: const Text(
+        child: Text(
           AppStrings.backToHome,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          style: AppTypography.label,
         ),
       ),
     );

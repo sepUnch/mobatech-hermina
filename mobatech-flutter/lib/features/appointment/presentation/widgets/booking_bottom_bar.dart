@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_button.dart';
 
 class BookingBottomBar extends StatelessWidget {
   final bool isBooking;
@@ -17,9 +19,9 @@ class BookingBottomBar extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 800),
         child: Container(
-          padding: const EdgeInsets.all(24),
+          padding: const EdgeInsets.all(AppSpacing.pagePadding),
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite,
+            color: AppColors.surface,
             boxShadow: [
               BoxShadow(
                 color: AppColors.shadowColor.withValues(alpha: 0.05),
@@ -29,29 +31,12 @@ class BookingBottomBar extends StatelessWidget {
             ],
           ),
           child: SafeArea(
-            child: SizedBox(
-              width: double.infinity,
-              height: 54,
-              child: ElevatedButton(
-                onPressed: isBooking ? null : onBook,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(27),
-                  ),
-                  elevation: 0,
-                ),
-                child: isBooking
-                    ? const CircularProgressIndicator(color: AppColors.backgroundWhite)
-                    : const Text(
-                        'Buat Janji Temu',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.backgroundWhite,
-                        ),
-                      ),
-              ),
+            child: AppButton(
+              text: 'Buat Janji Temu',
+              onPressed: isBooking ? null : onBook,
+              isLoading: isBooking,
+              isFullWidth: true,
+              size: AppButtonSize.large,
             ),
           ),
         ),

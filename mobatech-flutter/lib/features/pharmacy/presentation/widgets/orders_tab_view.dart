@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../widgets/shimmer_loading.dart';
@@ -16,132 +19,131 @@ class OrdersTabView extends ConsumerWidget {
     return ordersAsync.when(
       data: (orders) {
         if (orders.isEmpty) {
-          return const Center(child: Text(AppStrings.noOrders));
+          return Center(
+            child: Text(
+              AppStrings.noOrders,
+              style: AppTypography.body
+                  .copyWith(color: AppColors.textSecondary),
+            ),
+          );
         }
-        return RefreshIndicator (
+        return RefreshIndicator(
           onRefresh: () async {
             ref.invalidate(ordersProvider);
             await ref.read(ordersProvider.future);
           },
           child: ListView.separated(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.pagePadding, vertical: AppSpacing.md),
             itemCount: orders.length,
-            separatorBuilder: (context, index) => const SizedBox(height: 16),
+            separatorBuilder: (context, index) =>
+                const SizedBox(height: AppSpacing.md),
             itemBuilder: (context, index) {
               final order = orders[index];
-            return GestureDetector(
-              onTap: () => context.push('/pharmacy/tracking', extra: order),
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.backgroundWhite,
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.shadowColor,
-                      blurRadius: 10,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          order.orderNumber,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: AppColors.textDark,
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 4,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.iconOrange.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Text(
-                            order.status,
-                            style: const TextStyle(
-                              color: AppColors.iconOrange,
-                              fontSize: 12,
+              return GestureDetector(
+                onTap: () => context.push('/pharmacy/tracking', extra: order),
+                child: AppCard(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            order.orderNumber,
+                            style: AppTypography.body.copyWith(
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.inventory_2_outlined,
-                          color: AppColors.textGrey,
-                          size: 20,
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            order.items.map((e) => e.medicine.name).join(', '),
-                            style: const TextStyle(
-                              color: AppColors.textGrey,
-                              fontSize: 14,
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: AppSpacing.xs,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            decoration: BoxDecoration(
+                              color:
+                                  AppColors.warning.withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(
+                                  AppSpacing.radiusSm),
+                            ),
+                            child: Text(
+                              order.status,
+                              style: AppTypography.caption.copyWith(
+                                color: AppColors.warning,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const Divider(height: 24, color: AppColors.dividerGrey),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          AppStrings.totalOrder,
-                          style: TextStyle(
-                            color: AppColors.textDark,
-                            fontSize: 14,
+                        ],
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      Row(
+                        children: [
+                          const Icon(
+                            Icons.inventory_2_outlined,
+                            color: AppColors.textSecondary,
+                            size: 20,
                           ),
-                        ),
-                        Text(
-                          'Rp ${order.totalPrice.toInt()}',
-                          style: const TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                          const SizedBox(width: AppSpacing.sm),
+                          Expanded(
+                            child: Text(
+                              order.items
+                                  .map((e) => e.medicine.name)
+                                  .join(', '),
+                              style: AppTypography.bodySmall.copyWith(
+                                color: AppColors.textSecondary,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const Divider(
+                          height: AppSpacing.xl, color: AppColors.border),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppStrings.totalOrder,
+                            style: AppTypography.bodySmall,
+                          ),
+                          Text(
+                            'Rp ${order.totalPrice.toInt()}',
+                            style: AppTypography.body.copyWith(
+                              color: AppColors.primary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
-        ),
+              );
+            },
+          ),
         );
       },
       loading: () => ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.pagePadding, vertical: AppSpacing.md),
         itemCount: 3,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
+        separatorBuilder: (context, index) =>
+            const SizedBox(height: AppSpacing.md),
         itemBuilder: (context, index) => const ShimmerLoading(
           width: double.infinity,
           height: 140,
           borderRadius: 16,
         ),
       ),
-      error: (err, stack) =>
-          const Center(child: Text(AppStrings.errorLoadOrders)),
+      error: (err, stack) => Center(
+        child: Text(
+          AppStrings.errorLoadOrders,
+          style: AppTypography.body.copyWith(color: AppColors.error),
+        ),
+      ),
     );
   }
 }

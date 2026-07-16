@@ -1,7 +1,10 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/app_card.dart';
 import '../../data/models/polyclinic.dart';
 import '../../providers/appointment_provider.dart';
 import 'polyclinic_card_widgets.dart';
@@ -13,123 +16,73 @@ class PolyclinicCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.shadowColor.withValues(alpha: 0.05),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
+      child: AppCard(
+        padding: EdgeInsets.zero, // Padding handled inside elements
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            dividerColor: AppColors.transparent,
+            splashColor: AppColors.transparent,
+            highlightColor: AppColors.transparent,
           ),
-        ],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Material(
-            color: AppColors.backgroundWhite.withValues(alpha: 0.85),
-            child: Theme(
-              data: Theme.of(
-                context,
-              ).copyWith(dividerColor: AppColors.transparent),
-              child: ExpansionTile(
-                tilePadding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 8,
-                ),
-                title: Text(
-                  poly.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: AppColors.textDark,
-                  ),
-                ),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: Text(
-                    poly.description,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: AppColors.textGrey,
-                      fontSize: 13,
-                    ),
-                  ),
-                ),
-                children: [
-                  Container(
-                    width: double.infinity,
-                    color: AppColors.primaryLight.withValues(alpha: 0.5),
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Jadwal Praktik:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.textDark,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        if (poly.schedules.isEmpty)
-                          const Text(
-                            'Jadwal belum tersedia',
-                            style: TextStyle(
-                              color: AppColors.textGrey,
-                              fontSize: 13,
-                            ),
-                          )
-                        else
-                          ...poly.schedules.map(
-                            (s) => PolyclinicScheduleItem(schedule: s),
-                          ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ref
-                                      .read(
-                                        selectedPolyclinicIdProvider.notifier,
-                                      )
-                                      .state =
-                                  poly.id;
-                              Navigator.pop(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.primary,
-                              foregroundColor: AppColors.backgroundWhite,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
-                              ),
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.person_search, size: 18),
-                                SizedBox(width: 8),
-                                Text(
-                                  'Lihat Dokter di Poli Ini',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+          child: ExpansionTile(
+            tilePadding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.lg,
+              vertical: AppSpacing.sm,
+            ),
+            iconColor: AppColors.primary,
+            collapsedIconColor: AppColors.textSecondary,
+            title: Text(
+              poly.name,
+              style: AppTypography.h3,
+            ),
+            subtitle: Padding(
+              padding: const EdgeInsets.only(top: AppSpacing.xs),
+              child: Text(
+                poly.description,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTypography.bodySmall,
               ),
             ),
+            children: [
+              Container(
+                width: double.infinity,
+                color: AppColors.surfaceVariant,
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Jadwal Praktik:',
+                      style: AppTypography.label,
+                    ),
+                    const SizedBox(height: AppSpacing.md),
+                    if (poly.schedules.isEmpty)
+                      Text(
+                        'Jadwal belum tersedia',
+                        style: AppTypography.bodySmall,
+                      )
+                    else
+                      ...poly.schedules.map(
+                        (s) => PolyclinicScheduleItem(schedule: s),
+                      ),
+                    const SizedBox(height: AppSpacing.lg),
+                    AppButton(
+                      text: 'Lihat Dokter di Poli Ini',
+                      onPressed: () {
+                        ref.read(selectedPolyclinicIdProvider.notifier).state =
+                            poly.id;
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.person_search, size: 20),
+                      isFullWidth: true,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

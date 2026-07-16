@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../data/models/polyclinic.dart';
 
 class PolyclinicScheduleItem extends StatelessWidget {
@@ -10,14 +12,14 @@ class PolyclinicScheduleItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(AppSpacing.xs),
             decoration: BoxDecoration(
-              color: AppColors.backgroundWhite,
-              borderRadius: BorderRadius.circular(10),
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
             ),
             child: const Icon(
               Icons.schedule,
@@ -25,24 +27,18 @@ class PolyclinicScheduleItem extends StatelessWidget {
               size: 16,
             ),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               schedule.dayOfWeek,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: AppColors.textDark,
-                fontSize: 13,
+              style: AppTypography.bodySmall.copyWith(
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
           Text(
             '${schedule.startTime} - ${schedule.endTime}',
-            style: const TextStyle(
-              color: AppColors.textDark,
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
-            ),
+            style: AppTypography.labelSmall,
           ),
         ],
       ),

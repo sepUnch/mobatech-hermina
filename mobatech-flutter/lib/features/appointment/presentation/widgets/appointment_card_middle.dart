@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class AppointmentCardMiddleSection extends StatelessWidget {
   final dynamic appointment;
@@ -9,75 +11,58 @@ class AppointmentCardMiddleSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(AppSpacing.md),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child:
-                appointment.doctor?.imageUrl != null &&
+            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+            child: appointment.doctor?.imageUrl != null &&
                     appointment.doctor!.imageUrl.isNotEmpty
                 ? Image.network(
                     appointment.doctor!.imageUrl
                         .replaceAll('/svg', '/png')
                         .replaceAll('.svg', '.png'),
-                    width: 60,
-                    height: 60,
+                    width: 64,
+                    height: 64,
                     fit: BoxFit.cover,
-                    errorBuilder: (ctx, err, stack) => Container(
-                      width: 60,
-                      height: 60,
-                      color: AppColors.primaryLight,
-                      child: const Icon(Icons.person, color: AppColors.primary),
-                    ),
+                    errorBuilder: (ctx, err, stack) => _buildPlaceholder(),
                   )
-                : Container(
-                    width: 60,
-                    height: 60,
-                    color: AppColors.primaryLight,
-                    child: const Icon(Icons.person, color: AppColors.primary),
-                  ),
+                : _buildPlaceholder(),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: AppSpacing.md),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   appointment.doctor?.name ?? 'Dokter Tidak Diketahui',
-                  style: const TextStyle(
-                    color: AppColors.textDark,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: AppTypography.h4,
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: AppSpacing.xs),
                 Text(
                   appointment.doctor?.specialization ?? '-',
-                  style: const TextStyle(
+                  style: AppTypography.bodySmall.copyWith(
                     color: AppColors.primary,
-                    fontSize: 13,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 if (appointment.notes != null &&
                     appointment.notes!.isNotEmpty) ...[
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Row(
                     children: [
                       const Icon(
                         Icons.notes,
                         size: 14,
-                        color: AppColors.textGrey,
+                        color: AppColors.textTertiary,
                       ),
-                      const SizedBox(width: 4),
+                      const SizedBox(width: AppSpacing.xs),
                       Expanded(
                         child: Text(
                           appointment.notes!,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: AppColors.textGrey,
+                          style: AppTypography.caption.copyWith(
+                            color: AppColors.textSecondary,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -91,6 +76,15 @@ class AppointmentCardMiddleSection extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      width: 64,
+      height: 64,
+      color: AppColors.surfaceVariant,
+      child: const Icon(Icons.person, color: AppColors.primary),
     );
   }
 }

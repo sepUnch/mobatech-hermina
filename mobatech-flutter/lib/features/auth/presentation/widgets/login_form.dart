@@ -3,10 +3,12 @@ import '../../../../core/utils/custom_snackbar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../../core/utils/validators.dart';
 import '../../../../core/utils/error_handler.dart';
-import 'auth_label.dart';
+// removed auth_label.dart
 import 'auth_text_field.dart';
 import '../providers/auth_provider.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../data/models/doctor_schedule.dart';
 
 class ScheduleItemCard extends StatelessWidget {
@@ -37,8 +39,9 @@ class ScheduleItemCard extends StatelessWidget {
       }
     }
 
-    final isAvailable =
-        !isExpired && schedule.isAvailable && (schedule.quota - schedule.booked > 0);
+    final isAvailable = !isExpired &&
+        schedule.isAvailable &&
+        (schedule.quota - schedule.booked > 0);
     final localDate = schedule.date?.toLocal();
     final dateStr = localDate != null
         ? '${localDate.day}/${localDate.month}/${localDate.year}'
@@ -48,53 +51,52 @@ class ScheduleItemCard extends StatelessWidget {
       onTap: isAvailable ? onTap : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withValues(alpha: 0.05)
-              : AppColors.backgroundWhite,
-          borderRadius: BorderRadius.circular(16),
+              : AppColors.surface,
+          borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.borderGrey,
+            color: isSelected ? AppColors.primary : AppColors.border,
+            width: isSelected ? 2 : 1,
           ),
         ),
         child: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(AppSpacing.sm),
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.primary
-                    : AppColors.backgroundScreen,
+                    : AppColors.surfaceVariant,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.calendar_month,
-                color: isSelected ? AppColors.backgroundWhite : AppColors.textGrey,
+                color: isSelected ? AppColors.textOnPrimary : AppColors.textSecondary,
                 size: 20,
               ),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     '$dateStr • ${schedule.startTime} - ${schedule.endTime}',
-                    style: TextStyle(
+                    style: AppTypography.body.copyWith(
                       fontWeight: FontWeight.bold,
                       color: isAvailable
-                          ? AppColors.textDark
-                          : AppColors.textGrey,
-                      fontSize: 14,
+                          ? AppColors.textPrimary
+                          : AppColors.textTertiary,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: AppSpacing.xs),
                   Text(
                     'Sisa kuota: ${schedule.quota - schedule.booked}',
-                    style: const TextStyle(
-                      color: AppColors.textGrey,
-                      fontSize: 12,
+                    style: AppTypography.caption.copyWith(
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -102,16 +104,16 @@ class ScheduleItemCard extends StatelessWidget {
             ),
             if (!isAvailable)
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
                 decoration: BoxDecoration(
-                  color: AppColors.errorRed.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.error.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
                 ),
                 child: Text(
                   isExpired ? 'Berakhir' : 'Penuh',
-                  style: const TextStyle(
-                    color: AppColors.errorRed,
-                    fontSize: 10,
+                  style: AppTypography.caption.copyWith(
+                    color: AppColors.error,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -121,7 +123,7 @@ class ScheduleItemCard extends StatelessWidget {
                 isSelected
                     ? Icons.radio_button_checked
                     : Icons.radio_button_unchecked,
-                color: isSelected ? AppColors.primary : AppColors.textLightGrey,
+                color: isSelected ? AppColors.primary : AppColors.border,
               ),
           ],
         ),

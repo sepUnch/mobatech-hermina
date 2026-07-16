@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class DoctorStatusBadge extends StatelessWidget {
   final bool isActive;
@@ -10,32 +12,32 @@ class DoctorStatusBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (isActive) {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
         decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
+          color: AppColors.success.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         ),
-        child: const Text(
+        child: Text(
           'Available',
-          style: TextStyle(
-            fontSize: 10,
-            color: AppColors.primary,
+          style: AppTypography.caption.copyWith(
+            color: AppColors.success,
             fontWeight: FontWeight.bold,
           ),
         ),
       );
     } else {
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm, vertical: AppSpacing.xs),
         decoration: BoxDecoration(
-          color: AppColors.errorRed.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(8),
+          color: AppColors.error.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
         ),
-        child: const Text(
+        child: Text(
           'Unavailable',
-          style: TextStyle(
-            fontSize: 10,
-            color: AppColors.errorRed,
+          style: AppTypography.caption.copyWith(
+            color: AppColors.error,
             fontWeight: FontWeight.bold,
           ),
         ),

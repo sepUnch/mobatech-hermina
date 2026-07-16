@@ -20,12 +20,10 @@ class AppointmentFilterChip extends StatelessWidget {
       margin: const EdgeInsets.only(right: 8),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
-        color: isSelected ? AppColors.backgroundWhite : AppColors.backgroundWhite.withValues(alpha: 0.15),
+        color: isSelected ? AppColors.primary : AppColors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isSelected
-              ? AppColors.backgroundWhite
-              : AppColors.backgroundWhite.withValues(alpha: 0.3),
+          color: isSelected ? AppColors.primary : Colors.grey.shade300,
           width: 1,
         ),
       ),
@@ -36,14 +34,14 @@ class AppointmentFilterChip extends StatelessWidget {
             Icon(
               icon,
               size: 16,
-              color: isSelected ? AppColors.primary : AppColors.backgroundWhite,
+              color: isSelected ? AppColors.textWhite : AppColors.textDark,
             ),
             const SizedBox(width: 6),
           ],
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? AppColors.primary : AppColors.backgroundWhite,
+              color: isSelected ? AppColors.textWhite : AppColors.textDark,
               fontSize: 12,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
             ),

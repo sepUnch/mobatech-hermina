@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 
 class SkeletonLoader extends StatelessWidget {
   final double width;
@@ -12,7 +13,7 @@ class SkeletonLoader extends StatelessWidget {
     super.key,
     required this.width,
     required this.height,
-    this.borderRadius = 16,
+    this.borderRadius = AppSpacing.radiusMd,
     this.margin,
   });
 
@@ -23,11 +24,11 @@ class SkeletonLoader extends StatelessWidget {
       width: width,
       height: height,
       child: Shimmer.fromColors(
-        baseColor: AppColors.borderGrey.withValues(alpha: 0.5),
-        highlightColor: AppColors.backgroundWhite,
+        baseColor: AppColors.surfaceVariant,
+        highlightColor: AppColors.surface,
         child: Container(
           decoration: BoxDecoration(
-            color: AppColors.backgroundWhite,
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
@@ -44,7 +45,7 @@ class CardSkeletonLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(AppSpacing.pagePadding),
       itemCount: count,
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
@@ -52,8 +53,8 @@ class CardSkeletonLoader extends StatelessWidget {
         return SkeletonLoader(
           width: double.infinity,
           height: 120,
-          margin: const EdgeInsets.only(bottom: 16),
-          borderRadius: 20,
+          margin: const EdgeInsets.only(bottom: AppSpacing.md),
+          borderRadius: AppSpacing.radiusMd,
         );
       },
     );
@@ -63,18 +64,18 @@ class CardSkeletonLoader extends StatelessWidget {
 class GridSkeletonLoader extends StatelessWidget {
   final int count;
 
-  const GridSkeletonLoader({super.key, this.count = 8});
+  const GridSkeletonLoader({super.key, this.count = 4});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.pagePadding),
       child: GridView.builder(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 4,
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 8,
-          childAspectRatio: 0.75,
+          mainAxisSpacing: AppSpacing.sm,
+          crossAxisSpacing: AppSpacing.sm,
+          childAspectRatio: 0.85,
         ),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
@@ -82,8 +83,8 @@ class GridSkeletonLoader extends StatelessWidget {
         itemBuilder: (context, index) {
           return const Column(
             children: [
-              SkeletonLoader(width: 50, height: 50, borderRadius: 25),
-              SizedBox(height: 8),
+              SkeletonLoader(width: 44, height: 44, borderRadius: AppSpacing.radiusSm),
+              SizedBox(height: AppSpacing.sm),
               SkeletonLoader(width: 60, height: 10, borderRadius: 5),
               SizedBox(height: 4),
               SkeletonLoader(width: 40, height: 10, borderRadius: 5),

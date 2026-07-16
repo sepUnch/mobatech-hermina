@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../../core/theme/app_colors.dart';
+import '../../../../../core/theme/app_spacing.dart';
+import '../../../../../core/theme/app_typography.dart';
+import '../../../../../core/widgets/app_card.dart';
 
 class CheckoutPaymentMethod extends StatelessWidget {
   final String paymentMethod;
@@ -20,9 +23,9 @@ class CheckoutPaymentMethod extends StatelessWidget {
           'Transfer',
           Icons.account_balance_outlined,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _buildPaymentOption('Tunai (Cash)', 'Cash', Icons.money_outlined),
-        const SizedBox(height: 12),
+        const SizedBox(height: AppSpacing.md),
         _buildPaymentOption(
           'BPJS Kesehatan',
           'BPJS',
@@ -36,28 +39,20 @@ class CheckoutPaymentMethod extends StatelessWidget {
     final isSelected = paymentMethod == value;
     return GestureDetector(
       onTap: () => onChanged(value),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.backgroundWhite,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.borderGrey,
-            width: isSelected ? 2 : 1,
-          ),
-        ),
+      child: AppCard(
+        borderColor: isSelected ? AppColors.primary : AppColors.border,
         child: Row(
           children: [
             Icon(
               icon,
-              color: isSelected ? AppColors.primary : AppColors.iconGrey,
+              color: isSelected ? AppColors.primary : AppColors.textSecondary,
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: AppSpacing.md),
             Expanded(
               child: Text(
                 title,
-                style: TextStyle(
-                  color: isSelected ? AppColors.textDark : AppColors.textGrey,
+                style: AppTypography.bodySmall.copyWith(
+                  color: isSelected ? AppColors.textPrimary : AppColors.textSecondary,
                   fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                 ),
               ),

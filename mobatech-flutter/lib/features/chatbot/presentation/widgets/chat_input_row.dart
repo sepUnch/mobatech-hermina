@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
 import 'chat_text_field.dart';
 
 class ChatInputRow extends StatelessWidget {
@@ -25,7 +26,7 @@ class ChatInputRow extends StatelessWidget {
             onAttachmentTap: onAttachmentTap,
           ),
         ),
-        const SizedBox(width: 12),
+        const SizedBox(width: AppSpacing.md),
         GestureDetector(
           onTap: onSubmitted,
           child: Container(
@@ -35,7 +36,7 @@ class ChatInputRow extends StatelessWidget {
               color: AppColors.primary,
               shape: BoxShape.circle,
             ),
-            child: const Icon(Icons.send, color: AppColors.textWhite, size: 20),
+            child: const Icon(Icons.send, color: AppColors.textOnPrimary, size: 20),
           ),
         ),
       ],

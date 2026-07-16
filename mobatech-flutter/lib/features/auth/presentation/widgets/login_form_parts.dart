@@ -11,19 +11,13 @@ class _EmailInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.emailLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.emailHint,
-          controller: controller,
-          keyboardType: TextInputType.emailAddress,
-          validator: Validators.validateEmail,
-          onChanged: (_) => onChanged(),
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.emailLabel,
+      hint: AppStrings.emailHint,
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      validator: Validators.validateEmail,
+      onChanged: (_) => onChanged(),
     );
   }
 }
@@ -43,21 +37,15 @@ class _PasswordInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.passwordLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.passwordHint,
-          isPassword: true,
-          obscureText: obscurePassword,
-          controller: controller,
-          validator: Validators.validatePassword,
-          onChanged: (_) => onChanged(),
-          onTogglePassword: onTogglePassword,
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.passwordLabel,
+      hint: AppStrings.passwordHint,
+      isPassword: true,
+      obscureText: obscurePassword,
+      controller: controller,
+      validator: Validators.validatePassword,
+      onChanged: (_) => onChanged(),
+      onTogglePassword: onTogglePassword,
     );
   }
 }
@@ -86,9 +74,9 @@ class _LoginFormOptions extends StatelessWidget {
               child: Checkbox(
                 value: rememberMe,
                 activeColor: AppColors.primary,
-                checkColor: AppColors.textWhite,
+                checkColor: AppColors.surface,
                 side: const BorderSide(
-                  color: AppColors.borderGrey,
+                  color: AppColors.border,
                   width: 1.5,
                 ),
                 shape: RoundedRectangleBorder(
@@ -97,21 +85,19 @@ class _LoginFormOptions extends StatelessWidget {
                 onChanged: onRememberMeChanged,
               ),
             ),
-            const SizedBox(width: 8),
-            const Text(
+            const SizedBox(width: AppSpacing.sm),
+            Text(
               AppStrings.rememberMe,
-              style: TextStyle(color: AppColors.textGrey, fontSize: 14),
+              style: AppTypography.bodySmall,
             ),
           ],
         ),
         TextButton(
           onPressed: onForgotPasswordPressed,
-          child: const Text(
+          child: Text(
             AppStrings.forgotPassword,
-            style: TextStyle(
+            style: AppTypography.labelSmall.copyWith(
               color: AppColors.primary,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
             ),
           ),
         ),

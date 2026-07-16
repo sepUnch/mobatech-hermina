@@ -15,18 +15,17 @@ class _PharmacyAppBar extends StatelessWidget {
       expandedHeight: 120,
       pinned: true,
       backgroundColor: AppColors.primary,
-      iconTheme: const IconThemeData(color: AppColors.textWhite),
+      iconTheme: const IconThemeData(color: AppColors.textOnPrimary),
       centerTitle: true,
-      title: const Text(
+      title: Text(
         AppStrings.pharmacyTitle,
-        style: TextStyle(
-          color: AppColors.textWhite,
-          fontWeight: FontWeight.bold,
+        style: AppTypography.h3.copyWith(
+          color: AppColors.textOnPrimary,
         ),
       ),
       actions: [
         _buildCartAction(context),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.sm),
       ],
       flexibleSpace: _buildFlexibleSpace(),
       bottom: _buildTabBar(),
@@ -38,7 +37,8 @@ class _PharmacyAppBar extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         IconButton(
-          icon: const Icon(Icons.shopping_cart_outlined, color: AppColors.textWhite),
+          icon: const Icon(Icons.shopping_cart_outlined,
+              color: AppColors.textOnPrimary),
           onPressed: () => context.push('/pharmacy/cart'),
         ),
         if (cartItemCount > 0)
@@ -48,13 +48,13 @@ class _PharmacyAppBar extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(4),
               decoration: const BoxDecoration(
-                color: AppColors.errorRed,
+                color: AppColors.error,
                 shape: BoxShape.circle,
               ),
               child: Text(
                 '$cartItemCount',
-                style: const TextStyle(
-                  color: AppColors.textWhite,
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textOnPrimary,
                   fontSize: 10,
                   fontWeight: FontWeight.bold,
                 ),
@@ -87,18 +87,20 @@ class _PharmacyAppBar extends StatelessWidget {
       preferredSize: const Size.fromHeight(48),
       child: Container(
         decoration: const BoxDecoration(
-          color: AppColors.backgroundWhite,
+          color: AppColors.surface,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(24),
-            topRight: Radius.circular(24),
+            topLeft: Radius.circular(AppSpacing.radiusXl),
+            topRight: Radius.circular(AppSpacing.radiusXl),
           ),
         ),
         child: TabBar(
           controller: tabController,
           labelColor: AppColors.primary,
-          unselectedLabelColor: AppColors.textGrey,
+          unselectedLabelColor: AppColors.textSecondary,
           indicatorColor: AppColors.primary,
           indicatorWeight: 3,
+          labelStyle: AppTypography.label,
+          unselectedLabelStyle: AppTypography.label,
           tabs: const [
             Tab(text: AppStrings.catalogTab),
             Tab(text: AppStrings.ePrescriptionTab),

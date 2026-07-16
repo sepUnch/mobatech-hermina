@@ -8,18 +8,12 @@ class _NameInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.fullNameLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.fullNameHint,
-          controller: controller,
-          validator: (v) => Validators.validateName(v, AppStrings.fullNameLabel),
-          onChanged: (_) => onChanged(),
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.fullNameLabel,
+      hint: AppStrings.fullNameHint,
+      controller: controller,
+      validator: (v) => Validators.validateName(v, AppStrings.fullNameLabel),
+      onChanged: (_) => onChanged(),
     );
   }
 }
@@ -32,19 +26,13 @@ class _EmailInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.emailLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.emailHint,
-          controller: controller,
-          keyboardType: TextInputType.emailAddress,
-          validator: Validators.validateEmail,
-          onChanged: (_) => onChanged(),
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.emailLabel,
+      hint: AppStrings.emailHint,
+      controller: controller,
+      keyboardType: TextInputType.emailAddress,
+      validator: Validators.validateEmail,
+      onChanged: (_) => onChanged(),
     );
   }
 }
@@ -56,16 +44,9 @@ class _PhoneInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.phoneLabel),
-        const SizedBox(height: 8),
-        PhoneTextField(
-          controller: controller,
-          validator: Validators.validatePhone,
-        ),
-      ],
+    return PhoneTextField(
+      controller: controller,
+      validator: Validators.validatePhone,
     );
   }
 }
@@ -85,21 +66,15 @@ class _PasswordInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.passwordLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.passwordHint,
-          isPassword: true,
-          controller: controller,
-          obscureText: obscurePassword,
-          validator: Validators.validatePassword,
-          onChanged: (_) => onChanged(),
-          onTogglePassword: onTogglePassword,
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.passwordLabel,
+      hint: AppStrings.passwordHint,
+      isPassword: true,
+      controller: controller,
+      obscureText: obscurePassword,
+      validator: Validators.validatePassword,
+      onChanged: (_) => onChanged(),
+      onTogglePassword: onTogglePassword,
     );
   }
 }
@@ -121,21 +96,16 @@ class _ConfirmPasswordInputSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const AuthLabel(text: AppStrings.confirmPasswordLabel),
-        const SizedBox(height: 8),
-        AuthTextField(
-          hint: AppStrings.confirmPasswordHint,
-          isPassword: true,
-          controller: controller,
-          obscureText: obscureConfirm,
-          validator: (v) => Validators.validateConfirmPassword(v, passwordController.text),
-          onChanged: (_) => onChanged(),
-          onTogglePassword: onTogglePassword,
-        ),
-      ],
+    return AuthTextField(
+      label: AppStrings.confirmPasswordLabel,
+      hint: AppStrings.confirmPasswordHint,
+      isPassword: true,
+      controller: controller,
+      obscureText: obscureConfirm,
+      validator: (v) =>
+          Validators.validateConfirmPassword(v, passwordController.text),
+      onChanged: (_) => onChanged(),
+      onTogglePassword: onTogglePassword,
     );
   }
 }

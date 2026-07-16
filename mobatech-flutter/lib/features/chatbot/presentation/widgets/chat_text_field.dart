@@ -1,6 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 
 class ChatTextField extends StatelessWidget {
@@ -18,16 +20,16 @@ class ChatTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
         child: Container(
           height: 48,
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md),
           decoration: BoxDecoration(
-            color: AppColors.white85,
-            borderRadius: BorderRadius.circular(24),
-            border: Border.all(color: AppColors.grey20),
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusXl),
+            border: Border.all(color: AppColors.border),
           ),
           child: Row(
             children: [
@@ -35,11 +37,11 @@ class ChatTextField extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   onSubmitted: (_) => onSubmitted(),
-                  decoration: const InputDecoration(
+                  style: AppTypography.body,
+                  decoration: InputDecoration(
                     hintText: AppStrings.chatInputHint,
-                    hintStyle: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.textGrey,
+                    hintStyle: AppTypography.body.copyWith(
+                      color: AppColors.textTertiary,
                     ),
                     border: InputBorder.none,
                   ),
@@ -49,7 +51,7 @@ class ChatTextField extends StatelessWidget {
                 onTap: onAttachmentTap,
                 child: const Icon(
                   Icons.attach_file,
-                  color: AppColors.textGrey,
+                  color: AppColors.textSecondary,
                   size: 20,
                 ),
               ),

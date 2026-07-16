@@ -5,6 +5,9 @@ import 'package:dio/dio.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/utils/custom_snackbar.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../providers/pharmacy_provider.dart';
 import '../widgets/shimmer_loading.dart';
@@ -60,8 +63,10 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
           slivers: [
             SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
-                child: ElevatedButton.icon(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.pagePadding, vertical: AppSpacing.md),
+                child: AppButton(
+                  text: _isUploading ? 'Mengunggah...' : 'Unggah E-Resep Baru',
                   onPressed: _isUploading ? null : _uploadPrescription,
                   icon: _isUploading 
                       ? const SizedBox(
@@ -69,30 +74,28 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
                           height: 20, 
                           child: CircularProgressIndicator(
                             strokeWidth: 2, 
-                            color: AppColors.backgroundWhite,
+                            color: AppColors.textOnPrimary,
                           ),
                         )
-                      : const Icon(Icons.upload_file),
-                  label: Text(_isUploading ? 'Mengunggah...' : 'Unggah E-Resep Baru'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.textWhite,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                      : const Icon(Icons.upload_file, color: AppColors.textOnPrimary),
                 ),
               ),
             ),
             if (prescriptions.isEmpty)
-              const SliverFillRemaining(
-                child: Center(child: Text(AppStrings.noPrescription)),
+              SliverFillRemaining(
+                child: Center(
+                  child: Text(
+                    AppStrings.noPrescription,
+                    style: AppTypography.body
+                        .copyWith(color: AppColors.textSecondary),
+                  ),
+                ),
               )
             else
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                  (context, index) => PrescriptionCard(prescription: prescriptions[index]),
+                  (context, index) => PrescriptionCard(
+                      prescription: prescriptions[index]),
                   childCount: prescriptions.length,
                 ),
               ),
@@ -100,17 +103,20 @@ class _PrescriptionTabViewState extends ConsumerState<PrescriptionTabView> {
         );
       },
       loading: () => ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+        padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.pagePadding, vertical: AppSpacing.md),
         itemCount: 3,
-        separatorBuilder: (context, index) => const SizedBox(height: 16),
+        separatorBuilder: (context, index) =>
+            const SizedBox(height: AppSpacing.md),
         itemBuilder: (context, index) => const ShimmerLoading(
           width: double.infinity,
           height: 180,
           borderRadius: 16,
         ),
       ),
-      error: (err, stack) =>
-          const Center(child: Text(AppStrings.errorLoadPrescriptions)),
+      error: (err, stack) => Center(
+          child: Text(AppStrings.errorLoadPrescriptions,
+              style: AppTypography.body.copyWith(color: AppColors.error))),
     );
   }
 }

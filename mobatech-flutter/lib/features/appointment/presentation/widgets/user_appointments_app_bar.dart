@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 
 class UserAppointmentsAppBar extends StatelessWidget {
   const UserAppointmentsAppBar({super.key});
@@ -7,32 +9,28 @@ class UserAppointmentsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 140.0,
+
       floating: false,
       pinned: true,
       backgroundColor: AppColors.primary,
       centerTitle: true,
-      iconTheme: const IconThemeData(color: AppColors.textWhite),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-      ),
-      flexibleSpace: FlexibleSpaceBar(
-        title: const Text(
-          'Janji Temu Saya',
-          style: TextStyle(
-            color: AppColors.textWhite,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
+      iconTheme: const IconThemeData(color: AppColors.textOnPrimary),
+      title: Text(
+        'Janji Temu Saya',
+        style: AppTypography.h3.copyWith(
+          color: AppColors.textOnPrimary,
         ),
-        background: Stack(
+      ),
+      flexibleSpace: ClipRRect(
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(AppSpacing.radiusXl)),
+        child: Stack(
           clipBehavior: Clip.none,
           children: [
             Positioned(
               right: -20,
-              top: -10,
+              top: -20,
               child: Opacity(
-                opacity: 0.4,
+                opacity: 0.2,
                 child: Image.asset('assets/header_logo.png', width: 220),
               ),
             ),

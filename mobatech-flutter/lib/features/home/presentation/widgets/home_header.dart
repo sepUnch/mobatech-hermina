@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_typography.dart';
 import '../../../../core/constants/app_strings.dart';
 import '../../../profile/presentation/providers/profile_provider.dart';
 import '../../../patient_support/providers/patient_support_provider.dart';
@@ -22,8 +24,8 @@ class HomeHeader extends ConsumerWidget {
       decoration: const BoxDecoration(
         color: AppColors.primary,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(AppSpacing.radiusXl),
+          bottomRight: Radius.circular(AppSpacing.radiusXl),
         ),
       ),
       child: Stack(
@@ -33,103 +35,24 @@ class HomeHeader extends ConsumerWidget {
             right: -20,
             top: -20,
             child: Opacity(
-              opacity: 0.4,
+              opacity: 0.2,
               child: Image.asset('assets/header_logo.png', width: 220),
             ),
           ),
           SafeArea(
             bottom: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+              padding: const EdgeInsets.fromLTRB(
+                AppSpacing.pagePadding,
+                AppSpacing.lg,
+                AppSpacing.pagePadding,
+                AppSpacing.xl, // Restore compact padding
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 24,
-                        backgroundColor: AppColors.backgroundWhite.withValues(alpha: 0.2),
-                        backgroundImage: userProfile?.imagePath != null
-                            ? (userProfile!.imagePath!.startsWith('http')
-                                  ? NetworkImage(userProfile.imagePath!)
-                                        as ImageProvider
-                                  : FileImage(File(userProfile.imagePath!)))
-                            : null,
-                        child: userProfile?.imagePath == null
-                            ? const Icon(
-                                Icons.person,
-                                color: AppColors.textWhite,
-                                size: 28,
-                              )
-                            : null,
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '${AppStrings.homeGreetingPrefix}$firstName',
-                              style: const TextStyle(
-                                color: AppColors.textWhite,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            const Text(
-                              AppStrings.homeGreetingSubtitle,
-                              style: TextStyle(
-                                color: AppColors.textWhite,
-                                fontSize: 13,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Consumer(
-                        builder: (context, ref, child) {
-                          final unreadCountAsync = ref.watch(
-                            unreadReminderCountProvider,
-                          );
-                          return Stack(
-                            children: [
-                              IconButton(
-                                icon: const Icon(
-                                  Icons.notifications_outlined,
-                                  color: AppColors.textWhite,
-                                  size: 28,
-                                ),
-                                onPressed: () => context.push('/notifications'),
-                              ),
-                              if (unreadCountAsync.valueOrNull != null &&
-                                  unreadCountAsync.valueOrNull! > 0)
-                                Positioned(
-                                  right: 6,
-                                  top: 6,
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: AppColors.errorRed,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Text(
-                                      unreadCountAsync.valueOrNull!.toString(),
-                                      style: const TextStyle(
-                                        color: AppColors.textWhite,
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                  _buildTopRow(context, ref, userProfile, firstName),
+                  const SizedBox(height: AppSpacing.lg),
                   const HomeHeaderSearchField(),
                 ],
               ),
@@ -137,6 +60,97 @@ class HomeHeader extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildTopRow(
+    BuildContext context,
+    WidgetRef ref,
+    dynamic userProfile,
+    String firstName,
+  ) {
+    return Row(
+      children: [
+        _buildAvatar(userProfile),
+        const SizedBox(width: AppSpacing.md),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${AppStrings.homeGreetingPrefix}$firstName',
+                style: AppTypography.h2.copyWith(
+                  color: AppColors.textOnPrimary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                AppStrings.homeGreetingSubtitle,
+                style: AppTypography.bodySmall.copyWith(
+                  color: AppColors.textOnPrimaryMuted,
+                ),
+              ),
+            ],
+          ),
+        ),
+        _NotificationBell(),
+      ],
+    );
+  }
+
+  Widget _buildAvatar(dynamic userProfile) {
+    return CircleAvatar(
+      radius: 22,
+      backgroundColor: Colors.white.withValues(alpha: 0.2),
+      backgroundImage: userProfile?.imagePath != null
+          ? (userProfile!.imagePath!.startsWith('http')
+                ? NetworkImage(userProfile.imagePath!) as ImageProvider
+                : FileImage(File(userProfile.imagePath!)))
+          : null,
+      child: userProfile?.imagePath == null
+          ? const Icon(Icons.person, color: AppColors.textOnPrimary, size: 24)
+          : null,
+    );
+  }
+}
+
+class _NotificationBell extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final unreadCountAsync = ref.watch(unreadReminderCountProvider);
+    final count = unreadCountAsync.valueOrNull ?? 0;
+
+    return Stack(
+      children: [
+        IconButton(
+          icon: const Icon(
+            Icons.notifications_outlined,
+            color: AppColors.textOnPrimary,
+            size: 26,
+          ),
+          onPressed: () => context.push('/notifications'),
+        ),
+        if (count > 0)
+          Positioned(
+            right: 8,
+            top: 8,
+            child: Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                color: AppColors.error,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                count.toString(),
+                style: AppTypography.caption.copyWith(
+                  color: AppColors.textOnPrimary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
